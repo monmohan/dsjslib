@@ -210,8 +210,27 @@ BinarySearchTree.prototype.delete=function(item){
 
 }
 
-var test = function () {
+
+
+var testSetup = function () {
+
     var bt = new BinarySearchTree();
+
+    function bfs(nodes){
+        if (nodes.length === 0) return;
+        var items=[];
+        nodes.forEach(function(i){
+          if(i)items.push(i.item);
+        });
+        console.log(items.join(","));
+        nodes.forEach(function(node){
+            var chs=[];
+            if(node.leftChild)chs.push(node.leftChild);
+            if(node.rightChild)chs.push(node.rightChild);
+            bfs(chs);
+        });
+    }
+
     function testInsert(){
         console.log("INSERT AND TRAVERSE")
         bt.insert(16).insert(7).insert(25).insert(26).insert(39)
@@ -221,19 +240,18 @@ var test = function () {
         });
 
     }
-    testInsert()
     function testMinMax() {
         console.log("FIND min max")
         console.log("min " + bt.min().item);
         console.log("min " + bt.max().item);
     }
-    testMinMax();
+
     function testSearch() {
         console.log("SEARCH")
         var f = bt.search(29);
         console.log("node " + f+" "+f?f.item:"");
     }
-    testSearch();
+
     function testSuccPre() {
         console.log("SUCCESSOR AND PREDECESSOR")
         console.log("successor of 26 = " + bt.successor(26).item);
@@ -252,9 +270,26 @@ var test = function () {
             console.log(node.item )
         });
     }
-    testSuccPre();
 
-    testDel();
+    function testBSTfuncs(){
+        testInsert();
+        testMinMax();
+        testSearch();
+        testSuccPre();
+        testDel();
+        bt=null;//tear down
+    }
+
+    function visualizeTree(){
+          bt=new BinarySearchTree();
+          testInsert();
+          bfs([bt.root]);
+    }
+
+    visualizeTree();
+
 };
 
-test();
+testSetup();
+
+
