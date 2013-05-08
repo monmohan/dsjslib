@@ -216,19 +216,30 @@ var testSetup = function () {
 
     var bt = new BinarySearchTree();
 
-    function bfs(nodes){
-        if (nodes.length === 0) return;
-        var items=[];
-        nodes.forEach(function(i){
-          if(i)items.push(i.item);
-        });
-        console.log(items.join(","));
-        nodes.forEach(function(node){
-            var chs=[];
-            if(node.leftChild)chs.push(node.leftChild);
-            if(node.rightChild)chs.push(node.rightChild);
-            bfs(chs);
-        });
+    function prettyPrint(node){
+        var chs=[node];
+        var n, pArray=[],lArr=[];
+        while((n=chs.shift())){
+            n.level= n.level || 0;
+            lArr=pArray[n.level];
+            lArr=lArr||[];
+            lArr.push(n.item);
+            pArray[n.level]=lArr;
+            if(n.leftChild){
+                chs.push(n.leftChild);
+                n.leftChild.level= n.level+1;
+            }
+            if(n.rightChild){
+                chs.push(n.rightChild);
+                n.rightChild.level= n.level+1;
+            }
+        }
+
+        for(i in pArray){
+           console.log(pArray[i].join(" "));
+        }
+
+
     }
 
     function testInsert(){
@@ -283,7 +294,7 @@ var testSetup = function () {
     function visualizeTree(){
           bt=new BinarySearchTree();
           testInsert();
-          bfs([bt.root]);
+          bfs(bt.root);
     }
 
     visualizeTree();
