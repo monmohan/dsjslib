@@ -2,9 +2,10 @@
  * Implementation of a Binary Search Tree Data structure
  * @constructor
  */
-var BinarySearchTree = function () {
+function BinarySearchTree() {
     this.root = null;
-};
+}
+;
 
 BinarySearchTree.prototype.insert = function (obj) {
     if (!this.root) {
@@ -26,22 +27,26 @@ BinarySearchTree.prototype.insert = function (obj) {
         }
     }
     //cNode should be null now
-    var iNode=mkNode(obj, pNode);
+    var iNode = mkNode(obj, pNode);
     pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
-    while(pNode){
-        pNode.height=Math.max((pNode.leftChild?pNode.leftChild.height:-1),
-            (pNode.rightChild?pNode.rightChild.height:-1))+1;
-        pNode=pNode.parent;
-    }
-    var tree=this;
+    this.reCalcHeight(iNode);
+    var tree = this;
     return {
-        insert:function(obj){
+        insert:function (obj) {
             return tree.insert(obj);
         },
         node:iNode
 
     };
 }
+
+BinarySearchTree.prototype.reCalcHeight = function (pNode) {
+    while (pNode) {
+        pNode.height = Math.max((pNode.leftChild ? pNode.leftChild.height : -1),
+            (pNode.rightChild ? pNode.rightChild.height : -1)) + 1;
+        pNode = pNode.parent;
+    }
+};
 /**
  * Inorder traversal, apply provided function on each  visited node
  * @param obj
@@ -54,10 +59,10 @@ BinarySearchTree.prototype.traverse = function (node, fn) {
             console.log('initializing node to root');
             node = this.root;
             fn = args[0];
-        }else{
-           fn=function(n){
-              console.log(n.item);
-           }
+        } else {
+            fn = function (n) {
+                console.log(n.item);
+            }
         }
     }
 
@@ -170,40 +175,40 @@ BinarySearchTree.prototype.predecessor = function (item) {
 
 }
 
-BinarySearchTree.prototype.delete=function(item){
+BinarySearchTree.prototype.delete = function (item) {
     var node = this.search(item);
-    if(node){
-        var num= node.leftChild?(node.rightChild?2:1):(node.rightChild?1:0);
-        switch (num){
+    if (node) {
+        var num = node.leftChild ? (node.rightChild ? 2 : 1) : (node.rightChild ? 1 : 0);
+        switch (num) {
             case 0:
-                var p=node.parent;
-                if(p){
-                    var lc= p.leftChild === node;
-                    p[lc?"leftChild":"rightChild"]=null;
-                    node=null;
+                var p = node.parent;
+                if (p) {
+                    var lc = p.leftChild === node;
+                    p[lc ? "leftChild" : "rightChild"] = null;
+                    node = null;
                 }
                 break;
             case 1:
                 //single subtree
-                p=node.parent;
-                if(p){
-                    lc= p.leftChild === node;
-                    var child=node.leftChild || node.rightChild;
-                    child.parent=p;
-                    p[lc?"leftChild":"rightChild"]=child;
-                    node=null;
-                } else{
+                p = node.parent;
+                if (p) {
+                    lc = p.leftChild === node;
+                    var child = node.leftChild || node.rightChild;
+                    child.parent = p;
+                    p[lc ? "leftChild" : "rightChild"] = child;
+                    node = null;
+                } else {
                     //root
-                    child=node.leftChild || node.rightChild;
-                    lc= node.leftChild === child;
-                    child.parent=null;
+                    child = node.leftChild || node.rightChild;
+                    lc = node.leftChild === child;
+                    child.parent = null;
                 }
-            break;
+                break;
             case 2:
-                var nextL=this.successor(node.item);
-                var temp=nextL.item;
+                var nextL = this.successor(node.item);
+                var temp = nextL.item;
                 this.delete(nextL.item);
-                node.item=temp;
+                node.item = temp;
         }
 
 
@@ -211,30 +216,31 @@ BinarySearchTree.prototype.delete=function(item){
 
 }
 
-BinarySearchTree.prototype.printByLevel=function(node){
-    node=node|| this.root;
-    var chs=[node];
-    var n, pArray=[],lArr;
-    while((n=chs.shift())){
-        n.level= n.level || 0;
-        lArr=pArray[n.level]||[];
-        lArr.push(n.item +"(height="+ n.height+")");
-        pArray[n.level]=lArr;
-        if(n.leftChild){
+BinarySearchTree.prototype.printByLevel = function (node) {
+    node = node || this.root;
+    var chs = [node];
+    var n, pArray = [], lArr;
+    while ((n = chs.shift())) {
+        n.level = n.level || 0;
+        lArr = pArray[n.level] || [];
+        lArr.push(n.item + "(height=" + n.height + ")");
+        pArray[n.level] = lArr;
+        if (n.leftChild) {
             chs.push(n.leftChild);
-            n.leftChild.level= n.level+1;
+            n.leftChild.level = n.level + 1;
         }
-        if(n.rightChild){
+        if (n.rightChild) {
             chs.push(n.rightChild);
-            n.rightChild.level= n.level+1;
+            n.rightChild.level = n.level + 1;
         }
     }
 
-    for(i in pArray){
+    for (i in pArray) {
         console.log(pArray[i].join(" "));
     }
 
 }
+
 
 /**
  *
@@ -249,7 +255,14 @@ function mkNode(item, parent, leftChild, rightChild) {
         parent:parent || null,
         leftChild:leftChild || null,
         rightChild:rightChild || null,
-        height:0
+        height:0,
+        isLeftChild:function () {
+            return this.parent && this.parent.leftChild === this
+        },
+        isRightChild:function () {
+            return this.parent && this.parent.rightChild === this
+        }
+
     }
 }
 
@@ -257,4 +270,4 @@ function mkNode(item, parent, leftChild, rightChild) {
  * Export the Type so that new instances can be created
  * @type {Function}
  */
-module.exports=BinarySearchTree;
+module.exports = BinarySearchTree;

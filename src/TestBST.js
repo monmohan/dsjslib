@@ -1,15 +1,17 @@
-var BinarySearchTree=require("./BinarySearchTree.js");
+var BinarySearchTree = require("./BinarySearchTree.js");
 (function () {
     var bt = new BinarySearchTree();
-    function testInsert(){
+
+    function testInsert() {
         console.log("INSERT AND TRAVERSE")
         bt.insert(16).insert(7).insert(25).insert(26).insert(39)
             .insert(13).insert(15).insert(29).insert(35).insert(12).insert(55).insert(11);
-        bt.traverse( function (node) {
-            console.log(node.item )
+        bt.traverse(function (node) {
+            console.log(node.item)
         });
 
     }
+
     function testMinMax() {
         console.log("FIND min max")
         console.log("min " + bt.min().item);
@@ -19,7 +21,7 @@ var BinarySearchTree=require("./BinarySearchTree.js");
     function testSearch() {
         console.log("SEARCH")
         var f = bt.search(29);
-        console.log("node " + f+" "+f?f.item:"");
+        console.log("node " + f + " " + f ? f.item : "");
     }
 
     function testSuccPre() {
@@ -27,31 +29,32 @@ var BinarySearchTree=require("./BinarySearchTree.js");
         console.log("successor of 26 = " + bt.successor(26).item);
         console.log("pre of 11 = " + bt.predecessor(11).item);
     }
+
     function testDel() {
         console.log("DELETE")
         bt.delete(29);
         bt.traverse(
             function (node) {
-                console.log(node.item )
+                console.log(node.item)
             }
         );
         bt.delete(13);
-        bt.traverse( function (node) {
-            console.log(node.item )
+        bt.traverse(function (node) {
+            console.log(node.item)
         });
     }
 
-    function testBSTfuncs(){
+    function testBSTfuncs() {
         testInsert();
         testMinMax();
         testSearch();
         testSuccPre();
         testDel();
-        bt=null;//tear down
+        bt = null;//tear down
     }
 
-    function visualizeTree(){
-        bt=new BinarySearchTree();
+    function visualizeTree() {
+        bt = new BinarySearchTree();
         testInsert();
         bt.prettyPrint();
     }
