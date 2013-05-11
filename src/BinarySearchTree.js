@@ -1,18 +1,7 @@
 /**
- * Created with IntelliJ IDEA.
- * User: msingh
- * Date: 29/4/13
- * Time: 7:26 PM
- * To change this template use File | Settings | File Templates.
+ * Implementation of a Binary Search Tree Data structure
+ * @constructor
  */
-function mkNode(item, parent, leftChild, rightChild) {
-    return {item:item,
-        parent:parent || null,
-        leftChild:leftChild || null,
-        rightChild:rightChild || null
-    }
-}
-
 var BinarySearchTree = function () {
     this.root = null;
 };
@@ -37,9 +26,21 @@ BinarySearchTree.prototype.insert = function (obj) {
         }
     }
     //cNode should be null now
-    pNode[isLeft ? "leftChild" : "rightChild"] = mkNode(obj, pNode);
+    var iNode=mkNode(obj, pNode);
+    pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
+    while(pNode){
+        pNode.height=Math.max((pNode.leftChild?pNode.leftChild.height:-1),
+            (pNode.rightChild?pNode.rightChild.height:-1))+1;
+        pNode=pNode.parent;
+    }
+    var tree=this;
+    return {
+        insert:function(obj){
+            return tree.insert(obj);
+        },
+        node:iNode
 
-    return this;
+    };
 }
 /**
  * Inorder traversal, apply provided function on each  visited node
@@ -210,97 +211,50 @@ BinarySearchTree.prototype.delete=function(item){
 
 }
 
-
-
-var testSetup = function () {
-
-    var bt = new BinarySearchTree();
-
-    function prettyPrint(node){
-        var chs=[node];
-        var n, pArray=[],lArr=[];
-        while((n=chs.shift())){
-            n.level= n.level || 0;
-            lArr=pArray[n.level];
-            lArr=lArr||[];
-            lArr.push(n.item);
-            pArray[n.level]=lArr;
-            if(n.leftChild){
-                chs.push(n.leftChild);
-                n.leftChild.level= n.level+1;
-            }
-            if(n.rightChild){
-                chs.push(n.rightChild);
-                n.rightChild.level= n.level+1;
-            }
+BinarySearchTree.prototype.printByLevel=function(node){
+    node=node|| this.root;
+    var chs=[node];
+    var n, pArray=[],lArr;
+    while((n=chs.shift())){
+        n.level= n.level || 0;
+        lArr=pArray[n.level]||[];
+        lArr.push(n.item +"(height="+ n.height+")");
+        pArray[n.level]=lArr;
+        if(n.leftChild){
+            chs.push(n.leftChild);
+            n.leftChild.level= n.level+1;
         }
-
-        for(i in pArray){
-           console.log(pArray[i].join(" "));
+        if(n.rightChild){
+            chs.push(n.rightChild);
+            n.rightChild.level= n.level+1;
         }
-
-
     }
 
-    function testInsert(){
-        console.log("INSERT AND TRAVERSE")
-        bt.insert(16).insert(7).insert(25).insert(26).insert(39)
-            .insert(13).insert(15).insert(29).insert(35).insert(12).insert(55).insert(11);
-        bt.traverse( function (node) {
-            console.log(node.item )
-        });
-
-    }
-    function testMinMax() {
-        console.log("FIND min max")
-        console.log("min " + bt.min().item);
-        console.log("min " + bt.max().item);
+    for(i in pArray){
+        console.log(pArray[i].join(" "));
     }
 
-    function testSearch() {
-        console.log("SEARCH")
-        var f = bt.search(29);
-        console.log("node " + f+" "+f?f.item:"");
+}
+
+/**
+ *
+ * @param item
+ * @param parent
+ * @param leftChild
+ * @param rightChild
+ * @return {Object}
+ */
+function mkNode(item, parent, leftChild, rightChild) {
+    return {item:item,
+        parent:parent || null,
+        leftChild:leftChild || null,
+        rightChild:rightChild || null,
+        height:0
     }
+}
 
-    function testSuccPre() {
-        console.log("SUCCESSOR AND PREDECESSOR")
-        console.log("successor of 26 = " + bt.successor(26).item);
-        console.log("pre of 11 = " + bt.predecessor(11).item);
-    }
-    function testDel() {
-        console.log("DELETE")
-        bt.delete(29);
-        bt.traverse(
-            function (node) {
-                console.log(node.item )
-            }
-        );
-        bt.delete(13);
-        bt.traverse( function (node) {
-            console.log(node.item )
-        });
-    }
-
-    function testBSTfuncs(){
-        testInsert();
-        testMinMax();
-        testSearch();
-        testSuccPre();
-        testDel();
-        bt=null;//tear down
-    }
-
-    function visualizeTree(){
-          bt=new BinarySearchTree();
-          testInsert();
-          bfs(bt.root);
-    }
-
-    visualizeTree();
-
-};
-
-testSetup();
-
-
+/**
+ * Export the Type so that new instances can be created
+ * @type {Function}
+ */
+module.exports=BinarySearchTree;
