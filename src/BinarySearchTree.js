@@ -1,3 +1,4 @@
+var util=require('util');
 /**
  * Implementation of a Binary Search Tree Data structure
  * @constructor
@@ -214,6 +215,20 @@ BinarySearchTree.prototype.delete = function (item) {
 
     }
 
+}
+
+BinarySearchTree.prototype.checkInvariants=function(node){
+   if(typeof node === 'undefined') node=this.root;
+   if(!node) return;
+   var lc=node.leftChild,rc=node.rightChild;
+   console.log(util.format("lc=%s, rc=%s, node=%s",
+        lc?lc.item:"null",rc?rc.item:"null",node.item))
+   var ok=(!lc || lc.item < node.item) &&
+       (!rc || rc.item > node.item);
+
+    if(!ok) throw new Error("Invariant check failed at node "+node +" key="+node.item)
+   this.checkInvariants(lc);
+   this.checkInvariants(rc);
 }
 
 BinarySearchTree.prototype.printByLevel = function (node) {
