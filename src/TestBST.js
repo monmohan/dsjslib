@@ -56,8 +56,7 @@ var BinarySearchTree = require("./BinarySearchTree.js");
     function visualizeTree() {
         bt = new BinarySearchTree();
         testInsert();
-        bt.prettyPrint();
-    }
+        bt.printByLevel();    }
 
     visualizeTree();
 
