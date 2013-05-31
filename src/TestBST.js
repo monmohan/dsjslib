@@ -44,21 +44,17 @@ var BinarySearchTree = require("./BinarySearchTree.js");
         });
     }
 
-    function testBSTfuncs() {
+    (function testBSTfuncs() {
         testInsert();
         testMinMax();
         testSearch();
         testSuccPre();
         testDel();
+        bt.printByLevel();
         bt = null;//tear down
-    }
+    })();
 
-    function visualizeTree() {
-        bt = new BinarySearchTree();
-        testInsert();
-        bt.printByLevel();    }
 
-    visualizeTree();
 
 })();
 

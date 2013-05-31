@@ -5,12 +5,36 @@ var util=require('util'), log=require("./logger");
  */
 function BinarySearchTree() {
     this.root = null;
+    /**
+     *
+     * @param item
+     * @param parent
+     * @param leftChild
+     * @param rightChild
+     * @return {Object}
+     */
+    this.mkNode=function(item, parent, leftChild, rightChild) {
+        return {item:item,
+            parent:parent || null,
+            leftChild:leftChild || null,
+            rightChild:rightChild || null,
+            height:0,
+            isLeftChild:function () {
+                return this.parent && this.parent.leftChild === this
+            },
+            isRightChild:function () {
+                return this.parent && this.parent.rightChild === this
+            }
+
+        }
+    }
+
 }
-;
+
 
 BinarySearchTree.prototype.insert = function (obj) {
     if (!this.root) {
-        this.root = mkNode(obj);
+        this.root = this.mkNode(obj);
         return this
     }
 
@@ -28,7 +52,7 @@ BinarySearchTree.prototype.insert = function (obj) {
         }
     }
     //cNode should be null now
-    var iNode = mkNode(obj, pNode);
+    var iNode = this.mkNode(obj, pNode);
     pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
     this.reCalcHeight(iNode);
     var tree = this;
@@ -259,29 +283,6 @@ BinarySearchTree.prototype.printByLevel = function (node) {
 }
 
 
-/**
- *
- * @param item
- * @param parent
- * @param leftChild
- * @param rightChild
- * @return {Object}
- */
-function mkNode(item, parent, leftChild, rightChild) {
-    return {item:item,
-        parent:parent || null,
-        leftChild:leftChild || null,
-        rightChild:rightChild || null,
-        height:0,
-        isLeftChild:function () {
-            return this.parent && this.parent.leftChild === this
-        },
-        isRightChild:function () {
-            return this.parent && this.parent.rightChild === this
-        }
-
-    }
-}
 
 /**
  * Export the Type so that new instances can be created
