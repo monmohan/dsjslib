@@ -1,4 +1,4 @@
-var util=require('util'), log=require("./logger");
+var util = require('util'), log = require("./logger");
 /**
  * Implementation of a Binary Search Tree Data structure
  * @constructor
@@ -13,7 +13,7 @@ function BinarySearchTree() {
      * @param rightChild
      * @return {Object}
      */
-    this.mkNode=function(item, parent, leftChild, rightChild) {
+    this.mkNode = function (item, parent, leftChild, rightChild) {
         return {item:item,
             parent:parent || null,
             leftChild:leftChild || null,
@@ -24,6 +24,14 @@ function BinarySearchTree() {
             },
             isRightChild:function () {
                 return this.parent && this.parent.rightChild === this
+            },
+            /**
+             * function to display the tree using Node util class
+             * @return {*}
+             */
+            inspect:function () {
+                return util.inspect({item:this.item, h:this.height,
+                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.item : null)});
             }
 
         }
@@ -241,47 +249,21 @@ BinarySearchTree.prototype.delete = function (item) {
 
 }
 
-BinarySearchTree.prototype.checkInvariants=function(node){
-   if(typeof node === 'undefined') node=this.root;
-   if(!node) return;
-   var lc=node.leftChild,rc=node.rightChild;
-   if (log.DEBUG) {
+BinarySearchTree.prototype.checkInvariants = function (node) {
+    if (typeof node === 'undefined') node = this.root;
+    if (!node) return;
+    var lc = node.leftChild, rc = node.rightChild;
+    if (log.DEBUG) {
         console.log(util.format("lc=%s, rc=%s, node=%s",
             lc ? lc.item : "null", rc ? rc.item : "null", node.item))
-   }
-   var ok=(!lc || lc.item < node.item) &&
-       (!rc || rc.item > node.item);
-
-   if(!ok) throw new Error("Invariant check failed at node "+node +" key="+node.item)
-   this.checkInvariants(lc);
-   this.checkInvariants(rc);
-}
-
-BinarySearchTree.prototype.printByLevel = function (node) {
-    node = node || this.root;
-    var chs = [node];
-    var n, pArray = [], lArr;
-    while ((n = chs.shift())) {
-        n.level = n.level || 0;
-        lArr = pArray[n.level] || [];
-        lArr.push(n.item + "(height=" + n.height + ")");
-        pArray[n.level] = lArr;
-        if (n.leftChild) {
-            chs.push(n.leftChild);
-            n.leftChild.level = n.level + 1;
-        }
-        if (n.rightChild) {
-            chs.push(n.rightChild);
-            n.rightChild.level = n.level + 1;
-        }
     }
+    var ok = (!lc || lc.item < node.item) &&
+        (!rc || rc.item > node.item);
 
-    for (i in pArray) {
-        console.log(pArray[i].join(" "));
-    }
-
+    if (!ok) throw new Error("Invariant check failed at node " + node + " key=" + node.item)
+    this.checkInvariants(lc);
+    this.checkInvariants(rc);
 }
-
 
 
 /**

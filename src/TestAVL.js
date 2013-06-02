@@ -10,17 +10,18 @@ var AVL = require("./AVLTree.js");
         bt.checkInvariants(bt.root);
 
     }
-    function testRotate(){
-        bt.printByLevel();
+
+    function testRotate() {
+        console.log(bt.root)
         bt.rotate(bt.search(39), 'r');
-        bt.printByLevel();
+        console.log(bt.root)
         bt.rotate(bt.search(29), 'l');
-        bt.printByLevel();
+        console.log(bt.root)
 
     }
 
     testInsertWithRebalance();
-    bt.printByLevel();
+    console.log(bt.root)
     //testRotate();
     //bt.checkInvariants(bt.root,true);
 

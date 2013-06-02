@@ -50,10 +50,8 @@ var BinarySearchTree = require("./BinarySearchTree.js");
         testSearch();
         testSuccPre();
         testDel();
-        bt.printByLevel();
-        bt = null;//tear down
+        console.log(bt.root);
     })();
-
 
 
 })();

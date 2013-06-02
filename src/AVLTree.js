@@ -1,4 +1,4 @@
-var BST = require("./BinarySearchTree.js"), util=require("util"),log=require("./logger");
+var BST = require("./BinarySearchTree.js"), util = require("util"), log = require("./logger");
 
 function AVLTree() {
 }
@@ -32,26 +32,26 @@ AVLTree.prototype.rotate = function (node, rL) {
     }
 
 }
-AVLTree.prototype.rebalance=function(vNode, iNode) {
+AVLTree.prototype.rebalance = function (vNode, iNode) {
     var islc = iNode.isLeftChild();
     var p = iNode.parent;
     var zigzag = false;
     while (vNode !== p) {
         zigzag = islc != p.isLeftChild();
-        if(zigzag){
+        if (zigzag) {
             this.rotate(p, p.isLeftChild() ? 'l' : 'r');
             break;
         }
         p = p.parent;
     }
-        //re-balance single rotation case
-        this.rotate(vNode, iNode.isLeftChild() ? 'r' : 'l');
+    //re-balance single rotation case
+    this.rotate(vNode, iNode.isLeftChild() ? 'r' : 'l');
 
 }
 
-AVLTree.prototype.insert=function(item){
-    var ins = BST.prototype.insert.call(this,item);
-    console.log("inserting item "+item);
+AVLTree.prototype.insert = function (item) {
+    var ins = BST.prototype.insert.call(this, item);
+    console.log("inserting item " + item);
     try {
         this.checkAVLProperty(ins.node);
     } catch (vNode) {
@@ -60,20 +60,20 @@ AVLTree.prototype.insert=function(item){
     return ins;
 }
 
-AVLTree.prototype.checkInvariants=function(node){
-    if(typeof node ==="undefined")node=this.root;
-    BST.prototype.checkInvariants.call(this,node);
-    if(!node) return;
-    var lc=node.leftChild,rc=node.rightChild;
+AVLTree.prototype.checkInvariants = function (node) {
+    if (typeof node === "undefined")node = this.root;
+    BST.prototype.checkInvariants.call(this, node);
+    if (!node) return;
+    var lc = node.leftChild, rc = node.rightChild;
     if (log.DEBUG) {
         console.log("Checking AVL Invariants");
         console.log(util.format("lc(h)=%s, rc(h)=%s, node=%s",
-            lc ? lc.item+"("+lc.height+")": "null(-1)",
-            rc ? rc.item+"("+rc.height+")": "null(-1)",
-            node.item+"("+node.height+")"))
+            lc ? lc.item + "(" + lc.height + ")" : "null(-1)",
+            rc ? rc.item + "(" + rc.height + ")" : "null(-1)",
+            node.item + "(" + node.height + ")"))
     }
-    var hdiff=Math.abs((lc?lc.height:-1)-(rc?rc.height:-1));
-    if(hdiff >1) throw new Error("Invariant check failed at node "+node +" key="+node.item)
+    var hdiff = Math.abs((lc ? lc.height : -1) - (rc ? rc.height : -1));
+    if (hdiff > 1) throw new Error("Invariant check failed at node " + node + " key=" + node.item)
     this.checkInvariants(lc);
     this.checkInvariants(rc);
 
@@ -81,12 +81,12 @@ AVLTree.prototype.checkInvariants=function(node){
 }
 
 
-AVLTree.prototype.checkAVLProperty=function(node){
-    if(!node) return;
-    var lc=node.leftChild,rc=node.rightChild;
-    var hdiff=Math.abs((lc?lc.height:-1)-(rc?rc.height:-1));
-    if(hdiff>1) {
-        if(log.DEBUG)console.log("AVL Height violation at Node key" + node.item);
+AVLTree.prototype.checkAVLProperty = function (node) {
+    if (!node) return;
+    var lc = node.leftChild, rc = node.rightChild;
+    var hdiff = Math.abs((lc ? lc.height : -1) - (rc ? rc.height : -1));
+    if (hdiff > 1) {
+        if (log.DEBUG)console.log("AVL Height violation at Node key" + node.item);
         throw node;
     }
     this.checkAVLProperty(node.parent);

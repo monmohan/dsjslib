@@ -35,8 +35,8 @@ var btree = require("./BTree.js"), util = require("util");
         //console.log(bt.inspectNode(bt.root))
     }
 
-    function testInsert(){
-        bt=new btree(3);
+    function testInsert() {
+        bt = new btree(3);
         bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
         bt.insert(11)
@@ -46,8 +46,8 @@ var btree = require("./BTree.js"), util = require("util");
 
     }
 
-    function testDelete(){
-        bt=new btree(3);
+    function testDelete() {
+        bt = new btree(3);
         bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
         bt.insert(11)
