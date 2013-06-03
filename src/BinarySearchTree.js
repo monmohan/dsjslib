@@ -31,7 +31,7 @@ function BinarySearchTree() {
              */
             inspect:function () {
                 return util.inspect({item:this.item, h:this.height,
-                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.item : null)});
+                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.item : null)},{depth:null,colors:true});
             }
 
         }
@@ -265,7 +265,9 @@ BinarySearchTree.prototype.checkInvariants = function (node) {
     this.checkInvariants(rc);
 }
 
-
+BinarySearchTree.prototype.inspect=function(){
+    return util.inspect(this.root,{depth:null,colors:true})
+}
 /**
  * Export the Type so that new instances can be created
  * @type {Function}

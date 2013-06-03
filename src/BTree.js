@@ -1,7 +1,11 @@
 util = require("util")
 /**
- * A BTree of degree N, Can have a maximum of 2*N -1 keys and a
- * minimum of N-1 keys
+ * A BTree of degree N,
+ * Can have a
+ * maximum of 2*N -1 keys
+ * and
+ * minimum of N-1 keys per Node
+ * Root is allowed to have f
  * @param degree
  * @constructor
  */
@@ -68,15 +72,16 @@ BTree.prototype.splitChild = function (p, child, splitIdx) {
 
 }
 
-BTree.prototype.inspectNode = function (node) {
+BTree.prototype.inspect = function (node) {
+    if(arguments.length==0)node=this.root;
     if (!node) return;
     var that = this;
     //helper to log child pointers
-    if (node.cPtrs) {
+    if (node.cPtrs && !node.cPtrs.inspect) {
         node.cPtrs.inspect = function () {
             return this.reduce(
                 function (lastVal, ptr, idx) {
-                    return (lastVal + "index:" + idx + that.inspectNode(ptr) + "\n")
+                    return (lastVal + "index:" + idx + that.inspect(ptr) + "\n")
                 }, "")
         }
     }

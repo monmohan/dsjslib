@@ -1,4 +1,4 @@
-var AVL = require("./AVLTree.js");
+var AVL = require("../src/AVLTree.js");
 
 (function () {
     var bt = new AVL();
