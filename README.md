@@ -35,7 +35,8 @@ avl.successor(key) - successor
 avl.traverse([node],callbackfn) - inorder traversal of the tree. callbackfn called for every node visited
 avl.min([startAtNode]) - if start node not given, starts at root
 avl.max([startAtNode]) - if start node not given, starts at root
-avl.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise). Validates BST as well as AVL proeprties
+avl.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise). 
+                                     Validates BST as well as AVL proeprties
 ```
 ```
 print the tree starting at root (requires util module from Node.js)
