@@ -27,9 +27,9 @@ See rotate(), reBalance() and checkAVLProperty() functions for explanation. They
 when an insert or delete violates the AVL property of the tree
 ```
 var avl=new AVLTree() 
-avl.insert(key) -insert a key
+avl.insert(key) -inserts a key and rebalnaces the tree
 avl.find(key) -search
-avl.delete(key) -delete a key
+avl.delete(key) -deletes a key and rebalances the tree
 avl.predecessor(key) - predecessor 
 avl.successor(key) - successor
 avl.traverse([node],callbackfn) - inorder traversal of the tree. callbackfn called for every node visited
@@ -42,3 +42,14 @@ avl.checkInvariants([startAtNode]) - Validates the tree starting at given node (
 print the tree starting at root (requires util module from Node.js)
 console.log(avl.root)
 ```
+BTree
+----------------------
+```
+var btree=new BTree(K) - Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys 
+                         and a minimum of K-1 keys.
+avl.insert(key) - Inserts a key and splits nodes as required
+avl.find(key) - Search for a key
+avl.delete(key) - Deletes a key and re-joins nodes and/or reduces the height of tree as required
+```
+For explanation of insert and delete algos, see Chpater 18 from Introduction to Algorithms By Coremen et al.
+                         
