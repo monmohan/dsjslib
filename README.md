@@ -1,5 +1,4 @@
-Tree Datastructures implemented in JavaScript
-==========
+
 Binary Search Tree
 ------------------------
 
