@@ -2,46 +2,64 @@ Tree Datastructures implemented in JavaScript
 ==========
 Binary Search Tree
 ------------------------
-All functions : insert, delete, find, successor, predecessor, traversal, min, max
+
 ```
+//create a binary tree
 var bst=new BinarySearchTree()
-bst.insert(key) -insert a key
-bst.find(key) -search
-bst.delete(key) -delete a key
-bst.predecessor(key) - predecessor 
-bst.successor(key) - successor
-bst.traverse([node],callbackfn) - inorder traversal of the tree. callbackfn called for every node visited
-bst.min([startAtNode]) - if start node not given, starts at root
-bst.max([startAtNode]) - if start node not given, starts at root
+
+//Insert a key
+bst.insert(key)
+
+//Find a key
+bst.find(key)
+
+//Delete a key
+bst.delete(key)
+
+//Predecessor and Successor
+bst.predecessor(key) 
+bst.successor(key) 
+
+//Inorder traversal of the tree. callbackfn called for every node visited
+bst.traverse([node],callbackfn) 
+
+//Min and Max - if start node not given, starts at root
+bst.min([startAtNode]) 
+bst.max([startAtNode]) 
+
+//Run this to validate the tree. Useful for testing
 bst.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise)
 ```
 ```
-print the tree starting at root (requires util module from Node.js)
+print the tree starting at root (Requires util module from Node.js)
 console.log(bst.root)
 ```
 AVL Tree
 --------------------------
-Extends BinarySearchTree. All functionality of BinarySearchTree is available. In addition Tree is height balanced
-by rotation when an insert or delete is done
-See rotate(), reBalance() and checkAVLProperty() functions for explanation. They need not be used directly but are invoked
-when an insert or delete violates the AVL property of the tree
+Extends BinarySearchTree. 
+All functionality of BinarySearchTree is available. 
+In addition Tree is height balanced by rotation whenever an insert or delete is done
+See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
+Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
+
 ```
+//Create and AVLTree (extends a BinarySearchTree)
 var avl=new AVLTree() 
-avl.insert(key) -inserts a key and rebalnaces the tree
-avl.find(key) -search
-avl.delete(key) -deletes a key and rebalances the tree
-avl.predecessor(key) - predecessor 
-avl.successor(key) - successor
-avl.traverse([node],callbackfn) - inorder traversal of the tree. callbackfn called for every node visited
-avl.min([startAtNode]) - if start node not given, starts at root
-avl.max([startAtNode]) - if start node not given, starts at root
-avl.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise). 
-                                     Validates BST as well as AVL proeprties
+
+//Insert and delete. They also rebalance the tree
+avl.insert(key)
+avl.delete(key)
+
+// Validates the tree starting at given node (root otherwise). 
+// Validates BST as well as AVL proeprties
+avl.checkInvariants([startAtNode])
+                                     
 ```
 ```
-print the tree starting at root (requires util module from Node.js)
+//Print the tree starting at root (requires util module from Node.js)
 console.log(avl.root)
 ```
+
 BTree
 ----------------------
 ```
