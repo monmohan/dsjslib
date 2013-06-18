@@ -33,21 +33,24 @@ function BTree(degree) {
 }
 
 BTree.prototype.search = function (key, node) {
-    if (!node)return;
-    var next, found;
-    for (var i = 0; i < node.n; i++) {
-        if (key === node.keys[i]) {
-            found = true;
-            break;
+    return recSearch(key, node || this.root);
+    function recSearch(key, node) {
+        if (!node)return;
+        var next, found;
+        for (var i = 0; i < node.n; i++) {
+            if (key === node.keys[i]) {
+                found = true;
+                break;
 
-        } else if (!node.isLeaf && key < node.keys[i]) {
-            next = node.cPtrs[i];
-            break;
+            } else if (!node.isLeaf && key < node.keys[i]) {
+                next = node.cPtrs[i];
+                break;
+            }
         }
+        if (found) return {'node':node, 'index':i};
+        if (node.isLeaf && !found) return;
+        return recSearch(key, node.cPtrs[i]);
     }
-    if (found) return {'node':node, 'index':i};
-    if (node.isLeaf && !found) return;
-    return this.search(key, node.cPtrs[i]);
 
 }
 
@@ -73,7 +76,7 @@ BTree.prototype.splitChild = function (p, child, splitIdx) {
 }
 
 BTree.prototype.inspect = function (node) {
-    if(arguments.length==0)node=this.root;
+    if (arguments.length == 0)node = this.root;
     if (!node) return;
     var that = this;
     //helper to log child pointers
