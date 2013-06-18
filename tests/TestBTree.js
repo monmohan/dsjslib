@@ -34,7 +34,7 @@ var btree = require("../src/BTree.js"), util = require("util");
         bt.insert(11)
         bt.insert(6);
         bt.insert(50).insert(65).insert(15)
-        var n=bt.search(30,bt.root);
+        var n=bt.search(30);
         console.log(n);
     }
 
