@@ -18,6 +18,7 @@ function RWayTrie(R) {
 }
 
 RWayTrie.prototype.insert = function (key, val) {
+    if(!(typeof key === 'string'))throw new Error("Only String keys are supported");
     if (!val)throw new Error("Null values are not supported");
     var that = this;
     return insKey(key, val, this.root, 0);
@@ -55,11 +56,11 @@ RWayTrie.prototype.keyset = function () {
             keys.push(collect);
         }
         node.cPtrs.forEach(function (e, i, arr) {
-            collect += String.fromCharCode(i);
-            keysWithPrefix(e, collect);
+            var prefix = String.fromCharCode(i);
+            keysWithPrefix(e, (collect + prefix));
 
         })
-        collect = "";
+
     }
 
     return keys;
