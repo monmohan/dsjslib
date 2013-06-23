@@ -1,4 +1,3 @@
-
 Binary Search Tree
 ------------------------
 
@@ -68,5 +67,21 @@ avl.insert(key) - Inserts a key and splits nodes as required
 avl.find(key) - Search for a key
 avl.delete(key) - Deletes a key and re-joins nodes and/or reduces the height of tree as required
 ```
-For explanation of insert and delete algos, see Chpater 18 from Introduction to Algorithms By Coremen et al.
+For explanation of insert and delete algos, Ref - Introduction to Algorithms By Coremen et al.
+                         
+RWayTrie
+----------------------
+Data structure supporting String keys, for fast retrival of values associated with string keys. In comparison
+to a (Hash)Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order.
+For large R the space requirement for this DS is impractical, TernarySearchTrie should be used instead.
+```
+var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . For example if you know that 
+the keys are made of ASCII chars only, R=128. Each node in this trie will have an array of size R. 
+
+rTrie.insert(key,val) - Inserts a key and set its value as val
+rTrie.search(key) - Search for a key and return associated value or null
+rTrie.delete(key) - Deletes a key 
+rTrie.keyset() - Return a list of all keys in sorted order
+```
+Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne
                          
