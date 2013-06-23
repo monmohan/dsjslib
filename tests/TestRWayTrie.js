@@ -21,16 +21,36 @@ var rtrie = require('../src/RWayTrie.js'), assert = require('assert');
         assert.deepEqual(trie.keyset(), ['a', 'abb', 'abc', 'abcd', 'averylongkey', 'k', 'kplus', 'kpplus'], 'keyset failed');
     }
     function testUnicode(){
-        trie=new rtrie(400);
+       var t=new rtrie(400);
         var unicode1="\u0100unicode",unicode2="\u0170latin"
-        trie.insert(unicode1,"latin1").insert("asciikey","ascii").insert(unicode2,"latinext2");
-        console.log(trie.keyset());
-        assert.deepEqual(trie.keyset(),["asciikey",unicode1,unicode2],"key listing failed")
-        assert.deepEqual(trie.search(unicode2),"latinext2");
+        t.insert(unicode1,"latin1").insert("asciikey","ascii").insert(unicode2,"latinext2");
+        console.log(t.keyset());
+        assert.deepEqual(t.keyset(),["asciikey",unicode1,unicode2],"key listing failed")
+        assert.deepEqual(t.search(unicode2),"latinext2");
+    }
+    function testDelete(){
+        var dt=new rtrie(128);
+        dt.insert("abc",10);
+        dt.delete("abc");
+        assert.deepEqual(dt.keyset(),[]);
+        assert.strictEqual(dt.search("abc"),null);
+        dt.insert("abc",10).insert("abcd",20);
+        dt.delete("abcd");
+        assert.deepEqual(dt.keyset(),["abc"]);
+        assert.strictEqual(dt.search("abcd"),null);
+        assert.strictEqual(dt.search("abc"),10);
+        dt.insert("ab",20).insert("ad",30);
+        dt.delete("ad");
+        assert.deepEqual(dt.keyset(),["ab","abc"]);
+        assert.strictEqual(dt.search("ad"),null);
+        assert.strictEqual(dt.search("abc"),10);
+        assert.strictEqual(dt.search("ab"),20);
+
     }
     setup()
     testSearch()
     testKeyset()
     testUnicode()
+    testDelete()
 
 })();
