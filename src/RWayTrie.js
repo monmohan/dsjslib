@@ -6,7 +6,7 @@
  */
 function RWayTrie(R) {
     if (!R || !(typeof R === "number")) {
-        throw new Error("Inavlid argument, R should be integer")
+        throw new Error("Invalid argument, R should be integer")
     }
     this.R = R;
     this.mkNode = function (value) {
