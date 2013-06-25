@@ -1,4 +1,3 @@
-
 Binary Search Tree
 ------------------------
 
@@ -6,32 +5,20 @@ Binary Search Tree
 //create a binary tree
 var bst=new BinarySearchTree()
 
-//Insert a key
-bst.insert(key)
-
-//Find a key
-bst.find(key)
-
-//Delete a key
-bst.delete(key)
+//Insert a key    //Find a key   //Delete a key
+bst.insert(key),  bst.find(key)  bst.delete(key)
 
 //Predecessor and Successor
-bst.predecessor(key) 
-bst.successor(key) 
+bst.predecessor(key)  bst.successor(key) 
 
 //Inorder traversal of the tree. callbackfn called for every node visited
 bst.traverse([node],callbackfn) 
 
 //Min and Max - if start node not given, starts at root
-bst.min([startAtNode]) 
-bst.max([startAtNode]) 
+bst.min([startAtNode]) bst.max([startAtNode]) 
 
 //Run this to validate the tree. Useful for testing
 bst.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise)
-```
-```
-print the tree starting at root (Requires util module from Node.js)
-console.log(bst.root)
 ```
 AVL Tree
 --------------------------
@@ -61,12 +48,35 @@ console.log(avl.root)
 
 BTree
 ----------------------
+[Ref - Introduction to Algorithms By Coremen et al.]
 ```
-var btree=new BTree(K) - Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys 
-                         and a minimum of K-1 keys.
-avl.insert(key) - Inserts a key and splits nodes as required
-avl.find(key) - Search for a key
-avl.delete(key) - Deletes a key and re-joins nodes and/or reduces the height of tree as required
+Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
+var btree=new BTree(K) 
+
+//Inserts a key and splits nodes as required
+btree.insert(key) 
+
+//Search for a key
+btree.find(key) 
+
+//Deletes a key and re-joins nodes and/or reduces the height of tree as required
+btree.delete(key) 
 ```
-For explanation of insert and delete algos, see Chpater 18 from Introduction to Algorithms By Coremen et al.
+
+                         
+RWayTrie
+----------------------
+[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
+Data structure supporting String keys, for fast retrival of values associated with string keys. In comparison
+to a (Hash)Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order.
+For large R the space requirement for this DS is impractical, TernarySearchTrie should be used instead.
+```
+var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . For example if you know that 
+the keys are made of ASCII chars only, R=128. Each node in this trie will have an array of size R. 
+
+rTrie.insert(key,val) - Inserts a key and set its value as val
+rTrie.search(key) - Search for a key and return associated value or null
+rTrie.delete(key) - Deletes a key 
+rTrie.keyset() - Return a list of all keys in sorted order
+```
                          
