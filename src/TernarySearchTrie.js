@@ -3,8 +3,8 @@
  * @constructor
  */
 function TernarySearchTrie() {
-    this.mkNode = function (lt, gt, eq, val,char) {
-        return {c:char||null,l:lt || null, g:gt|| null, e:eq|| null, v:val || null};
+    this.mkNode = function (lt, gt, eq, val,ch) {
+        return {c:ch||null,l:lt || null, g:gt|| null, e:eq|| null, v:val || null};
     }
     this.root = this.mkNode();
 }
@@ -28,7 +28,7 @@ TernarySearchTrie.prototype.insert = function (key,val) {
             node.c=key.charAt(pos);
         }
         if(pos===key.length-1){
-            node.v=val
+            node.v=val;
             return that;
         }
 
@@ -39,4 +39,4 @@ TernarySearchTrie.prototype.insert = function (key,val) {
     }
 }
 
-module.exports=TernarySearchTrie
+module.exports=TernarySearchTrie;
