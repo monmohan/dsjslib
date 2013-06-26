@@ -80,3 +80,5 @@ rTrie.delete(key) - Deletes a key
 rTrie.keyset() - Return a list of all keys in sorted order
 ```
                          
+TernarySearchTrie
+------------------------------
