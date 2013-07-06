@@ -190,31 +190,35 @@ BTree.prototype.delete = function (key, node) {
 
     function descendTreeForDeletion(key, node, i) {
         var child = node.cPtrs[i];
-        var sibling = node.cPtrs[i + 1], minKeys = that.degree - 1, sibIsRt = true;
-        if (i == node.n) {
-            sibling = node.cPtrs[i - 1];
-            sibIsRt = false;
-        }
+        var rightSib = node.cPtrs[i + 1], leftSib = node.cPtrs[i - 1], minKeys = that.degree - 1;
+
         if (child.n === minKeys) {
-            if (sibling.n == minKeys) {
-                //deletion is descending such that both child nodes have degree-1 nodes
-                //merge with parent
-                merge(sibIsRt ? child : sibling, node, i, sibIsRt ? sibling : child);
-                var merged = sibIsRt ? child : sibling;
+            if ((!rightSib || rightSib.n === minKeys) && (!leftSib || leftSib.n === minKeys)) {
+                //deletion is descending such that all sibling nodes have degree-1 nodes
+                //merge the left sibling, parent key and right sibling and use the merged node for deletion
+                merge((rightSib ? child : leftSib), node, (rightSib ? i : i - 1), (rightSib ? rightSib : child));
+                var merged = rightSib ? child : rightSib;
                 if (node == that.root && node.keys.length == 0) {
                     that.root = merged
                 }
                 return that.delete(key, merged);
-            } else/*sibling has more keys*/{
-                child.keys.splice(sibIsRt ? child.n : 0, 0, node.keys[i]);
+            } else/*
+             One of the right/left sibling has more keys. Move the parent key to the child with degree-1 keys
+             Pick a key (last from left sibling, first from right sibling) and then move that to the evacuated
+             parent. recurse for deletion starting from the parent node
+             */
+            {
+                var sib=(rightSib && rightSib.n>minKeys)?rightSib:leftSib, pIdx=sib===rightSib ? i:i- 1,
+                    sibIdx=sib===rightSib?0:sib.n-1;
+                child.keys.splice(sib===rightSib ? child.n : 0, 0, node.keys[pIdx]);
                 child.n++;
-                if (!sibling.isLeaf) {
-                    child.cPtrs.splice(sibIsRt ? child.n : 0, 0, sibIsRt ? sibling.cPtrs[0] : sibling.cPtrs[sibling.n]);
-                    sibling.cPtrs.splice(sibIsRt ? 0 : sibling.n, 1);
+                if (!sib.isLeaf) {
+                    child.cPtrs.splice(sib===rightSib ? child.n : 0, 0, sib===rightSib? sib.cPtrs[0] : sib.cPtrs[sib.n]);
+                    sib.cPtrs.splice(sib==rightSib ? 0 : sib.n, 1);
                 }
-                node.keys[i] = sibIsRt ? sibling.keys[0] : sibling.keys[sibling.n - 1];
-                sibling.keys.splice(sibIsRt ? 0 : sibling.n, 1);
-                sibling.n--;
+                node.keys[pIdx] = sib.keys[sibIdx];
+                sib.keys.splice(sibIdx, 1);
+                sib.n--;
                 return that.delete(key, child);
             }
         } else {
