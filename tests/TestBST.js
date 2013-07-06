@@ -4,9 +4,10 @@ var BinarySearchTree = require("../src/BinarySearchTree.js"),assert=require('ass
 
     function testInsert() {
         console.log("INSERT AND TRAVERSE")
-        bt.insert(16).insert(7).insert(25).insert(26).insert(39)
-            .insert(13).insert(15).insert(29).insert(35).insert(12).insert(55).insert(11);
-        assert.strictEqual(bt.search(29).item,29);
+        bt.insert(16,"sVal").insert(7,"sVal").insert(25,"sVal").insert(26,"sVal").insert(39,"sVal")
+            .insert(13,"sVal").insert(15,"sVal").insert(29,"zzz")
+            .insert(35,"sVal").insert(12,"sVal").insert(55,"sVal").insert(11,"sVal");
+        assert.strictEqual(bt.search(29).value,"zzz");
         assert.strictEqual(bt.search(7).item,7);
         assert.strictEqual(bt.search(16).item,16);
         assert.strictEqual(bt.search(12).item,12);

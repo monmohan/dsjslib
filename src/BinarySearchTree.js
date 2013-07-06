@@ -13,12 +13,13 @@ function BinarySearchTree() {
      * @param rightChild
      * @return {Object}
      */
-    this.mkNode = function (item, parent, leftChild, rightChild) {
+    this.mkNode = function (item, val,parent, leftChild, rightChild) {
         return {item:item,
             parent:parent || null,
             leftChild:leftChild || null,
             rightChild:rightChild || null,
             height:0,
+            value:val,
             isLeftChild:function () {
                 return this.parent && this.parent.leftChild === this
             },
@@ -40,9 +41,9 @@ function BinarySearchTree() {
 }
 
 
-BinarySearchTree.prototype.insert = function (obj) {
+BinarySearchTree.prototype.insert = function (key,value) {
     if (!this.root) {
-        this.root = this.mkNode(obj);
+        this.root = this.mkNode(key);
         return this
     }
 
@@ -51,7 +52,7 @@ BinarySearchTree.prototype.insert = function (obj) {
     var isLeft = false;
     while (cNode) {
         pNode = cNode;
-        if (obj < cNode.item) {
+        if (key < cNode.item) {
             cNode = cNode.leftChild;
             isLeft = true;
         } else {
@@ -60,13 +61,13 @@ BinarySearchTree.prototype.insert = function (obj) {
         }
     }
     //cNode should be null now
-    var iNode = this.mkNode(obj, pNode);
+    var iNode = this.mkNode(key, value,pNode);
     pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
     this.reCalcHeight(iNode);
     var tree = this;
     return {
-        insert:function (obj) {
-            return tree.insert(obj);
+        insert:function (key,value) {
+            return tree.insert(key,value);
         },
         node:iNode
 

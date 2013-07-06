@@ -180,7 +180,7 @@ BTree.prototype.delete = function (key, node) {
             merge(child1, node, i, child2);
             return that.delete(key, node);
         } else {
-            var sucPred = child.keys[child.n - 1];
+            var sucPred = child===child1?child.keys[child.n - 1]:child.keys[0];
             //recursively delete and replace
             that.delete(sucPred, child);
             node.keys[i] = sucPred;
