@@ -180,7 +180,7 @@ function BinarySearchTree() {
 
 BinarySearchTree.prototype.insert = function (key, value) {
     if (!this.root) {
-        this.root = this.mkNode(key);
+        this.root = this.mkNode(key,value);
         return this
     }
 

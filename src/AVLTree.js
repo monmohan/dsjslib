@@ -49,9 +49,9 @@ AVLTree.prototype.rebalance = function (vNode, iNode) {
 
 }
 
-AVLTree.prototype.insert = function (item) {
-    var ins = BST.prototype.insert.call(this, item);
-    console.log("inserting item " + item);
+AVLTree.prototype.insert = function (key,value) {
+    var ins = BST.prototype.insert.call(this,key,value);
+    console.log("inserting key " + key);
     try {
         this.checkAVLProperty(ins.node);
     } catch (vNode) {

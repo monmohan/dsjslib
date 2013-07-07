@@ -10,6 +10,7 @@ var AVL = require("../src/AVLTree.js"),assert=require('assert');
         assert.doesNotThrow(function(){bt.checkInvariants(bt.root);},
             "AVL Tree property violated")
         assert.strictEqual(bt.search(15).key,15);
+        assert.strictEqual(bt.search(16).value,"some val");
         assert.strictEqual(bt.successor(15).key,16);
         assert.strictEqual(bt.predecessor(35).key,29);
         assert.strictEqual(bt.min().key,7);
