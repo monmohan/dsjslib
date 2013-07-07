@@ -13,7 +13,7 @@ function BinarySearchTree() {
      * @param rightChild
      * @return {Object}
      */
-    this.mkNode = function (item, val,parent, leftChild, rightChild) {
+    this.mkNode = function (item, val, parent, leftChild, rightChild) {
         return {item:item,
             parent:parent || null,
             leftChild:leftChild || null,
@@ -32,16 +32,153 @@ function BinarySearchTree() {
              */
             inspect:function () {
                 return util.inspect({item:this.item, h:this.height,
-                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.item : null)},{depth:null,colors:true});
+                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.item : null)}, {depth:null, colors:true});
             }
 
         }
     }
+    /**
+     * Private method tofind successor node
+     * @param item
+     * @param node
+     * @return {*}
+     */
+    var successorNode = function (node) {
+        if (node && node === node.parent.leftChild) {
+            //go to the right child if right child is not null
+            //descend and get the min of left tree
+            var rc = node.rightChild;
+            if (rc) {
+                return minNode(rc);
+            } else {
+                return node.parent;
+            }
+        }
+
+        if (node && node === node.parent.rightChild) {
+            rc = node.rightChild;
+            if (rc) {
+                return minNode(rc);
+            } else {
+                var p = node.parent;
+                var sp = p ? p.parent : null;
+                while (sp && sp.leftChild !== p) {
+                    node = p;
+                    p = node.parent;
+                    sp = p ? p.parent : null;
+
+                }
+                return sp;
+            }
+        }
+    }
+    /**
+     * Return the successor key value pair
+     * @param item
+     * @return {*}
+     */
+    this.successor = function (item) {
+        var node = this.search(item, this.root);
+        var sc = successorNode(node);
+        return sc && {key:sc.item, value:sc.value}
+
+    }
+
+    /**
+     * Private method to return min node in tree
+     * @param m
+     * @return {*}
+     */
+    var minNode = function (m) {
+        while (m.leftChild) {
+            m = m.leftChild;
+        }
+        return m;
+    }
+
+    /**
+     * Public method - find min key
+     * @return {*}
+     */
+    this.min = function () {
+        var mNode = minNode(this.root);
+        return mNode && {key:mNode.item, value:mNode.value};
+
+    }
+    /**
+     * Private return max node in tree
+     * @param max
+     * @return {*}
+     */
+    var maxNode = function (max) {
+        while (max.rightChild) {
+            max = max.rightChild;
+        }
+        return max;
+    }
+    /**
+     * Public return max key
+     * @return {*}
+     */
+    this.max = function () {
+        var mNode = maxNode(this.root);
+        return mNode && {key:mNode.item, value:mNode.value};
+
+    }
+
+    /**
+     * Private method to find predecessor node
+     * @param node
+     * @return {*}
+     */
+    var predecessorNode = function (node) {
+        //if the node is the right child
+        if (node && node === node.parent.rightChild) {
+            //go to the left child if left child is not null
+            //descend and get the max of left tree
+            var lc = node.leftChild;
+            if (lc) {
+                return maxNode(lc);
+            } else {
+                return node.parent;
+            }
+        }
+        //if the node is the left child
+        if (node && node === node.parent.leftChild) {
+            lc = node.leftChild;
+            if (lc) {
+                return maxNode(rc);
+            } else {
+                var p = node.parent;
+                var sp = p ? p.parent : null;
+                while (sp && sp.rightChild !== p) {
+                    node = p;
+                    p = node.parent;
+                    sp = p ? p.parent : null;
+
+                }
+                return sp;
+            }
+        }
+
+
+    }
+    /**
+     * Public method to find predecessor key
+     * @param key
+     * @return {*}
+     */
+    this.predecessor = function (key) {
+        var node = this.search(key, this.root);
+        var pNode = predecessorNode(node)
+        return pNode && {key:pNode.item, value:pNode.value}
+    }
+
 
 }
 
 
-BinarySearchTree.prototype.insert = function (key,value) {
+BinarySearchTree.prototype.insert = function (key, value) {
     if (!this.root) {
         this.root = this.mkNode(key);
         return this
@@ -61,13 +198,13 @@ BinarySearchTree.prototype.insert = function (key,value) {
         }
     }
     //cNode should be null now
-    var iNode = this.mkNode(key, value,pNode);
+    var iNode = this.mkNode(key, value, pNode);
     pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
     this.reCalcHeight(iNode);
     var tree = this;
     return {
-        insert:function (key,value) {
-            return tree.insert(key,value);
+        insert:function (key, value) {
+            return tree.insert(key, value);
         },
         node:iNode
 
@@ -111,106 +248,21 @@ BinarySearchTree.prototype.traverse = function (node, fn) {
  * @param key
  */
 BinarySearchTree.prototype.search = function (key, node) {
-    if (typeof node === "undefined")node = this.root;
-    if (!node) return null;
-
-    if (key < node.item) return this.search(key, node.leftChild);
-    if (key > node.item) return this.search(key, node.rightChild);
-    if (key == node.item)return node;
+    var retKV = (typeof node === "undefined");
+    if (retKV)node = this.root;
+    return recFind(key, node);
+    function recFind(key, node) {
+        if (!node) return null;
+        if (key < node.item) return recFind(key, node.leftChild);
+        if (key > node.item) return recFind(key, node.rightChild);
+        if (key == node.item)return retKV ? {key:node.item, value:node.value} : node;
+    }
 
 }
 
-BinarySearchTree.prototype.min = function (node) {
-    node = (typeof node === 'undefined') ? this.root : node;
-    var min = node;
-    while (min.leftChild) {
-        min = min.leftChild;
-    }
-    return min;
-
-}
-
-BinarySearchTree.prototype.max = function (node) {
-    node = (typeof node === 'undefined') ? this.root : node;
-    var max = node;
-    while (max.rightChild) {
-        max = max.rightChild;
-    }
-    return max;
-
-}
-
-
-BinarySearchTree.prototype.successor = function (item) {
-    var node = this.search(item);
-
-    if (node && node === node.parent.leftChild) {
-        //go to the right child if right child is not null
-        //descend and get the min of left tree
-        var rc = node.rightChild;
-        if (rc) {
-            return this.min(rc);
-        } else {
-            return node.parent;
-        }
-    }
-
-    if (node && node === node.parent.rightChild) {
-        rc = node.rightChild;
-        if (rc) {
-            return this.min(rc);
-        } else {
-            var p = node.parent;
-            var sp = p ? p.parent : null;
-            while (sp && sp.leftChild !== p) {
-                node = p;
-                p = node.parent;
-                sp = p ? p.parent : null;
-
-            }
-            return sp;
-        }
-    }
-
-
-}
-
-BinarySearchTree.prototype.predecessor = function (item) {
-    var node = this.search(item);
-    //if the node is the right child
-    if (node && node === node.parent.rightChild) {
-        //go to the left child if left child is not null
-        //descend and get the max of left tree
-        var lc = node.leftChild;
-        if (lc) {
-            return this.max(lc);
-        } else {
-            return node.parent;
-        }
-    }
-    //if the node is the left child
-    if (node && node === node.parent.leftChild) {
-        lc = node.leftChild;
-        if (lc) {
-            return this.max(rc);
-        } else {
-            var p = node.parent;
-            var sp = p ? p.parent : null;
-            while (sp && sp.rightChild !== p) {
-                node = p;
-                p = node.parent;
-                sp = p ? p.parent : null;
-
-            }
-            return sp;
-        }
-    }
-
-
-}
 
 BinarySearchTree.prototype.delete = function (item) {
-    var node = this.search(item);
+    var node = this.search(item, this.root);
     if (node) {
         var num = node.leftChild ? (node.rightChild ? 2 : 1) : (node.rightChild ? 1 : 0);
         switch (num) {
@@ -240,8 +292,8 @@ BinarySearchTree.prototype.delete = function (item) {
                 break;
             case 2:
                 var nextL = this.successor(node.item);
-                var temp = nextL.item;
-                this.delete(nextL.item);
+                var temp = nextL.key;
+                this.delete(nextL.key);
                 node.item = temp;
         }
 
@@ -266,8 +318,8 @@ BinarySearchTree.prototype.checkInvariants = function (node) {
     this.checkInvariants(rc);
 }
 
-BinarySearchTree.prototype.inspect=function(){
-    return util.inspect(this.root,{depth:null,colors:true})
+BinarySearchTree.prototype.inspect = function () {
+    return util.inspect(this.root, {depth:null, colors:true})
 }
 /**
  * Export the Type so that new instances can be created
