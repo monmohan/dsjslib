@@ -1,19 +1,19 @@
 var btree = require("../src/BTree.js"), util = require("util");
 (function () {
-    var bt = new btree(2);
 
     function testInsert() {
-        bt = new btree(3);
+        var bt = new btree(3);
         bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
         bt.insert(11)
         bt.insert(6);
         bt.insert(50).insert(65).insert(15).insert(22).insert(24).insert(26);
         console.log(bt.inspect());
+        bt.checkInvariants(bt.root);
     }
 
     function testDelete() {
-        bt = new btree(3);
+        var bt = new btree(3);
         bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
         bt.insert(11)
@@ -23,7 +23,7 @@ var btree = require("../src/BTree.js"), util = require("util");
         bt.delete(20);
         bt.delete(26);
         bt.delete(6);
-        console.log(bt.inspect());
+        bt.checkInvariants(bt.root);
     }
 
 
@@ -41,7 +41,7 @@ var btree = require("../src/BTree.js"), util = require("util");
         console.log(b.inspect());
         b.delete(10)
         console.log(b.inspect());
-
+        b.checkInvariants(b.root)
     }
 
     function testDeleteInternalNode(){
@@ -64,6 +64,8 @@ var btree = require("../src/BTree.js"), util = require("util");
         console.log(b.inspect());
         b.delete(17)
         console.log(b.inspect());
+        b.checkInvariants(b.root);
+        console.log("BTree Invariant check passed")
     }
 
     function testSearch(){
@@ -80,11 +82,10 @@ var btree = require("../src/BTree.js"), util = require("util");
 
     (function runTests() {
         testInsert()
+        testMultiLevelTree()
         testDelete()
-        testDelete2()
         testDeleteNonInternalNode()
         testDeleteInternalNode()
-        testMultiLevelTree()
         testSearch()
     })();
 

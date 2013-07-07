@@ -247,5 +247,38 @@ BTree.prototype.delete = function (key, node) {
 
 }
 
+BTree.prototype.checkInvariants=function(node){
+    var that=this,minKeysAllowed=(this.degree-1);
+    var isRoot=node === this.root;
+    console.log("isRoot="+isRoot+" Key Length="+node.n);
+    if(!isRoot && !node.n>=minKeysAllowed){
+        throw new Error("Node "+node + "has less than min keys allowed");
+    }
+    var children=[]
+    node.cPtrs.forEach(function(ptr,idx,cPtrs){
+         if(idx==node.keys.length){
+             if(!ptr.keys.every(function(key){
+                 console.log("child key="+key+
+                     " GT parent key="+node.keys[idx-1]
+                 );
+                return key>node.keys[idx-1];
+             }))throw new Error("child"+ ptr+" keys not greater than parent node key" +node)
+         }else{
+             if(!ptr.keys.every(function(key){
+                 console.log("child key="+key+
+                     " LT parent key="+node.keys[idx]
+                 );
+                 return key<node.keys[idx];
+             }))throw new Error("child"+ ptr+" keys not less than parent node key" +node)
+         }
+         children.push(ptr);
+
+    })
+    children.forEach(function(child){
+       that.checkInvariants(child);
+    })
+
+}
+
 module.exports = BTree;
 
