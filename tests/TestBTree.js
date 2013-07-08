@@ -14,9 +14,9 @@ var btree = require("../src/BTree.js"), util = require("util"),assert=require('a
 
     function testDelete() {
         var bt = new btree(3);
-        bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
+        bt.insert(10).insert(30,"avalue").insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
-        bt.insert(11)
+        bt.insert(11,"eleven")
         bt.insert(6);
         bt.insert(50).insert(65).insert(15)
         bt.insert(22).insert(24).insert(26).insert(27).insert(28).insert(29);
@@ -27,8 +27,8 @@ var btree = require("../src/BTree.js"), util = require("util"),assert=require('a
         assert.strictEqual(bt.search(20),undefined);
         assert.strictEqual(bt.search(26),undefined);
         assert.strictEqual(bt.search(6),undefined);
-        assert.notStrictEqual(bt.search(11),null)
-        assert.notStrictEqual(bt.search(30),null)
+        assert.notStrictEqual(bt.search(11),"eleven")
+        assert.notStrictEqual(bt.search(30),"avalue")
     }
 
 
@@ -81,7 +81,7 @@ var btree = require("../src/BTree.js"), util = require("util"),assert=require('a
     function testSearch(){
         console.log("*test search*")
         var bt = new btree(2);
-        bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
+        bt.insert(10).insert(30,{some:"some",obj:"obj"}).insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
         bt.insert(11)
         bt.insert(6);
@@ -89,6 +89,8 @@ var btree = require("../src/BTree.js"), util = require("util"),assert=require('a
         console.log(bt.inspect());
         var n=bt.search(30);
         console.log(n);
+        assert.deepEqual(n.key,30)
+        assert.deepEqual(n.value,{some:"some",obj:"obj"})
     }
 
     (function runTests() {

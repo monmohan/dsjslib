@@ -5,7 +5,7 @@ util = require("util")
  * maximum of 2*N -1 keys
  * and
  * minimum of N-1 keys per Node
- * Root is allowed to have f
+ * Root is allowed to have less than minimum no. of keys
  * @param degree
  * @constructor
  */
@@ -27,7 +27,7 @@ function BTree(degree) {
             /* First index of keys where fn returns true*/
             indexOf:function (callBkFn) {
                 for (var i = 0; i < this.n; i++) {
-                    if (callBkFn.call(this, this.keys[i]))break;
+                    if (callBkFn.call(this, this.keys[i].key))break;
                 }
                 return i;
             }
@@ -40,7 +40,8 @@ function BTree(degree) {
 }
 
 BTree.prototype.search = function (key, node) {
-    return recSearch(key, node || this.root);
+    var res= recSearch(key, node || this.root);
+    return res && res.node.keys[res.index];
     function recSearch(key, node) {
         if (!node)return;
         var found;
@@ -93,7 +94,7 @@ BTree.prototype.inspect = function (node) {
 }
 
 
-BTree.prototype.insert = function (key, node) {
+BTree.prototype.insert = function (key, value, node) {
     if (!node)node = this.root;
     var keys, i, cPtr;
     //Handle Root is full
@@ -116,7 +117,7 @@ BTree.prototype.insert = function (key, node) {
         i = node.indexOf(function (k) {
             return key < k;
         })
-        node.keys.splice(i, 0, key);
+        node.keys.splice(i, 0, {"key":key,"value":value});
         node.n++;
 
     } else {
@@ -127,9 +128,9 @@ BTree.prototype.insert = function (key, node) {
         cPtr = node.cPtrs[i];
         if (cPtr.isFull()) {
             node = this.splitChild(node, cPtr, i);
-            this.insert(key, node);
+            this.insert(key,value, node);
         } else {
-            this.insert(key, cPtr);
+            this.insert(key,value, cPtr);
         }
 
     }
@@ -172,7 +173,7 @@ BTree.prototype.delete = function (key, node) {
         } else {
             var sucPred = child === child1 ? child.keys[child.n - 1] : child.keys[0];
             //recursively delete and replace
-            that.delete(sucPred, child);
+            that.delete(sucPred.key, child);
             node.keys[i] = sucPred;
             return;
         }
@@ -247,18 +248,18 @@ BTree.prototype.checkInvariants = function (node) {
     var children = []
     node.cPtrs.forEach(function (ptr, idx, cPtrs) {
         if (idx == node.keys.length) {
-            if (!ptr.keys.every(function (key) {
-                console.log("child key=" + key +
-                    " GT parent key=" + node.keys[idx - 1]
+            if (!ptr.keys.every(function (kv) {
+                console.log("child key=" + kv.key +
+                    " GT parent key=" + node.keys[idx - 1].key
                 );
-                return key > node.keys[idx - 1];
+                return kv.key > node.keys[idx - 1].key;
             }))throw new Error("child" + ptr + " keys not greater than parent node key" + node)
         } else {
-            if (!ptr.keys.every(function (key) {
-                console.log("child key=" + key +
+            if (!ptr.keys.every(function (kv) {
+                console.log("child key=" + kv +
                     " LT parent key=" + node.keys[idx]
                 );
-                return key < node.keys[idx];
+                return kv["key"] < node.keys[idx]["key"];
             }))throw new Error("child" + ptr + " keys not less than parent node key" + node)
         }
         children.push(ptr);
