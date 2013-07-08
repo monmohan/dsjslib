@@ -23,6 +23,13 @@ function BTree(degree) {
             n:n || 0/*number of keys*/,
             isFull:function () {
                 return this.n === 2 * degree - 1
+            },
+            /* First index of keys where fn returns true*/
+            indexOf:function (callBkFn) {
+                for (var i = 0; i < this.n; i++) {
+                    if (callBkFn.call(this, this.keys[i]))break;
+                }
+                return i;
             }
         }
 
@@ -36,20 +43,14 @@ BTree.prototype.search = function (key, node) {
     return recSearch(key, node || this.root);
     function recSearch(key, node) {
         if (!node)return;
-        var next, found;
-        for (var i = 0; i < node.n; i++) {
-            if (key === node.keys[i]) {
-                found = true;
-                break;
-
-            } else if (!node.isLeaf && key < node.keys[i]) {
-                next = node.cPtrs[i];
-                break;
-            }
-        }
-        if (found) return {'node':node, 'index':i};
+        var found;
+        var index = node.indexOf(function (k) {
+            found = key == k;
+            return found || (!this.isLeaf && key < k)
+        })
+        if (found) return {'node':node, 'index':index};
         if (node.isLeaf && !found) return;
-        return recSearch(key, node.cPtrs[i]);
+        return recSearch(key, node.cPtrs[index]);
     }
 
 }
@@ -112,21 +113,17 @@ BTree.prototype.insert = function (key, node) {
      * have been split by now
      */
     if (node.isLeaf) {
-        for (i = 0; i < node.n; i++) {
-            if (key < node.keys[i]) {
-                break;
-            }
-        }
+        i = node.indexOf(function (k) {
+            return key < k;
+        })
         node.keys.splice(i, 0, key);
         node.n++;
 
     } else {
         //find the child node pointer
-        for (i = 0; i < node.n; i++) {
-            if (key < node.keys[i]) {
-                break;
-            }
-        }
+        i = node.indexOf(function (k) {
+            return key < k;
+        })
         cPtr = node.cPtrs[i];
         if (cPtr.isFull()) {
             node = this.splitChild(node, cPtr, i);
@@ -146,15 +143,10 @@ BTree.prototype.delete = function (key, node) {
         return deleteFromLeafNode(key, node);
     }
     var keyFound = false;
-    for (var i = 0; i < node.n; i++) {
-        if (key === node.keys[i]) {
-            keyFound = true;
-            break;
-        }
-        if (key < node.keys[i]) {
-            break;
-        }
-    }
+    var i = node.indexOf(function (k) {
+        keyFound = key == k;
+        return keyFound || (key < k);
+    })
 
     if (keyFound) {
         deleteInternalNode(key, node, i);
@@ -162,11 +154,9 @@ BTree.prototype.delete = function (key, node) {
         descendTreeForDeletion(key, node, i);
     }
     function deleteFromLeafNode(key, node) {
-        for (var i = 0; i < node.n; i++) {
-            if (key === node.keys[i]) {
-                break;
-            }
-        }
+        var i=node.indexOf(function(k){
+            return key==k;
+        })
         node.keys.splice(i, 1);
         node.n--;
 
@@ -180,7 +170,7 @@ BTree.prototype.delete = function (key, node) {
             merge(child1, node, i, child2);
             return that.delete(key, node);
         } else {
-            var sucPred = child===child1?child.keys[child.n - 1]:child.keys[0];
+            var sucPred = child === child1 ? child.keys[child.n - 1] : child.keys[0];
             //recursively delete and replace
             that.delete(sucPred, child);
             node.keys[i] = sucPred;
@@ -208,13 +198,13 @@ BTree.prototype.delete = function (key, node) {
              parent. recurse for deletion starting from the parent node
              */
             {
-                var sib=(rightSib && rightSib.n>minKeys)?rightSib:leftSib, pIdx=sib===rightSib ? i:i- 1,
-                    sibIdx=sib===rightSib?0:sib.n-1;
-                child.keys.splice(sib===rightSib ? child.n : 0, 0, node.keys[pIdx]);
+                var sib = (rightSib && rightSib.n > minKeys) ? rightSib : leftSib, pIdx = sib === rightSib ? i : i - 1,
+                    sibIdx = sib === rightSib ? 0 : sib.n - 1;
+                child.keys.splice(sib === rightSib ? child.n : 0, 0, node.keys[pIdx]);
                 child.n++;
                 if (!sib.isLeaf) {
-                    child.cPtrs.splice(sib===rightSib ? child.n : 0, 0, sib===rightSib? sib.cPtrs[0] : sib.cPtrs[sib.n]);
-                    sib.cPtrs.splice(sib==rightSib ? 0 : sib.n, 1);
+                    child.cPtrs.splice(sib === rightSib ? child.n : 0, 0, sib === rightSib ? sib.cPtrs[0] : sib.cPtrs[sib.n]);
+                    sib.cPtrs.splice(sib == rightSib ? 0 : sib.n, 1);
                 }
                 node.keys[pIdx] = sib.keys[sibIdx];
                 sib.keys.splice(sibIdx, 1);
@@ -247,35 +237,35 @@ BTree.prototype.delete = function (key, node) {
 
 }
 
-BTree.prototype.checkInvariants=function(node){
-    var that=this,minKeysAllowed=(this.degree-1);
-    var isRoot=node === this.root;
-    console.log("isRoot="+isRoot+" Key Length="+node.n);
-    if(!isRoot && !node.n>=minKeysAllowed){
-        throw new Error("Node "+node + "has less than min keys allowed");
+BTree.prototype.checkInvariants = function (node) {
+    var that = this, minKeysAllowed = (this.degree - 1);
+    var isRoot = node === this.root;
+    console.log("isRoot=" + isRoot + " Key Length=" + node.n);
+    if (!isRoot && !node.n >= minKeysAllowed) {
+        throw new Error("Node " + node + "has less than min keys allowed");
     }
-    var children=[]
-    node.cPtrs.forEach(function(ptr,idx,cPtrs){
-         if(idx==node.keys.length){
-             if(!ptr.keys.every(function(key){
-                 console.log("child key="+key+
-                     " GT parent key="+node.keys[idx-1]
-                 );
-                return key>node.keys[idx-1];
-             }))throw new Error("child"+ ptr+" keys not greater than parent node key" +node)
-         }else{
-             if(!ptr.keys.every(function(key){
-                 console.log("child key="+key+
-                     " LT parent key="+node.keys[idx]
-                 );
-                 return key<node.keys[idx];
-             }))throw new Error("child"+ ptr+" keys not less than parent node key" +node)
-         }
-         children.push(ptr);
+    var children = []
+    node.cPtrs.forEach(function (ptr, idx, cPtrs) {
+        if (idx == node.keys.length) {
+            if (!ptr.keys.every(function (key) {
+                console.log("child key=" + key +
+                    " GT parent key=" + node.keys[idx - 1]
+                );
+                return key > node.keys[idx - 1];
+            }))throw new Error("child" + ptr + " keys not greater than parent node key" + node)
+        } else {
+            if (!ptr.keys.every(function (key) {
+                console.log("child key=" + key +
+                    " LT parent key=" + node.keys[idx]
+                );
+                return key < node.keys[idx];
+            }))throw new Error("child" + ptr + " keys not less than parent node key" + node)
+        }
+        children.push(ptr);
 
     })
-    children.forEach(function(child){
-       that.checkInvariants(child);
+    children.forEach(function (child) {
+        that.checkInvariants(child);
     })
 
 }

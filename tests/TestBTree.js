@@ -1,4 +1,4 @@
-var btree = require("../src/BTree.js"), util = require("util");
+var btree = require("../src/BTree.js"), util = require("util"),assert=require('assert');;
 (function () {
 
     function testInsert() {
@@ -24,6 +24,11 @@ var btree = require("../src/BTree.js"), util = require("util");
         bt.delete(26);
         bt.delete(6);
         bt.checkInvariants(bt.root);
+        assert.strictEqual(bt.search(20),undefined);
+        assert.strictEqual(bt.search(26),undefined);
+        assert.strictEqual(bt.search(6),undefined);
+        assert.notStrictEqual(bt.search(11),null)
+        assert.notStrictEqual(bt.search(30),null)
     }
 
 
@@ -42,6 +47,11 @@ var btree = require("../src/BTree.js"), util = require("util");
         b.delete(10)
         console.log(b.inspect());
         b.checkInvariants(b.root)
+        assert.strictEqual(b.search(10),undefined);
+        assert.strictEqual(b.search(22),undefined);
+        assert.strictEqual(b.search(94),undefined);
+        assert.strictEqual(b.search(98),undefined);
+        assert.notStrictEqual(b.search(15),null)
     }
 
     function testDeleteInternalNode(){
@@ -70,12 +80,13 @@ var btree = require("../src/BTree.js"), util = require("util");
 
     function testSearch(){
         console.log("*test search*")
-        bt = new btree(4);
+        var bt = new btree(2);
         bt.insert(10).insert(30).insert(20).insert(40).insert(55);//cause root split
         bt.insert(5)
         bt.insert(11)
         bt.insert(6);
         bt.insert(50).insert(65).insert(15)
+        console.log(bt.inspect());
         var n=bt.search(30);
         console.log(n);
     }
