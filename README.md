@@ -1,4 +1,4 @@
-This is a collection of standard data structures, implemented in JavaScript. Its written and tested using 
+This is a collection of search data structures, implemented in JavaScript. Its written and tested using 
 Node.js but the dependencies are mostly peripheral (e.g util for logging and assert module for testing). 
 So the code can be used in Browser as well with minor changes.
 
@@ -10,8 +10,8 @@ Binary Search Tree
 //create a binary tree
 var bst=new BinarySearchTree()
 
-//Insert a key    //Find a key   //Delete a key
-bst.insert(key),  bst.find(key)  bst.delete(key)
+//Insert a key value    //Find by key   //Delete a key
+bst.insert(key,value),  bst.find(key)  bst.delete(key)
 
 //Predecessor and Successor
 bst.predecessor(key)  bst.successor(key) 
@@ -25,14 +25,13 @@ bst.min([startAtNode]) bst.max([startAtNode])
 //Run this to validate the tree. Useful for testing
 bst.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise)
 ```
-Known Limitations: Currently ownly supports Numeric or String keys (uses < > for comparison). I plan to provide
-a Java style comparator interface for object keys
+Known Limitations: Currently ownly supports Numeric or String keys (uses < > for comparison).
 
 AVL Tree
 --------------------------
 Extends BinarySearchTree. 
 All functionality of BinarySearchTree is available. 
-In addition Tree is height balanced by rotation whenever an insert or delete is done
+In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
 Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
 
@@ -40,8 +39,8 @@ Caller doesn't need to invoke these functions, they are internally usedd when an
 //Create and AVLTree (extends a BinarySearchTree)
 var avl=new AVLTree() 
 
-//Insert a key. It also rebalances the tree
-avl.insert(key)
+//Insert a key value. It also rebalances the tree
+avl.insert(key,value)
 
 
 // Validates the tree starting at given node (root otherwise). 
@@ -55,26 +54,29 @@ console.log(avl.root)
 ```
 Known Limitations: Delete implementation TBD 
 
+
+
 BTree
 ----------------------
 [Ref - Introduction to Algorithms By Coremen et al.]
 ```
-Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
+Creates a BTree of degree K .
+Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
 var btree=new BTree(K) 
 
 //Inserts a key and splits nodes as required
-btree.insert(key) 
+btree.insert(key,value) 
 
-//Search for a key
+//Search by key
 btree.find(key) 
 
 //Deletes a key and re-joins nodes and/or reduces the height of tree as required
 btree.delete(key) 
 ```
 
-Known Limitations: Currently ownly supports Numeric or String keys (uses < > for comparison). I plan to provide
-a Java style comparator interface for object keys
+Known Limitations: Currently ownly supports Numeric or String keys (uses < > for comparison). 
                          
+
 RWayTrie
 ----------------------
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
@@ -102,3 +104,10 @@ TernarySearchTrie
 Data structure supporting String keys, for fast retrival of values associated with string keys BUT have much less
 space requirement than RWayTrie. Functions are same as RWayTrie
 
+```
+var tst=new TernarySearchTrie() - Creates a TernarySearchTrie
+tst.insert(key,val) - insert a key value pair into the Trie
+tst.search(key) -- Search for key and return associated value or null
+
+```
+Known Limitations: Delete and keyset() TBD
