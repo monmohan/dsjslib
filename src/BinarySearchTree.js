@@ -78,7 +78,7 @@ function BinarySearchTree() {
      * @return {*}
      */
     this.successor = function (item) {
-        var node = this.search(item, this.root);
+        var node = this.get(item, this.root);
         var sc = successorNode(node);
         return sc && {key:sc.item, value:sc.value}
 
@@ -169,7 +169,7 @@ function BinarySearchTree() {
      * @return {*}
      */
     this.predecessor = function (key) {
-        var node = this.search(key, this.root);
+        var node = this.get(key, this.root);
         var pNode = predecessorNode(node)
         return pNode && {key:pNode.item, value:pNode.value}
     }
@@ -178,7 +178,7 @@ function BinarySearchTree() {
 }
 
 
-BinarySearchTree.prototype.insert = function (key, value) {
+BinarySearchTree.prototype.put = function (key, value) {
     if (!this.root) {
         this.root = this.mkNode(key,value);
         return this
@@ -203,8 +203,8 @@ BinarySearchTree.prototype.insert = function (key, value) {
     this.reCalcHeight(iNode);
     var tree = this;
     return {
-        insert:function (key, value) {
-            return tree.insert(key, value);
+        put:function (key, value) {
+            return tree.put(key, value);
         },
         node:iNode
 
@@ -247,7 +247,7 @@ BinarySearchTree.prototype.traverse = function (node, fn) {
  *
  * @param key
  */
-BinarySearchTree.prototype.search = function (key, node) {
+BinarySearchTree.prototype.get = function (key, node) {
     var retKV = (typeof node === "undefined");
     if (retKV)node = this.root;
     return recFind(key, node);
@@ -262,7 +262,7 @@ BinarySearchTree.prototype.search = function (key, node) {
 
 
 BinarySearchTree.prototype.delete = function (item) {
-    var node = this.search(item, this.root);
+    var node = this.get(item, this.root);
     if (node) {
         var num = node.leftChild ? (node.rightChild ? 2 : 1) : (node.rightChild ? 1 : 0);
         switch (num) {

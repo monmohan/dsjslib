@@ -39,7 +39,7 @@ function BTree(degree) {
     this.root = this.mkNode();
 }
 
-BTree.prototype.search = function (key, node) {
+BTree.prototype.get = function (key, node) {
     var res= recSearch(key, node || this.root);
     return res && res.node.keys[res.index];
     function recSearch(key, node) {
@@ -94,7 +94,7 @@ BTree.prototype.inspect = function (node) {
 }
 
 
-BTree.prototype.insert = function (key, value, node) {
+BTree.prototype.put = function (key, value, node) {
     if (!node)node = this.root;
     var keys, i, cPtr;
     //Handle Root is full
@@ -128,9 +128,9 @@ BTree.prototype.insert = function (key, value, node) {
         cPtr = node.cPtrs[i];
         if (cPtr.isFull()) {
             node = this.splitChild(node, cPtr, i);
-            this.insert(key,value, node);
+            this.put(key,value, node);
         } else {
-            this.insert(key,value, cPtr);
+            this.put(key,value, cPtr);
         }
 
     }

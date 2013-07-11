@@ -4,13 +4,13 @@ var BinarySearchTree = require("../src/BinarySearchTree.js"),assert=require('ass
 
     function testInsert() {
         console.log("INSERT AND TRAVERSE")
-        bt.insert(16,"sVal").insert(7,"seven").insert(25,"sVal").insert(26,"sVal").insert(39,"sVal")
-            .insert(13,"sVal").insert(15,"sVal").insert(29,"zzz")
-            .insert(35,"sVal").insert(12,"sVal").insert(55,{complex:"55"}).insert(11,"sVal");
-        assert.strictEqual(bt.search(29).value,"zzz");
-        assert.strictEqual(bt.search(7).key,7);
-        assert.strictEqual(bt.search(16).key,16);
-        assert.strictEqual(bt.search(12).key,12);
+        bt.put(16,"sVal").put(7,"seven").put(25,"sVal").put(26,"sVal").put(39,"sVal")
+            .put(13,"sVal").put(15,"sVal").put(29,"zzz")
+            .put(35,"sVal").put(12,"sVal").put(55,{complex:"55"}).put(11,"sVal");
+        assert.strictEqual(bt.get(29).value,"zzz");
+        assert.strictEqual(bt.get(7).key,7);
+        assert.strictEqual(bt.get(16).key,16);
+        assert.strictEqual(bt.get(12).key,12);
         
         bt.traverse(function (node) {
             console.log(node.item)
@@ -40,9 +40,9 @@ var BinarySearchTree = require("../src/BinarySearchTree.js"),assert=require('ass
     function testDel() {
         console.log("DELETE")
         bt.delete(29);
-        assert.strictEqual(bt.search(29),null);
+        assert.strictEqual(bt.get(29),null);
         bt.delete(13);
-        assert.strictEqual(bt.search(13),null);
+        assert.strictEqual(bt.get(13),null);
 
     }
 

@@ -9,7 +9,7 @@ function TernarySearchTrie() {
     this.root = this.mkNode();
 }
 
-TernarySearchTrie.prototype.search = function (key) {
+TernarySearchTrie.prototype.get = function (key) {
     return recFind(this.root,key,0);
       function recFind(node,key,pos){
           if(!node) return null;
@@ -20,7 +20,7 @@ TernarySearchTrie.prototype.search = function (key) {
       }
 }
 
-TernarySearchTrie.prototype.insert = function (key,val) {
+TernarySearchTrie.prototype.put = function (key,val) {
     var that=this;
     return recIns(this.root,key,val,0);
     function recIns(node,key,val,pos){

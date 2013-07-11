@@ -19,7 +19,7 @@ function RWayTrie(R) {
 
 }
 
-RWayTrie.prototype.insert = function (key, val) {
+RWayTrie.prototype.put = function (key, val) {
     if (!(typeof key === 'string'))throw new Error("Only String keys are supported");
     if (!val)throw new Error("Null values are not supported");
     var that = this;
@@ -37,7 +37,7 @@ RWayTrie.prototype.insert = function (key, val) {
     }
 }
 
-RWayTrie.prototype.search = function (key) {
+RWayTrie.prototype.get = function (key) {
     return findKey(key, this.root, 0);
     function findKey(key, node, pos) {
         var ptr = key.charCodeAt(pos);

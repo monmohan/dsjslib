@@ -2,11 +2,11 @@ var tstrie = require('../src/TernarySearchTrie.js'), assert = require('assert'),
 (function(){
     function testSearchAndInsert(){
         var tst=new tstrie();
-        tst.insert("abc",20).insert("z",30).insert("ab",{x:"someObj"}).insert("averylongkey","somevalue");
-        assert.strictEqual(tst.search("abc"),20)
-        assert.strictEqual(tst.search("z"),30)
-        assert.deepEqual(tst.search("ab"),{x:"someObj"})
-        assert.deepEqual(tst.search("averylongkey"),"somevalue")
+        tst.put("abc",20).put("z",30).put("ab",{x:"someObj"}).put("averylongkey","somevalue");
+        assert.strictEqual(tst.get("abc"),20)
+        assert.strictEqual(tst.get("z"),30)
+        assert.deepEqual(tst.get("ab"),{x:"someObj"})
+        assert.deepEqual(tst.get("averylongkey"),"somevalue")
 
     }
      testSearchAndInsert()
