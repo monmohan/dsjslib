@@ -3,34 +3,11 @@ Node.js but the dependencies are mostly peripheral (e.g util for logging and ass
 So the code can be used in Browser as well with minor changes.
 
 
-Binary Search Tree [Map]
-------------------------
-A map like functionality backed by Binary Search Tree (unbalanced)
-```
-//create a binary tree
-var bst=new BinarySearchTree()
-
-//Insert a key value    //Find by key   //Delete a key
-bst.put(key,value),  bst.get(key)  bst.delete(key)
-
-//Predecessor and Successor
-bst.predecessor(key)  bst.successor(key) 
-
-//Inorder traversal of the tree. callbackfn called for every node visited
-bst.traverse([node],callbackfn) 
-
-//Min and Max - if start node not given, starts at root
-bst.min([startAtNode]) bst.max([startAtNode]) 
-
-//Run this to validate the tree. Useful for testing
-bst.checkInvariants([startAtNode]) - Validates the tree starting at given node (root otherwise)
-```
-Known Limitations: Currently only supports Numeric or String keys (uses < > for comparison).
 
 AVL Tree [Map]
 --------------------------
-Extends BinarySearchTree to provide a Map like functionality backed by a balanced Tree
-All functionality of BinarySearchTree is available. 
+Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like functionality 
+backed by a balanced Tree. All functionality of BinarySearchTree is available. 
 In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
 Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
@@ -45,6 +22,17 @@ avl.put(key,value)
 //Get a value for key
 avl.get(key)
 
+
+//Predecessor and Successor
+avl.predecessor(key)  avl.successor(key) 
+
+
+//Inorder traversal of the tree. callbackfn called for every node visited
+avl.traverse([node],callbackfn)
+
+//Min and Max - if start node not given, starts at root
+avl.min([startAtNode]) avl.max([startAtNode])
+
 // Validates the tree starting at given node (root otherwise). 
 // Validates BST as well as AVL proeprties
 avl.checkInvariants([startAtNode])
@@ -54,7 +42,8 @@ avl.checkInvariants([startAtNode])
 //Print the tree starting at root (requires util module from Node.js)
 console.log(avl.root)
 ```
-Known Limitations: Delete implementation TBD 
+Known Limitations: Currently only supports Numeric or String keys (uses < > for comparison),
+Delete implementation TBD 
 
 
 SkipList [Map]
