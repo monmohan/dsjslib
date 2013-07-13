@@ -12,7 +12,7 @@ util = require("util")
 function BTree(degree) {
     if (!degree) throw new Error("degree must be specified for creating a BTree");
     this.degree = degree;
-    this.mkNode = function (keys, childPtrs, isLeaf, n) {
+    this.mkNode_ = function (keys, childPtrs, isLeaf, n) {
         return {
             keys:keys || []/*Array of item objects in this node,
              max size = 2*degree -1
@@ -36,7 +36,7 @@ function BTree(degree) {
 
     }
 
-    this.root = this.mkNode();
+    this.root = this.mkNode_();
 }
 
 BTree.prototype.get = function (key, node) {
@@ -71,7 +71,7 @@ BTree.prototype.splitChild = function (p, child, splitIdx) {
             sPtr = node.cPtrs.slice(st, end);
             sPtr[end - st] = node.cPtrs[end];
         }
-        return that.mkNode(sKeys, sPtr, node.isLeaf, (end - st))
+        return that.mkNode_(sKeys, sPtr, node.isLeaf, (end - st))
     }
 
 
@@ -101,7 +101,7 @@ BTree.prototype.put = function (key, value, node) {
     if (this.root === node) {
         if (node.isFull()) {
             //create a new empty node
-            var newroot = this.mkNode();
+            var newroot = this.mkNode_();
             newroot.cPtrs[0] = node;
             newroot.isLeaf = false;
             this.root = this.splitChild(newroot, node, 0);

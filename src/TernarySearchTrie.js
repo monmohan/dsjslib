@@ -3,10 +3,10 @@
  * @constructor
  */
 function TernarySearchTrie() {
-    this.mkNode = function (lt, gt, eq, val,ch) {
+    this.mkNode_ = function (lt, gt, eq, val,ch) {
         return {c:ch||null,l:lt || null, g:gt|| null, e:eq|| null, v:val || null};
     }
-    this.root = this.mkNode();
+    this.root = this.mkNode_();
 }
 
 TernarySearchTrie.prototype.get = function (key) {
@@ -32,8 +32,8 @@ TernarySearchTrie.prototype.put = function (key,val) {
             return that;
         }
 
-        var recNode=key.charAt(pos)===node.c?(node.e || (node.e=that.mkNode()))
-            :key.charAt(pos)>node.c?(node.g||(node.g=that.mkNode())):(node.l || (node.l=that.mkNode()));
+        var recNode=key.charAt(pos)===node.c?(node.e || (node.e=that.mkNode_()))
+            :key.charAt(pos)>node.c?(node.g||(node.g=that.mkNode_())):(node.l || (node.l=that.mkNode_()));
         return recIns(recNode,key,val,++pos);
 
     }

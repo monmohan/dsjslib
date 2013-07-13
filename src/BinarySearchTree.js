@@ -13,7 +13,7 @@ function BinarySearchTree() {
      * @param rightChild
      * @return {Object}
      */
-    this.mkNode = function (item, val, parent, leftChild, rightChild) {
+    this.mkNode_ = function (item, val, parent, leftChild, rightChild) {
         return {item:item,
             parent:parent || null,
             leftChild:leftChild || null,
@@ -180,7 +180,7 @@ function BinarySearchTree() {
 
 BinarySearchTree.prototype.put = function (key, value) {
     if (!this.root) {
-        this.root = this.mkNode(key,value);
+        this.root = this.mkNode_(key,value);
         return this
     }
 
@@ -198,7 +198,7 @@ BinarySearchTree.prototype.put = function (key, value) {
         }
     }
     //cNode should be null now
-    var iNode = this.mkNode(key, value, pNode);
+    var iNode = this.mkNode_(key, value, pNode);
     pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
     this.reCalcHeight(iNode);
     var tree = this;

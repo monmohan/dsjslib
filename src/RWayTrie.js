@@ -9,13 +9,13 @@ function RWayTrie(R) {
         throw new Error("Invalid argument, R should be integer")
     }
     this.R = R;
-    this.mkNode = function (value) {
+    this.mkNode_ = function (value) {
         return {
             cPtrs:[],
             val:value || null
         }
     }
-    this.root = this.mkNode();
+    this.root = this.mkNode_();
 
 }
 
@@ -31,7 +31,7 @@ RWayTrie.prototype.put = function (key, val) {
         }
         var ptr = key.charCodeAt(pos);
         if (ptr > that.R) throw new Error("Character out of range " + ptr + " " + key.charAt(pos));
-        if (!node.cPtrs[ptr])node.cPtrs[ptr] = that.mkNode();
+        if (!node.cPtrs[ptr])node.cPtrs[ptr] = that.mkNode_();
         return insKey(key, val, node.cPtrs[ptr], ++pos);
 
     }
