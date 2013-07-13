@@ -62,10 +62,13 @@ SkipList [Map]
 [Ref - http://ocw.mit.edu Lecture on skip-lists]
 ```
 Create a Skip List
-var skl=new SkipList(compareFn) - Optional compare function to order the keys. If not provided, a natural ordering is
-                                   assumed. The function takes two arguments, 1) a key in iteration and 2) the key being
-                                   inserted. Should return 1 if 2nd arg is greater than first,-1 if 2nd arg is less than
-                                    first and zero otherwise.
+
+Optional compare function to order the keys. If not provided, a natural ordering is
+assumed. The function takes two arguments, 1) a key in iteration and 2) the key being
+inserted. Should return 1 if 2nd arg is greater than first,-1 if 2nd arg is less than
+first and zero otherwise.
+
+var skl=new SkipList(compareFn) 
 
 Add a key value
 skl.put(k,v)
