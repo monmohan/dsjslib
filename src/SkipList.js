@@ -60,11 +60,39 @@ SkipList.prototype.insert_ = function (key, value, list, recurse, depth,down) {
 
     }
 
-
 }
+
+/**
+ * Add a key value pair
+ * @param key
+ * @param value
+ * @return {*}
+ */
 SkipList.prototype.put = function (key, value) {
      this.insert_(key,value,this.top_,true,0);
     return this;
+}
+
+/**
+ *
+ * @param key
+ */
+SkipList.prototype.get=function(key){
+     return this.search_(key,this.top_);
+}
+
+
+SkipList.prototype.search_=function(key,list){
+    var cur = list;
+    while (cur && this.compareFn(cur, key) > 0) {
+        cur = cur.next;
+    }
+    if(this.compareFn(cur,key)===0){
+        return {'key':key,'value':cur.value}
+    }else if(cur.prev.down){
+        return this.search_(key,cur.prev.down)
+    }
+
 }
 
 module.exports = SkipList;
