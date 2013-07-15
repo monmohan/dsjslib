@@ -8,12 +8,14 @@ var BinarySearchTree = require("../src/BinarySearchTree.js"),assert=require('ass
             .put(13,"sVal").put(15,"sVal").put(29,"zzz")
             .put(35,"sVal").put(12,"sVal").put(55,{complex:"55"}).put(11,"sVal");
         assert.strictEqual(bt.get(29).value,"zzz");
+        bt.put(29,"newvalfor29")
+        assert.strictEqual(bt.get(29).value,"newvalfor29");
         assert.strictEqual(bt.get(7).key,7);
         assert.strictEqual(bt.get(16).key,16);
         assert.strictEqual(bt.get(12).key,12);
         
         bt.traverse(function (node) {
-            console.log(node.item)
+            console.log(node.key)
         });
 
     }

@@ -7,14 +7,14 @@ function BinarySearchTree() {
     this.root = null;
     /**
      *
-     * @param item
+     * @param key
      * @param parent
      * @param leftChild
      * @param rightChild
      * @return {Object}
      */
-    this.mkNode_ = function (item, val, parent, leftChild, rightChild) {
-        return {item:item,
+    this.mkNode_ = function (key, val, parent, leftChild, rightChild) {
+        return {key:key,
             parent:parent || null,
             leftChild:leftChild || null,
             rightChild:rightChild || null,
@@ -31,8 +31,8 @@ function BinarySearchTree() {
              * @return {*}
              */
             inspect:function () {
-                return util.inspect({item:this.item, h:this.height,
-                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.item : null)}, {depth:null, colors:true});
+                return util.inspect({key:this.key, h:this.height,
+                    L:this.leftChild, R:this.rightChild, p:(this.parent ? this.parent.key : null)}, {depth:null, colors:true});
             }
 
         }
@@ -80,7 +80,7 @@ function BinarySearchTree() {
     this.successor = function (item) {
         var node = this.get(item, this.root);
         var sc = successorNode(node);
-        return sc && {key:sc.item, value:sc.value}
+        return sc && {key:sc.key, value:sc.value}
 
     }
 
@@ -102,7 +102,7 @@ function BinarySearchTree() {
      */
     this.min = function () {
         var mNode = minNode(this.root);
-        return mNode && {key:mNode.item, value:mNode.value};
+        return mNode && {key:mNode.key, value:mNode.value};
 
     }
     /**
@@ -122,7 +122,7 @@ function BinarySearchTree() {
      */
     this.max = function () {
         var mNode = maxNode(this.root);
-        return mNode && {key:mNode.item, value:mNode.value};
+        return mNode && {key:mNode.key, value:mNode.value};
 
     }
 
@@ -171,7 +171,7 @@ function BinarySearchTree() {
     this.predecessor = function (key) {
         var node = this.get(key, this.root);
         var pNode = predecessorNode(node)
-        return pNode && {key:pNode.item, value:pNode.value}
+        return pNode && {key:pNode.key, value:pNode.value}
     }
 
 
@@ -189,18 +189,24 @@ BinarySearchTree.prototype.put = function (key, value) {
     var isLeft = false;
     while (cNode) {
         pNode = cNode;
-        if (key < cNode.item) {
+        if (key < cNode.key) {
             cNode = cNode.leftChild;
             isLeft = true;
-        } else {
+        } else if (key > cNode.key){
             cNode = cNode.rightChild;
             isLeft = false;
+        }else{//replace
+            cNode.value=value;
+            break;
         }
     }
     //cNode should be null now
-    var iNode = this.mkNode_(key, value, pNode);
-    pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
-    this.reCalcHeight(iNode);
+    var iNode = cNode;
+    if (!cNode) {
+        iNode=this.mkNode_(key, value, pNode);
+        pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
+        this.reCalcHeight(iNode);
+    }
     var tree = this;
     return {
         put:function (key, value) {
@@ -232,7 +238,7 @@ BinarySearchTree.prototype.traverse = function (node, fn) {
             fn = args[0];
         } else {
             fn = function (n) {
-                console.log(n.item);
+                console.log(n.key);
             }
         }
     }
@@ -253,9 +259,9 @@ BinarySearchTree.prototype.get = function (key, node) {
     return recFind(key, node);
     function recFind(key, node) {
         if (!node) return null;
-        if (key < node.item) return recFind(key, node.leftChild);
-        if (key > node.item) return recFind(key, node.rightChild);
-        if (key == node.item)return retKV ? {key:node.item, value:node.value} : node;
+        if (key < node.key) return recFind(key, node.leftChild);
+        if (key > node.key) return recFind(key, node.rightChild);
+        if (key == node.key)return retKV ? {key:node.key, value:node.value} : node;
     }
 
 }
@@ -291,10 +297,10 @@ BinarySearchTree.prototype.delete = function (item) {
                 }
                 break;
             case 2:
-                var nextL = this.successor(node.item);
+                var nextL = this.successor(node.key);
                 var temp = nextL.key;
                 this.delete(nextL.key);
-                node.item = temp;
+                node.key = temp;
         }
 
 
@@ -308,12 +314,12 @@ BinarySearchTree.prototype.checkInvariants = function (node) {
     var lc = node.leftChild, rc = node.rightChild;
     if (log.DEBUG) {
         console.log(util.format("lc=%s, rc=%s, node=%s",
-            lc ? lc.item : "null", rc ? rc.item : "null", node.item))
+            lc ? lc.key : "null", rc ? rc.key : "null", node.key))
     }
-    var ok = (!lc || lc.item < node.item) &&
-        (!rc || rc.item > node.item);
+    var ok = (!lc || lc.key < node.key) &&
+        (!rc || rc.key > node.key);
 
-    if (!ok) throw new Error("Invariant check failed at node " + node + " key=" + node.item)
+    if (!ok) throw new Error("Invariant check failed at node " + node + " key=" + node.key)
     this.checkInvariants(lc);
     this.checkInvariants(rc);
 }

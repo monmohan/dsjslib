@@ -68,12 +68,12 @@ AVLTree.prototype.checkInvariants = function (node) {
     if (log.DEBUG) {
         console.log("Checking AVL Invariants");
         console.log(util.format("lc(h)=%s, rc(h)=%s, node=%s",
-            lc ? lc.item + "(" + lc.height + ")" : "null(-1)",
-            rc ? rc.item + "(" + rc.height + ")" : "null(-1)",
-            node.item + "(" + node.height + ")"))
+            lc ? lc.key + "(" + lc.height + ")" : "null(-1)",
+            rc ? rc.key + "(" + rc.height + ")" : "null(-1)",
+            node.key + "(" + node.height + ")"))
     }
     var hdiff = Math.abs((lc ? lc.height : -1) - (rc ? rc.height : -1));
-    if (hdiff > 1) throw new Error("Invariant check failed at node " + node + " key=" + node.item)
+    if (hdiff > 1) throw new Error("Invariant check failed at node " + node + " key=" + node.key)
     this.checkInvariants(lc);
     this.checkInvariants(rc);
 
@@ -86,7 +86,7 @@ AVLTree.prototype.checkAVLProperty = function (node) {
     var lc = node.leftChild, rc = node.rightChild;
     var hdiff = Math.abs((lc ? lc.height : -1) - (rc ? rc.height : -1));
     if (hdiff > 1) {
-        if (log.DEBUG)console.log("AVL Height violation at Node key" + node.item);
+        if (log.DEBUG)console.log("AVL Height violation at Node key" + node.key);
         throw node;
     }
     this.checkAVLProperty(node.parent);
