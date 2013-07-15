@@ -327,6 +327,12 @@ BinarySearchTree.prototype.checkInvariants = function (node) {
 BinarySearchTree.prototype.inspect = function () {
     return util.inspect(this.root, {depth:null, colors:true})
 }
+
+BinarySearchTree.prototype.entrySet = function () {
+    var entries=[];
+    this.traverse(this.root,function(node){entries.push({key:node.key,value:node.value})});
+    return entries;
+}
 /**
  * Export the Type so that new instances can be created
  * @type {Function}

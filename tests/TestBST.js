@@ -48,6 +48,20 @@ var BinarySearchTree = require("../src/BinarySearchTree.js"),assert=require('ass
 
     }
 
+    function testEntrySet(){
+        assert.deepEqual(bt.entrySet(),[ { key: 7, value: 'seven' },
+            { key: 11, value: 'sVal' },
+            { key: 12, value: 'sVal' },
+            { key: 15, value: 'sVal' },
+            { key: 16, value: 'sVal' },
+            { key: 25, value: 'sVal' },
+            { key: 26, value: 'sVal' },
+            { key: 35, value: 'sVal' },
+            { key: 39, value: 'sVal' },
+            { key: 55, value: { complex: '55' } } ])
+    }
+
+
     (function testBSTfuncs() {
         testInsert();
         testMinMax();
@@ -55,6 +69,7 @@ var BinarySearchTree = require("../src/BinarySearchTree.js"),assert=require('ass
         testDel();
         //pretty print the tree
         console.log(bt.root);
+        testEntrySet();
     })();
 
 
