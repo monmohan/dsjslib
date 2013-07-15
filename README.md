@@ -50,15 +50,23 @@ SkipList [Map]
 ----------------------
 [Ref - http://ocw.mit.edu Lecture on skip-lists]
 ```
-Create a Skip List
+//Create a Skip List
+//Optional compare function to order the keys. If not provided, a natural ordering is
+//assumed.
 
-Optional compare function to order the keys. If not provided, a natural ordering is
-assumed.
+var skl=new SkipList(compareFn)
 
-var skl=new SkipList(compareFn) 
-
-Add a key value
+//Add a key value
 skl.put(k,v)
+
+//Search for a key
+skl.get(k)
+
+//delete a key and its associated value
+skl.delete(k)
+
+//Get all entries(sorted). They are returned as key value pair objects
+skl.entrySet()
 
 
 ```

@@ -10,20 +10,21 @@ util = require("util")
  */
 function SkipList(compareFn) {
     this.List_ = function () {
-        function Node_ (key, value) {
+        function Node_(key, value) {
             return {'key':key, 'value':value,
                 'next':null, 'prev':null, 'down':null,
-            insert:function (k,v,down){
-                var node = Node_(k, v);
-                this.prev.next = node;
-                node.prev = this.prev;
-                node.next = this;
-                this.prev = node;
-                node.down=down;
-                return node;
+                insert:function (k, v, down) {
+                    var node = Node_(k, v);
+                    this.prev.next = node;
+                    node.prev = this.prev;
+                    node.next = this;
+                    this.prev = node;
+                    node.down = down;
+                    return node;
 
-            }}
+                }}
         }
+
         var minNode = Node_();
         minNode.isMin = true;
         var node2 = Node_();
@@ -72,17 +73,14 @@ SkipList.prototype.insert_ = function (key, value, currentList) {
     }
 
     if (cur.prev.down) {
-        down = this.insert_(key, value, cur.prev.down, true);
+        down = this.insert_(key, value, cur.prev.down);
     }
 
-    if (!currentList.down/*bottom list*/) {
-        //insert
-        return cur.insert(key,value)
-    } else {
-        if (down && ((Math.random() * 100) < 50)) { //flip a coin
-            return cur.insert(key,value,down);
-        }
-    }
+    return (!currentList.down/*bottom list*/)
+        ? cur.insert(key, value)
+        : (down && ((Math.random() * 100) < 50))
+        ? cur.insert(key, value, down) : null;
+
 
 
 }
@@ -94,12 +92,12 @@ SkipList.prototype.insert_ = function (key, value, currentList) {
  * @return {*}
  */
 SkipList.prototype.put = function (key, value) {
-    var topNode = this.insert_(key, value, this.top_, true);
+    var topNode = this.insert_(key, value, this.top_);
     while (((Math.random() * 100) < 50) && topNode) {
         var newList = this.List_();
         newList.down = this.top_;
         this.top_ = newList;
-        topNode = this.insert_(key, value, this.top_, false);
+        topNode = this.insert_(key, value, this.top_);
     }
     return this;
 }
@@ -133,8 +131,43 @@ SkipList.prototype.search_ = function (key, list) {
 
 }
 
-SkipList.prototype.delete_ = function (key, list) {
+/**
+ * remove key and all nodes representing the key
+ * @param key
+ */
+SkipList.prototype.delete = function (key) {
+    return this.delNode_(key,this.top_)
+}
 
+SkipList.prototype.delNode_ = function (key, currentList) {
+    var cur = currentList, down;
+    while (cur && this.compareFn(cur, key) > 0) {
+        cur = cur.next;
+    }
+    //remove node
+    if (this.compareFn(cur, key) == 0) {
+         while(cur){
+             cur.prev.next=cur.next;
+             cur.next.prev=cur.prev;
+             cur=cur.down;
+         }
+        return true;
+    }
+    return (currentList.down)?this.delNode_(key,cur.prev.down):false;
+
+}
+
+SkipList.prototype.entrySet = function () {
+    var baseList=this.top_,entries=[],node;
+    while(baseList.down){
+       baseList=baseList.down;
+    }
+    node=baseList.next;
+    while(node && node.key/*don't list boundary nodes*/){
+       entries.push({'key':node.key, 'value':node.value})
+       node=node.next;
+    }
+    return entries;
 }
 /**
  * function to print lists by level
@@ -148,7 +181,8 @@ SkipList.prototype.inspect_ = function () {
         n = cur.next;
         keys = [];
         while (n) {
-            keys.push(n.key);
+            keys.push({'k':n.key||'',
+                'v':n.value||( n.isMin?'-*':'+*')});
             n = n.next;
         }
         all.push(keys);
