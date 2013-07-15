@@ -53,9 +53,7 @@ SkipList [Map]
 Create a Skip List
 
 Optional compare function to order the keys. If not provided, a natural ordering is
-assumed. The function takes two arguments, 1) a key in iteration and 2) the key being
-inserted. Should return 1 if 2nd arg is greater than first,-1 if 2nd arg is less than
-first and zero otherwise.
+assumed.
 
 var skl=new SkipList(compareFn) 
 
@@ -81,7 +79,12 @@ btree.put(key,value)
 btree.get(key)
 
 //Deletes a key and re-joins nodes and/or reduces the height of tree as required
-btree.delete(key) 
+btree.delete(key)
+
+//Check various BTree invariants -- For sanity testing
+1.Except root all nodes have degree -1 <keys<2*degree-1
+2. child keys are less than corresponding parent key (and greater than predecessor parent key)
+btree.checkInvariants()
 ```
 
 Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
