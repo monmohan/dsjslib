@@ -5,7 +5,7 @@ function AVLTree() {
 AVLTree.prototype = new BST();
 AVLTree.prototype.rotate = function (node, rL) {
     if (!rL || !node)return "Insufficient parameters";
-
+    var tree=this;
     switch (rL) {
         case 'r':
             if (node.leftChild) {
@@ -27,7 +27,12 @@ AVLTree.prototype.rotate = function (node, rL) {
     }
 
     function parentChild(par, ch, rL) {
-        if (par)par[rL === 'r' ? "rightChild" : "leftChild"] = ch;
+        if (par) {
+            par[rL === 'r' ? "rightChild" : "leftChild"] = ch
+        } else { //we are rotating at the root
+            tree.root = ch
+        }
+
         if (ch)ch.parent = par;
     }
 
@@ -49,9 +54,8 @@ AVLTree.prototype.rebalance = function (vNode, iNode) {
 
 }
 
-AVLTree.prototype.put = function (key,value) {
-    var ins = BST.prototype.put.call(this,key,value);
-    console.log("inserting key " + key);
+AVLTree.prototype.put = function (key, value) {
+    var ins = BST.prototype.put.call(this, key, value);
     try {
         this.checkAVLProperty(ins.node);
     } catch (vNode) {
@@ -59,6 +63,51 @@ AVLTree.prototype.put = function (key,value) {
     }
     return ins;
 }
+
+
+AVLTree.prototype.delete = function (key) {
+    var node = this.get(key, this.root), p, cNode/*node where violation check should start*/;
+    if (node) {
+        var num = node.leftChild ? (node.rightChild ? 2 : 1) : (node.rightChild ? 1 : 0);
+        switch (num) {
+            case 0:
+                p = node.parent;
+                if (p) {
+                    var lc = p.leftChild === node;
+                    p[lc ? "leftChild" : "rightChild"] = null;
+                    node = null;
+                    cNode = p;
+                }
+
+                break;
+            case 1:
+                //single subtree, the sibling can't have a subtree because
+                // it would have violated the AVL height diff invariant
+                var child = node.leftChild || node.rightChild;
+                node.key = child.key;
+                node.value = child.value;
+                node.leftChild = node.rightChild = null;
+                cNode = node;
+                break;
+            case 2:
+                var nextL = this.successor(node.key);
+                var temp = nextL;
+                this.delete(nextL.key);
+                node.key = temp.key;
+                node.value = temp.value;
+        }
+
+        this.reCalcHeight(cNode);
+        try {
+            this.checkAVLProperty(cNode);
+        } catch (vNode) {
+            this.rebalance(vNode, cNode);
+        }
+
+    }
+
+}
+
 
 AVLTree.prototype.checkInvariants = function (node) {
     if (typeof node === "undefined")node = this.root;

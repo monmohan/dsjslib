@@ -38,12 +38,15 @@ function BinarySearchTree() {
         }
     }
     /**
-     * Private method tofind successor node
+     * Private method to find successor node
      * @param item
      * @param node
      * @return {*}
      */
     var successorNode = function (node) {
+        if(node && !node.parent){
+            return minNode(node.rightChild);
+        }
         if (node && node === node.parent.leftChild) {
             //go to the right child if right child is not null
             //descend and get the min of left tree
@@ -268,12 +271,12 @@ BinarySearchTree.prototype.get = function (key, node) {
 
 
 BinarySearchTree.prototype.delete = function (item) {
-    var node = this.get(item, this.root);
+    var node = this.get(item, this.root),p;
     if (node) {
         var num = node.leftChild ? (node.rightChild ? 2 : 1) : (node.rightChild ? 1 : 0);
         switch (num) {
             case 0:
-                var p = node.parent;
+                p = node.parent;
                 if (p) {
                     var lc = p.leftChild === node;
                     p[lc ? "leftChild" : "rightChild"] = null;
@@ -298,9 +301,10 @@ BinarySearchTree.prototype.delete = function (item) {
                 break;
             case 2:
                 var nextL = this.successor(node.key);
-                var temp = nextL.key;
+                var temp = nextL;
                 this.delete(nextL.key);
-                node.key = temp;
+                node.key = temp.key;
+                node.value=temp.value;
         }
 
 
