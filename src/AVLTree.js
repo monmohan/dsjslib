@@ -37,20 +37,16 @@ AVLTree.prototype.rotate = function (node, rL) {
     }
 
 }
-AVLTree.prototype.rebalance = function (vNode, iNode) {
-    var islc = iNode.isLeftChild();
-    var p = iNode.parent;
-    var zigzag = false;
-    while (vNode !== p) {
-        zigzag = islc != p.isLeftChild();
-        if (zigzag) {
-            this.rotate(p, p.isLeftChild() ? 'l' : 'r');
-            break;
-        }
-        p = p.parent;
+AVLTree.prototype.rebalance = function (vError) {
+    var balance=vError.hdiff,vNode=vError.node,rc=vNode.rightChild,lc=vNode.leftChild;
+    var rcrc=rc&&rc.rightChild,rclc=rc &&rc.leftChild;
+    var childBalance=(rcrc?rcrc.height:-1)-(rclc?rclc.height:-1);
+    var zigzag=balance>1?childBalance<0:childBalance>0;
+    if(zigzag){
+         this.rotate(balance>1?vNode.rightChild:vNode.leftChild,childBalance>0?'l':'r')
     }
     //re-balance single rotation case
-    this.rotate(vNode, iNode.isLeftChild() ? 'r' : 'l');
+    this.rotate(vNode, balance>1 ? 'l' : 'r');
 
 }
 
@@ -58,8 +54,8 @@ AVLTree.prototype.put = function (key, value) {
     var ins = BST.prototype.put.call(this, key, value);
     try {
         this.checkAVLProperty(ins.node);
-    } catch (vNode) {
-        this.rebalance(vNode, ins.node);
+    } catch (vErr) {
+        this.rebalance(vErr);
     }
     return ins;
 }
@@ -77,6 +73,9 @@ AVLTree.prototype.delete = function (key) {
                     p[lc ? "leftChild" : "rightChild"] = null;
                     node = null;
                     cNode = p;
+                }else{
+                    //root
+                    this.root=null;
                 }
 
                 break;
@@ -100,8 +99,8 @@ AVLTree.prototype.delete = function (key) {
         this.reCalcHeight(cNode);
         try {
             this.checkAVLProperty(cNode);
-        } catch (vNode) {
-            this.rebalance(vNode, cNode);
+        } catch (vErr) {
+            this.rebalance(vErr);
         }
 
     }
@@ -111,7 +110,6 @@ AVLTree.prototype.delete = function (key) {
 
 AVLTree.prototype.checkInvariants = function (node) {
     if (typeof node === "undefined")node = this.root;
-    BST.prototype.checkInvariants.call(this, node);
     if (!node) return;
     var lc = node.leftChild, rc = node.rightChild;
     if (log.DEBUG) {
@@ -133,10 +131,10 @@ AVLTree.prototype.checkInvariants = function (node) {
 AVLTree.prototype.checkAVLProperty = function (node) {
     if (!node) return;
     var lc = node.leftChild, rc = node.rightChild;
-    var hdiff = Math.abs((lc ? lc.height : -1) - (rc ? rc.height : -1));
-    if (hdiff > 1) {
+    var hdiff = (rc ? rc.height : -1) - (lc ? lc.height : -1);
+    if (Math.abs(hdiff) > 1) {
         if (log.DEBUG)console.log("AVL Height violation at Node key" + node.key);
-        throw node;
+        throw {'node':node,'hdiff':hdiff};
     }
     this.checkAVLProperty(node.parent);
 

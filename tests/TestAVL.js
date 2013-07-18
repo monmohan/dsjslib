@@ -35,14 +35,37 @@ var AVL = require("../src/AVLTree.js"),assert=require('assert');
 
     function testDelete(){
         var bt=new AVL();
-        var i=0;
-        while(i<30){
+        var i=49;
+        var entrySet=[]
+        while(i>-1){
            bt.put(i,i+"_val");
-           i++;
+           entrySet[i]={'key':i,'value':(i+"_val")};
+            if(i%5==0){
+                bt.checkInvariants();
+            }
+           i--;
 
         }
-        assert.doesNotThrow(function(){bt.checkInvariants();},
-            "AVL Tree property violated")
+        assert.deepEqual(bt.entrySet(),entrySet)
+        i=49;
+        //delete everything and check for invariants
+        while(i>-1){
+            bt.delete(i);
+            entrySet.splice(i,1);
+            i--;
+            if(i%5==0){
+                bt.checkInvariants();
+                console.log(bt.entrySet());
+                assert.deepEqual(bt.entrySet(),entrySet)
+            }
+        }
+        console.log('------')
+        console.log(bt.entrySet());
+        //bt.delete(49)
+        assert.deepEqual(bt.entrySet(),entrySet)
+        console.log(bt.root)
+        assert.doesNotThrow(function(){bt.checkInvariants();},"AVL Tree property violated")
+
 
     }
 
