@@ -12,7 +12,7 @@ In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
 Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
 
-```
+```js
 //Create and AVLTree (extends a BinarySearchTree)
 var avl=new AVLTree() 
 
@@ -38,7 +38,7 @@ avl.min([startAtNode]) avl.max([startAtNode])
 avl.checkInvariants([startAtNode])
                                      
 ```
-```
+```js
 //Print the tree starting at root (requires util module from Node.js)
 console.log(avl.root)
 ```
@@ -49,7 +49,7 @@ Delete implementation TBD
 SkipList [Map]
 ----------------------
 [Ref - http://ocw.mit.edu Lecture on skip-lists]
-```
+```js
 //Create a Skip List
 //Optional compare function to order the keys. If not provided, a natural ordering is
 //assumed.
@@ -75,7 +75,7 @@ skl.entrySet()
 BTree
 ----------------------
 [Ref - Introduction to Algorithms By Coremen et al.]
-```
+```js
 Creates a BTree of degree K .
 Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
 var btree=new BTree(K) 
@@ -106,7 +106,7 @@ Data structure supporting String keys, for fast retrieval of values associated w
 to a (Hash)Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order.
 For large R the space requirement for this DS is impractical, TernarySearchTrie should be used instead.
 
-```
+```js
 var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . For example if you know that 
 the keys are made of ASCII chars only, R=128. Each node in this trie will have an array of size R. 
 
@@ -125,7 +125,7 @@ TernarySearchTrie [Map optimized for String keys]
 Data structure supporting String keys, for fast retrieval of values associated with string keys BUT have much less
 space requirement than RWayTrie. Functions are same as RWayTrie
 
-```
+```js
 var tst=new TernarySearchTrie() - Creates a TernarySearchTrie
 tst.put(key,val) - insert a key value pair into the Trie
 tst.get(key) -- Search for key and return associated value or null
