@@ -40,7 +40,7 @@ function BTree(degree) {
 }
 
 BTree.prototype.get = function (key, node) {
-    var res= recSearch(key, node || this.root);
+    var res = recSearch(key, node || this.root);
     return res && res.node.keys[res.index];
     function recSearch(key, node) {
         if (!node)return;
@@ -117,7 +117,7 @@ BTree.prototype.put = function (key, value, node) {
         i = node.indexOf(function (k) {
             return key < k;
         })
-        node.keys.splice(i, 0, {"key":key,"value":value});
+        node.keys.splice(i, 0, {"key":key, "value":value});
         node.n++;
 
     } else {
@@ -128,9 +128,9 @@ BTree.prototype.put = function (key, value, node) {
         cPtr = node.cPtrs[i];
         if (cPtr.isFull()) {
             node = this.splitChild(node, cPtr, i);
-            this.put(key,value, node);
+            this.put(key, value, node);
         } else {
-            this.put(key,value, cPtr);
+            this.put(key, value, cPtr);
         }
 
     }
@@ -155,8 +155,8 @@ BTree.prototype.delete = function (key, node) {
         descendTreeForDeletion(key, node, i);
     }
     function deleteFromLeafNode(key, node) {
-        var i=node.indexOf(function(k){
-            return key==k;
+        var i = node.indexOf(function (k) {
+            return key == k;
         })
         node.keys.splice(i, 1);
         node.n--;

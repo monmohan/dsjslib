@@ -1,2 +1,2 @@
 //TODO : Logging impl
-exports.DEBUG=true
+exports.DEBUG = true

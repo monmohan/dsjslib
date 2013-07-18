@@ -44,7 +44,7 @@ function BinarySearchTree() {
      * @return {*}
      */
     var successorNode = function (node) {
-        if(node && !node.parent){
+        if (node && !node.parent) {
             return minNode(node.rightChild);
         }
         if (node && node === node.parent.leftChild) {
@@ -183,7 +183,7 @@ function BinarySearchTree() {
 
 BinarySearchTree.prototype.put = function (key, value) {
     if (!this.root) {
-        this.root = this.mkNode_(key,value);
+        this.root = this.mkNode_(key, value);
         return this
     }
 
@@ -195,18 +195,18 @@ BinarySearchTree.prototype.put = function (key, value) {
         if (key < cNode.key) {
             cNode = cNode.leftChild;
             isLeft = true;
-        } else if (key > cNode.key){
+        } else if (key > cNode.key) {
             cNode = cNode.rightChild;
             isLeft = false;
-        }else{//replace
-            cNode.value=value;
+        } else {//replace
+            cNode.value = value;
             break;
         }
     }
     //cNode should be null now
     var iNode = cNode;
     if (!cNode) {
-        iNode=this.mkNode_(key, value, pNode);
+        iNode = this.mkNode_(key, value, pNode);
         pNode[isLeft ? "leftChild" : "rightChild"] = iNode;
         this.reCalcHeight(iNode);
     }
@@ -271,7 +271,7 @@ BinarySearchTree.prototype.get = function (key, node) {
 
 
 BinarySearchTree.prototype.delete = function (item) {
-    var node = this.get(item, this.root),p;
+    var node = this.get(item, this.root), p;
     if (node) {
         var num = node.leftChild ? (node.rightChild ? 2 : 1) : (node.rightChild ? 1 : 0);
         switch (num) {
@@ -304,7 +304,7 @@ BinarySearchTree.prototype.delete = function (item) {
                 var temp = nextL;
                 this.delete(nextL.key);
                 node.key = temp.key;
-                node.value=temp.value;
+                node.value = temp.value;
         }
 
 
@@ -333,8 +333,10 @@ BinarySearchTree.prototype.inspect = function () {
 }
 
 BinarySearchTree.prototype.entrySet = function () {
-    var entries=[];
-    this.traverse(this.root,function(node){entries.push({key:node.key,value:node.value})});
+    var entries = [];
+    this.traverse(this.root, function (node) {
+        entries.push({key:node.key, value:node.value})
+    });
     return entries;
 }
 /**

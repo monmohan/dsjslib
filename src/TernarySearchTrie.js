@@ -3,40 +3,40 @@
  * @constructor
  */
 function TernarySearchTrie() {
-    this.mkNode_ = function (lt, gt, eq, val,ch) {
-        return {c:ch||null,l:lt || null, g:gt|| null, e:eq|| null, v:val || null};
+    this.mkNode_ = function (lt, gt, eq, val, ch) {
+        return {c:ch || null, l:lt || null, g:gt || null, e:eq || null, v:val || null};
     }
     this.root = this.mkNode_();
 }
 
 TernarySearchTrie.prototype.get = function (key) {
-    return recFind(this.root,key,0);
-      function recFind(node,key,pos){
-          if(!node) return null;
-          if(pos===key.length-1)return node.v;
-          var recNode=key.charAt(pos)===node.c?node.e:key.charAt(pos)>node.c?node.g:node.l;
-          return recFind(recNode,key,++pos);
-
-      }
-}
-
-TernarySearchTrie.prototype.put = function (key,val) {
-    var that=this;
-    return recIns(this.root,key,val,0);
-    function recIns(node,key,val,pos){
-        if(!node.c){
-            node.c=key.charAt(pos);
-        }
-        if(pos===key.length-1){
-            node.v=val;
-            return that;
-        }
-
-        var recNode=key.charAt(pos)===node.c?(node.e || (node.e=that.mkNode_()))
-            :key.charAt(pos)>node.c?(node.g||(node.g=that.mkNode_())):(node.l || (node.l=that.mkNode_()));
-        return recIns(recNode,key,val,++pos);
+    return recFind(this.root, key, 0);
+    function recFind(node, key, pos) {
+        if (!node) return null;
+        if (pos === key.length - 1)return node.v;
+        var recNode = key.charAt(pos) === node.c ? node.e : key.charAt(pos) > node.c ? node.g : node.l;
+        return recFind(recNode, key, ++pos);
 
     }
 }
 
-module.exports=TernarySearchTrie;
+TernarySearchTrie.prototype.put = function (key, val) {
+    var that = this;
+    return recIns(this.root, key, val, 0);
+    function recIns(node, key, val, pos) {
+        if (!node.c) {
+            node.c = key.charAt(pos);
+        }
+        if (pos === key.length - 1) {
+            node.v = val;
+            return that;
+        }
+
+        var recNode = key.charAt(pos) === node.c ? (node.e || (node.e = that.mkNode_()))
+            : key.charAt(pos) > node.c ? (node.g || (node.g = that.mkNode_())) : (node.l || (node.l = that.mkNode_()));
+        return recIns(recNode, key, val, ++pos);
+
+    }
+}
+
+module.exports = TernarySearchTrie;

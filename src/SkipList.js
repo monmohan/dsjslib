@@ -82,7 +82,6 @@ SkipList.prototype.insert_ = function (key, value, currentList) {
         ? cur.insert(key, value, down) : null;
 
 
-
 }
 
 /**
@@ -136,7 +135,7 @@ SkipList.prototype.search_ = function (key, list) {
  * @param key
  */
 SkipList.prototype.delete = function (key) {
-    return this.delNode_(key,this.top_)
+    return this.delNode_(key, this.top_)
 }
 
 SkipList.prototype.delNode_ = function (key, currentList) {
@@ -146,26 +145,26 @@ SkipList.prototype.delNode_ = function (key, currentList) {
     }
     //remove node
     if (this.compareFn(cur, key) == 0) {
-         while(cur){
-             cur.prev.next=cur.next;
-             cur.next.prev=cur.prev;
-             cur=cur.down;
-         }
+        while (cur) {
+            cur.prev.next = cur.next;
+            cur.next.prev = cur.prev;
+            cur = cur.down;
+        }
         return true;
     }
-    return (currentList.down)?this.delNode_(key,cur.prev.down):false;
+    return (currentList.down) ? this.delNode_(key, cur.prev.down) : false;
 
 }
 
 SkipList.prototype.entrySet = function () {
-    var baseList=this.top_,entries=[],node;
-    while(baseList.down){
-       baseList=baseList.down;
+    var baseList = this.top_, entries = [], node;
+    while (baseList.down) {
+        baseList = baseList.down;
     }
-    node=baseList.next;
-    while(node && node.key/*don't list boundary nodes*/){
-       entries.push({'key':node.key, 'value':node.value})
-       node=node.next;
+    node = baseList.next;
+    while (node && node.key/*don't list boundary nodes*/) {
+        entries.push({'key':node.key, 'value':node.value})
+        node = node.next;
     }
     return entries;
 }
@@ -181,8 +180,8 @@ SkipList.prototype.inspect_ = function () {
         n = cur.next;
         keys = [];
         while (n) {
-            keys.push({'k':n.key||'',
-                'v':n.value||( n.isMin?'-*':'+*')});
+            keys.push({'k':n.key || '',
+                'v':n.value || ( n.isMin ? '-*' : '+*')});
             n = n.next;
         }
         all.push(keys);

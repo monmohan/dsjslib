@@ -20,33 +20,36 @@ var rtrie = require('../src/RWayTrie.js'), assert = require('assert');
         console.log(trie.keyset());
         assert.deepEqual(trie.keyset(), ['a', 'abb', 'abc', 'abcd', 'averylongkey', 'k', 'kplus', 'kpplus'], 'keyset failed');
     }
-    function testUnicode(){
-       var t=new rtrie(400);
-        var unicode1="\u0100unicode",unicode2="\u0170latin"
-        t.put(unicode1,"latin1").put("asciikey","ascii").put(unicode2,"latinext2");
+
+    function testUnicode() {
+        var t = new rtrie(400);
+        var unicode1 = "\u0100unicode", unicode2 = "\u0170latin"
+        t.put(unicode1, "latin1").put("asciikey", "ascii").put(unicode2, "latinext2");
         console.log(t.keyset());
-        assert.deepEqual(t.keyset(),["asciikey",unicode1,unicode2],"key listing failed")
-        assert.deepEqual(t.get(unicode2),"latinext2");
+        assert.deepEqual(t.keyset(), ["asciikey", unicode1, unicode2], "key listing failed")
+        assert.deepEqual(t.get(unicode2), "latinext2");
     }
-    function testDelete(){
-        var dt=new rtrie(128);
-        dt.put("abc",10);
+
+    function testDelete() {
+        var dt = new rtrie(128);
+        dt.put("abc", 10);
         dt.delete("abc");
-        assert.deepEqual(dt.keyset(),[]);
-        assert.strictEqual(dt.get("abc"),null);
-        dt.put("abc",10).put("abcd",20);
+        assert.deepEqual(dt.keyset(), []);
+        assert.strictEqual(dt.get("abc"), null);
+        dt.put("abc", 10).put("abcd", 20);
         dt.delete("abcd");
-        assert.deepEqual(dt.keyset(),["abc"]);
-        assert.strictEqual(dt.get("abcd"),null);
-        assert.strictEqual(dt.get("abc"),10);
-        dt.put("ab",20).put("ad",30);
+        assert.deepEqual(dt.keyset(), ["abc"]);
+        assert.strictEqual(dt.get("abcd"), null);
+        assert.strictEqual(dt.get("abc"), 10);
+        dt.put("ab", 20).put("ad", 30);
         dt.delete("ad");
-        assert.deepEqual(dt.keyset(),["ab","abc"]);
-        assert.strictEqual(dt.get("ad"),null);
-        assert.strictEqual(dt.get("abc"),10);
-        assert.strictEqual(dt.get("ab"),20);
+        assert.deepEqual(dt.keyset(), ["ab", "abc"]);
+        assert.strictEqual(dt.get("ad"), null);
+        assert.strictEqual(dt.get("abc"), 10);
+        assert.strictEqual(dt.get("ab"), 20);
 
     }
+
     setup()
     testSearch()
     testKeyset()

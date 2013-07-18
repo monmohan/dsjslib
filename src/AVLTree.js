@@ -5,7 +5,7 @@ function AVLTree() {
 AVLTree.prototype = new BST();
 AVLTree.prototype.rotate = function (node, rL) {
     if (!rL || !node)return "Insufficient parameters";
-    var tree=this;
+    var tree = this;
     switch (rL) {
         case 'r':
             if (node.leftChild) {
@@ -38,15 +38,15 @@ AVLTree.prototype.rotate = function (node, rL) {
 
 }
 AVLTree.prototype.rebalance = function (vError) {
-    var balance=vError.hdiff,vNode=vError.node,rc=vNode.rightChild,lc=vNode.leftChild;
-    var rcrc=rc&&rc.rightChild,rclc=rc &&rc.leftChild;
-    var childBalance=(rcrc?rcrc.height:-1)-(rclc?rclc.height:-1);
-    var zigzag=balance>1?childBalance<0:childBalance>0;
-    if(zigzag){
-         this.rotate(balance>1?vNode.rightChild:vNode.leftChild,childBalance>0?'l':'r')
+    var balance = vError.hdiff, vNode = vError.node, rc = vNode.rightChild, lc = vNode.leftChild;
+    var rcrc = rc && rc.rightChild, rclc = rc && rc.leftChild;
+    var childBalance = (rcrc ? rcrc.height : -1) - (rclc ? rclc.height : -1);
+    var zigzag = balance > 1 ? childBalance < 0 : childBalance > 0;
+    if (zigzag) {
+        this.rotate(balance > 1 ? vNode.rightChild : vNode.leftChild, childBalance > 0 ? 'l' : 'r')
     }
     //re-balance single rotation case
-    this.rotate(vNode, balance>1 ? 'l' : 'r');
+    this.rotate(vNode, balance > 1 ? 'l' : 'r');
 
 }
 
@@ -73,9 +73,9 @@ AVLTree.prototype.delete = function (key) {
                     p[lc ? "leftChild" : "rightChild"] = null;
                     node = null;
                     cNode = p;
-                }else{
+                } else {
                     //root
-                    this.root=null;
+                    this.root = null;
                 }
 
                 break;
@@ -134,7 +134,7 @@ AVLTree.prototype.checkAVLProperty = function (node) {
     var hdiff = (rc ? rc.height : -1) - (lc ? lc.height : -1);
     if (Math.abs(hdiff) > 1) {
         if (log.DEBUG)console.log("AVL Height violation at Node key" + node.key);
-        throw {'node':node,'hdiff':hdiff};
+        throw {'node':node, 'hdiff':hdiff};
     }
     this.checkAVLProperty(node.parent);
 
