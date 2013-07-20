@@ -23,6 +23,9 @@ avl.put(key,value)
 avl.get(key)
 
 
+//Renove key vallue, also rebalances the tree
+avl.delete(key)
+
 //Predecessor and Successor
 avl.predecessor(key)  avl.successor(key) 
 
@@ -43,7 +46,7 @@ avl.checkInvariants([startAtNode])
 console.log(avl.root)
 ```
 Known Limitations: Currently only supports Numeric or String keys (uses < > for comparison),
-Delete implementation TBD 
+
 
 
 SkipList [Map]
@@ -102,9 +105,10 @@ RWayTrie [Map optimized for String keys]
 ----------------------
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
-Data structure supporting String keys, for fast retrieval of values associated with string keys. In comparison
-to a (Hash)Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order.
-For large R the space requirement for this DS is impractical, TernarySearchTrie should be used instead.
+Data structure supporting String keys, for fast retrieval of values associated with string keys.
+In comparison to a Map, has additional (fast) functions like list of keys with prefix
+and listing all keys in sorted order. For large R the space requirement for this DS is impractical,
+TernarySearchTrie should be used instead.
 
 ```js
 var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . For example if you know that 
@@ -122,8 +126,9 @@ TernarySearchTrie [Map optimized for String keys]
 ------------------------------
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
-Data structure supporting String keys, for fast retrieval of values associated with string keys BUT have much less
-space requirement than RWayTrie. Functions are same as RWayTrie
+Data structure supporting String keys, for fast retrieval of values associated with 
+string keys BUT have much less space requirement than RWayTrie. Functions are same 
+as RWayTrie
 
 ```js
 var tst=new TernarySearchTrie() - Creates a TernarySearchTrie
