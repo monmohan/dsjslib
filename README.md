@@ -93,9 +93,11 @@ btree.get(key)
 btree.delete(key)
 
 //Check various BTree invariants -- For sanity testing
-1.Except root all nodes have degree -1 <keys<2*degree-1
-2. child keys are less than corresponding parent key (and greater than predecessor parent key)
+1. Except root all nodes have degree -1 <keys<2*degree-1
+2. Child keys are less than corresponding parent key (and greater than predecessor parent key)
+
 btree.checkInvariants()
+
 ```
 
 Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
@@ -134,6 +136,6 @@ as RWayTrie
 var tst=new TernarySearchTrie() - Creates a TernarySearchTrie
 tst.put(key,val) - insert a key value pair into the Trie
 tst.get(key) -- Search for key and return associated value or null
-
+tst.delete(key) -- Deletes a key and associated value
 ```
-Known Limitations: Delete and keyset() TBD
+Known Limitations: keyset() TBD

@@ -12,18 +12,39 @@ var tstrie = require('../src/TernarySearchTrie.js'), assert = require('assert'),
 
     function testDelete() {
         var tst = new tstrie();
-        tst.put("abc", 20).put("abcd", 30)
-        tst.put("abce", 40)
-        tst.put("abcm", 50)
-            .put("abcmp", 60).put("aaj", 70).put("xyz", 80);
-        tst.delete("abcd");
-        assert.strictEqual(tst.get("xyz"), 80)
-        assert.strictEqual(tst.get("abc"), 20)
-        assert.strictEqual(tst.get("abcd"), null)
-        assert.strictEqual(tst.get("abce"), 40)
-        assert.strictEqual(tst.get("abcm"), 50)
-        assert.strictEqual(tst.get("abcmp"), 60)
-        assert.strictEqual(tst.get("aaj"), 70)
+        var para="This example shows us the power of closures. As you can see, we store i at the outer scope of the object" +
+            " we actually operate on. " +
+            "It seems kind of trivial but it is one of those features of " +
+            "JavaScript it really pays off to understand as it allows us to implement all sorts of" +
+            " nifty little patterns such as this quite easily.";
+        var keys=para.split(/\s/);
+        var keyValSet={},val;
+
+        keys.forEach(function(key){
+            val=key+'-value';
+            tst.put(key,val);
+            keyValSet[key]=val;
+        })
+        keys.forEach(function(key){
+            assert.deepEqual(tst.get(key),keyValSet[key]);
+        })
+
+        var i= 0,deleted=[];
+        while(i<keys.length){
+            console.log('--Deleting-- '+i)
+            var nkey=keys.shift();
+            keyValSet[nkey]=null;
+            tst.delete(nkey);
+            deleted.push(nkey);
+            deleted.forEach(function(dKey){
+                assert.deepEqual(tst.get(dKey),null);
+            });
+            keys.forEach(function(key){
+                assert.deepEqual(tst.get(key),keyValSet[key]);
+            })
+           i++;
+        }
+
     }
 
     testSearchAndInsert()

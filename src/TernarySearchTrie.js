@@ -27,51 +27,82 @@ TernarySearchTrie.prototype.get = function (key) {
     return node && node.v;
 
 }
-
-TernarySearchTrie.prototype.deleteNode_ = function (parent, node, path, isKey) {
+/**
+ * Similar to BST delete but with some additional twist
+ * A node with a equal child pointer can't be deleted but
+ * the value is set to null. Also deletion may propagate up the chain
+ * @param parent
+ * @param node
+ * @param path
+ * @param isKey
+ * @return {*}
+ * @private
+ */
+TernarySearchTrie.prototype.deleteNode_ = function (parent, node, path) {
     if (!node) return null;
-    if (!parent) return (this.root = null)
     var continueDel = false;
-    if (!node.e) {
-        var numChild = node.l ? (node.g ? 2 : 1) : (node.g ? 1 : 0);
-        switch (numChild) {
-            case(0):
-                if (isKey || !node.v) {
-                    parent[path] = null;
-                    continueDel = true;
-                }
-                break;
-            case(1):
-                parent[path] = node.l || node.g;
-                continueDel = false;
-                break;
-            case(2):
-                var rChild = node.g;
-                var suc = rChild;
-                while (suc.l) {
-                    suc = suc.l;
-                }
-                var temp = suc;
-                this.deleteNode_(suc);
-                node.e = suc.e;
-                node.c = suc.c;
-        }
+    if (node.e) {
+        node.v = null;
+        return;
     }
+    var numChild = node.l ? (node.g ? 2 : 1) : (node.g ? 1 : 0);
+    switch (numChild) {
+        case(0):
+            if (!parent) {
+                this.root = null
+            }
+            else {
+                parent[path] = null;
+                continueDel = true;
+            }
+
+            break;
+        case(1):
+            var child = node.l || node.g;
+            if (!parent) {
+                this.root = child
+            } else {
+                parent[path] = child;
+            }
+            continueDel = false;
+            break;
+        case(2):
+            var rChild = node.g;
+            var p = node;
+            var suc = rChild;
+            while (suc.l) {
+                p = suc;
+                suc = suc.l;
+            }
+            this.deleteNode_(p, suc, 'l');
+            node.e = suc.e;
+            node.c = suc.c;
+            node.v = suc.v;
+    }
+
     return continueDel;
 
 }
 
 TernarySearchTrie.prototype.recDelete_ = function (parent, node, path, key, pos) {
     if (!node) return null;
-    if (pos === key.length - 1)return this.deleteNode_(parent, node, path, true);
-    var recNode = key.charAt(pos) === node.c ? node.e : key.charAt(pos) > node.c ? node.g : node.l;
-    path = key.charAt(pos) === node.c ? 'e' : key.charAt(pos) > node.c ? 'g' : 'l';
-    var continueDel = this.recDelete_(node, recNode, path, key, ++pos);
-    if (continueDel)return this.deleteNode_(parent, node, path);
+    var nextPath = key.charAt(pos) === node.c ? 'e' : key.charAt(pos) > node.c ? 'g' : 'l';
+    var isEq = nextPath === 'e';
+    var nextNode = node[nextPath];
+    var continueDel =(pos === key.length - 1?
+        (isEq?this.deleteNode_(parent, node, path)
+            :this.recDelete_(node, nextNode, nextPath, key, pos)):
+        this.recDelete_(node, nextNode, nextPath, key, isEq ? ++pos : pos));
+
+    return continueDel && this.deleteNode_(parent, node, path);
 
 
 }
 
+/**
+ * Delete a key from the Trie
+ * @param key
+ */
 TernarySearchTrie.prototype.delete = function (key) {
     this.recDelete_(null, this.root, null, key, 0);
 

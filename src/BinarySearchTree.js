@@ -47,21 +47,16 @@ function BinarySearchTree() {
         if (node && !node.parent) {
             return minNode(node.rightChild);
         }
-        if (node && node === node.parent.leftChild) {
+        if (node && node.isLeftChild()) {
             //go to the right child if right child is not null
             //descend and get the min of left tree
-            var rc = node.rightChild;
-            if (rc) {
-                return minNode(rc);
-            } else {
-                return node.parent;
-            }
+            return node.rightChild?minNode(node.rightChild):node.parent;
+
         }
 
-        if (node && node === node.parent.rightChild) {
-            rc = node.rightChild;
-            if (rc) {
-                return minNode(rc);
+        if (node && node.isRightChild()) {
+            if (node.rightChild) {
+                return minNode(node.rightChild);
             } else {
                 var p = node.parent;
                 var sp = p ? p.parent : null;
@@ -136,21 +131,16 @@ function BinarySearchTree() {
      */
     var predecessorNode = function (node) {
         //if the node is the right child
-        if (node && node === node.parent.rightChild) {
+        if (node && node.isRightChild()) {
             //go to the left child if left child is not null
             //descend and get the max of left tree
-            var lc = node.leftChild;
-            if (lc) {
-                return maxNode(lc);
-            } else {
-                return node.parent;
-            }
+            return node.leftChild? maxNode(node.leftChild):node.parent;
         }
         //if the node is the left child
         if (node && node === node.parent.leftChild) {
-            lc = node.leftChild;
-            if (lc) {
-                return maxNode(rc);
+
+            if (node.leftChild) {
+                return maxNode(node.leftChild);
             } else {
                 var p = node.parent;
                 var sp = p ? p.parent : null;
@@ -301,10 +291,9 @@ BinarySearchTree.prototype.delete = function (item) {
                 break;
             case 2:
                 var nextL = this.successor(node.key);
-                var temp = nextL;
                 this.delete(nextL.key);
-                node.key = temp.key;
-                node.value = temp.value;
+                node.key = nextL.key;
+                node.value = nextL.value;
         }
 
 
