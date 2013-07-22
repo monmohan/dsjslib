@@ -10,7 +10,8 @@ Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like fun
 backed by a balanced Tree. All functionality of BinarySearchTree is available. 
 In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
-Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
+Caller doesn't need to invoke these functions, 
+they are internally usedd when an insert or delete violates the AVL property of the tree
 
 ```js
 //Create and AVLTree (extends a BinarySearchTree)
@@ -94,7 +95,8 @@ btree.delete(key)
 
 //Check various BTree invariants -- For sanity testing
 1. Except root all nodes have degree -1 <keys<2*degree-1
-2. Child keys are less than corresponding parent key (and greater than predecessor parent key)
+2. Child keys are less than corresponding parent key 
+   (and greater than predecessor parent key)
 
 btree.checkInvariants()
 
@@ -109,12 +111,14 @@ RWayTrie [Map optimized for String keys]
 
 Data structure supporting String keys, for fast retrieval of values associated with string keys.
 In comparison to a Map, has additional (fast) functions like list of keys with prefix
-and listing all keys in sorted order. For large R the space requirement for this DS is impractical,
-TernarySearchTrie should be used instead.
+and listing all keys in sorted order. For large R the space requirement 
+for this DS is impractical (although in javascript arrays are sparse so its not the same)
+, TernarySearchTrie can be more practical alternative.
 
 ```js
-var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . For example if you know that 
-the keys are made of ASCII chars only, R=128. Each node in this trie will have an array of size R. 
+var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . 
+For example if you know that the keys are made of ASCII chars only, R=128. 
+Each node in this trie will have an array of size R. 
 
 rTrie.put(key,val) - Inserts a key and set its value as val
 rTrie.get(key) - Search for a key and return associated value or null
@@ -128,9 +132,9 @@ TernarySearchTrie [Map optimized for String keys]
 ------------------------------
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
-Data structure supporting String keys, for fast retrieval of values associated with 
-string keys BUT have much less space requirement than RWayTrie. Functions are same 
-as RWayTrie
+Data structure supporting String keys, for fast retrieval of 
+values associated with  string keys BUT have much less space 
+requirement than RWayTrie. Functions are same as RWayTrie
 
 ```js
 var tst=new TernarySearchTrie() - Creates a TernarySearchTrie
