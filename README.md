@@ -123,7 +123,9 @@ Each node in this trie will have an array of size R.
 rTrie.put(key,val) - Inserts a key and set its value as val
 rTrie.get(key) - Search for a key and return associated value or null
 rTrie.delete(key) - Deletes a key 
-rTrie.keyset() - Return a list of all keys in sorted order
+rTrie.entrySet() - Return a list of all key, value pairs in sorted order (of keys)
+rTrie.keysWithPrefix(prefix_chars) - Return a list of all key, value pairs where
+                                     keys start with given prefix_chars
 ```
 
 Known Limitations: None
@@ -142,4 +144,4 @@ tst.put(key,val) - insert a key value pair into the Trie
 tst.get(key) -- Search for key and return associated value or null
 tst.delete(key) -- Deletes a key and associated value
 ```
-Known Limitations: keyset() TBD
+Known Limitations: entrySet() TBD

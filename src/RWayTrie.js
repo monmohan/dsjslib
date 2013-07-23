@@ -37,7 +37,7 @@ RWayTrie.prototype.put = function (key, val) {
     }
 }
 
-RWayTrie.prototype.getNode_ = function (key,node,pos) {
+RWayTrie.prototype.getNode_ = function (key, node, pos) {
     var ptr = key.charCodeAt(pos);
     if (pos == key.length) {
         return node;
@@ -47,30 +47,56 @@ RWayTrie.prototype.getNode_ = function (key,node,pos) {
 
 }
 
+/**
+ * Get value for a given key
+ * @param key
+ * @return {*} value or null if key is not found
+ */
 RWayTrie.prototype.get = function (key) {
-    var node=this.getNode_(key, this.root, 0);
+    var node = this.getNode_(key, this.root, 0);
     return node && node.val;
 }
 
-RWayTrie.prototype.keyset = function () {
-    var keys = [];
-    keysWithPrefix(this.root, "");
-    function keysWithPrefix(node, collect) {
-        if (node.val) {
-            keys.push(collect);
-        }
-        node.cPtrs.forEach(function (e, i, arr) {
-            var prefix = String.fromCharCode(i);
-            keysWithPrefix(e, (collect + prefix));
+RWayTrie.prototype.keysWithPrefix= function (prefix) {
+     var keys=[];
+     var startAtNode=this.getNode_(prefix,this.root,0);
+     if(startAtNode)this.keysWithPrefix_(startAtNode,prefix,keys);
+     return keys;
 
-        })
+}
 
+
+    /**
+ *
+ * @param node
+ * @param collect
+ * @param keys
+ * @private
+ */
+RWayTrie.prototype.keysWithPrefix_ = function (node, collect, keys) {
+    if (node.val) {
+        keys.push({key:collect, 'value':node.val});
     }
+    var that=this;
+    node.cPtrs.forEach(function (e, i, arr) {
+        var prefix = String.fromCharCode(i);
+        that.keysWithPrefix_(e, (collect + prefix), keys);
 
+    })
+
+}
+
+/**
+ * Return a sorted list of all key value pairs
+ * @return {Array}
+ */
+RWayTrie.prototype.entrySet = function () {
+    var keys = [];
+    this.keysWithPrefix_(this.root, "", keys);
     return keys;
 }
 
-RWayTrie.prototype.deleteNode_=function(key, node, pos) {
+RWayTrie.prototype.deleteNode_ = function (key, node, pos) {
     var ptr = key.charCodeAt(pos);
     if (pos == key.length) {
         node.val = null;
