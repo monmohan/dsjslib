@@ -9,7 +9,7 @@ var rtrie = require('../src/RWayTrie.js'), assert = require('assert');
     }
 
     function testSearch() {
-        assert.strictEqual(trie.get('k'), 1, 'Failed');
+        assert.strictEqual(trie.get('k'), 1);
         assert.strictEqual(trie.get('abc'), 10, 'Failed');
         assert.strictEqual(trie.get('abcd'), 20, 'Failed');
         assert.strictEqual(trie.get('ab'), null, 'Failed');
@@ -49,11 +49,47 @@ var rtrie = require('../src/RWayTrie.js'), assert = require('assert');
         assert.strictEqual(dt.get("ab"), 20);
 
     }
+    function testRandom(){
+        var tst = new rtrie(128);
+        var para="This example shows us the power of closures. As you can see, we store i at the outer scope of the object" +
+            " we actually operate on. " +
+            "It seems kind of trivial but it is one of those features of " +
+            "JavaScript it really pays off to understand as it allows us to implement all sorts of" +
+            " nifty little patterns such as this quite easily.";
+        var keys=para.split(/\s/);
+        var keyValSet={},val;
+
+        keys.forEach(function(key){
+            val=key+'-value';
+            tst.put(key,val);
+            keyValSet[key]=val;
+        })
+        keys.forEach(function(key){
+            assert.deepEqual(tst.get(key),keyValSet[key]);
+        })
+
+        var i= 0,deleted=[];
+        while(i<keys.length){
+            console.log('--Deleting-- '+i)
+            var nkey=keys.shift();
+            keyValSet[nkey]=null;
+            tst.delete(nkey);
+            deleted.push(nkey);
+            deleted.forEach(function(dKey){
+                assert.deepEqual(tst.get(dKey),null);
+            });
+            keys.forEach(function(key){
+                assert.deepEqual(tst.get(key),keyValSet[key]);
+            })
+            i++;
+        }
+    }
 
     setup()
     testSearch()
     testKeyset()
     testUnicode()
     testDelete()
+    testRandom()
 
 })();

@@ -37,17 +37,19 @@ RWayTrie.prototype.put = function (key, val) {
     }
 }
 
-RWayTrie.prototype.get = function (key) {
-    return findKey(key, this.root, 0);
-    function findKey(key, node, pos) {
-        var ptr = key.charCodeAt(pos);
-        if (pos == key.length) {
-            return node.val;
-        }
-        if (!node.cPtrs[ptr])return null;
-        return findKey(key, node.cPtrs[ptr], ++pos);
-
+RWayTrie.prototype.getNode_ = function (key,node,pos) {
+    var ptr = key.charCodeAt(pos);
+    if (pos == key.length) {
+        return node;
     }
+    if (!node.cPtrs[ptr])return null;
+    return this.getNode_(key, node.cPtrs[ptr], ++pos);
+
+}
+
+RWayTrie.prototype.get = function (key) {
+    var node=this.getNode_(key, this.root, 0);
+    return node && node.val;
 }
 
 RWayTrie.prototype.keyset = function () {
@@ -68,28 +70,30 @@ RWayTrie.prototype.keyset = function () {
     return keys;
 }
 
-RWayTrie.prototype.delete = function (key) {
-    return delKey(key, this.root, 0);
-    function delKey(key, node, pos) {
-        var ptr = key.charCodeAt(pos);
-        if (pos == key.length) {
-            node.val = null;
-            return node;
-        }
-        if (!node.cPtrs[ptr])return null;
-        var ret = delKey(key, node.cPtrs[ptr], ++pos);
-        if (ret && !ret.cPtrs.some(
-            function (e) {
-                return e
-            }) &&
-            !ret.val) {
-            node.cPtrs.splice(ptr, 1);
-            ret = null;
-            return node;
-        }
-        return null;
-
+RWayTrie.prototype.deleteNode_=function(key, node, pos) {
+    var ptr = key.charCodeAt(pos);
+    if (pos == key.length) {
+        node.val = null;
+        return node;
     }
+    if (!node.cPtrs[ptr])return null;
+    var ret = this.deleteNode_(key, node.cPtrs[ptr], ++pos);
+    if (ret && !ret.cPtrs.some(
+        function (e) {
+            return e
+        }) &&
+        !ret.val) {
+        node.cPtrs.slice(ptr, 1);
+        ret = null;
+        return node;
+    }
+    return null;
+
+}
+
+RWayTrie.prototype.delete = function (key) {
+    return this.deleteNode_(key, this.root, 0);
+
 }
 
 
