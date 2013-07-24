@@ -116,7 +116,19 @@ var rtrie = require('../src/RWayTrie.js'), assert = require('assert');
         keys.forEach(function(key){
             assert.deepEqual(tst.get(key),keyValSet[key]);
         })
-        console.log(tst.keysWithPrefix('x'));
+        assert.deepEqual(tst.keysWithPrefix('i'),[ { key: 'in', value: 'in-value' },
+            { key: 'intended', value: 'intended-value' },
+            { key: 'is', value: 'is-value' },
+            { key: 'it', value: 'it-value' } ]
+        );
+        assert.deepEqual(tst.keysWithPrefix('environ'),([ { key: 'environment,', value: 'environment,-value' },
+            { key: 'environment-agnostic',
+                value: 'environment-agnostic-value' },
+            { key: 'environment-specific',
+                value: 'environment-specific-value' },
+            { key: 'environment.', value: 'environment.-value' } ])
+        )
+
 
 
     }

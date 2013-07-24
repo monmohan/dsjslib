@@ -19,22 +19,22 @@ function RWayTrie(R) {
 
 }
 
+RWayTrie.prototype.putNode_ = function (key, val, node, pos) {
+    if (pos === key.length) {
+        node.val = val;
+        return this;
+    }
+    var ptr = key.charCodeAt(pos);
+    if (ptr > this.R) throw new Error("Character out of range " + ptr + " " + key.charAt(pos));
+    if (!node.cPtrs[ptr])node.cPtrs[ptr] = this.mkNode_();
+    return this.putNode_(key, val, node.cPtrs[ptr], ++pos);
+
+}
+
 RWayTrie.prototype.put = function (key, val) {
     if (!(typeof key === 'string'))throw new Error("Only String keys are supported");
     if (!val)throw new Error("Null values are not supported");
-    var that = this;
-    return insKey(key, val, this.root, 0);
-    function insKey(key, val, node, pos) {
-        if (pos === key.length) {
-            node.val = val;
-            return that;
-        }
-        var ptr = key.charCodeAt(pos);
-        if (ptr > that.R) throw new Error("Character out of range " + ptr + " " + key.charAt(pos));
-        if (!node.cPtrs[ptr])node.cPtrs[ptr] = that.mkNode_();
-        return insKey(key, val, node.cPtrs[ptr], ++pos);
-
-    }
+    return this.putNode_(key, val, this.root, 0);
 }
 
 RWayTrie.prototype.getNode_ = function (key, node, pos) {
@@ -57,16 +57,16 @@ RWayTrie.prototype.get = function (key) {
     return node && node.val;
 }
 
-RWayTrie.prototype.keysWithPrefix= function (prefix) {
-     var keys=[];
-     var startAtNode=this.getNode_(prefix,this.root,0);
-     if(startAtNode)this.keysWithPrefix_(startAtNode,prefix,keys);
-     return keys;
+RWayTrie.prototype.keysWithPrefix = function (prefix) {
+    var keys = [];
+    var startAtNode = this.getNode_(prefix, this.root, 0);
+    if (startAtNode)this.keysWithPrefix_(startAtNode, prefix, keys);
+    return keys;
 
 }
 
 
-    /**
+/**
  *
  * @param node
  * @param collect
@@ -77,7 +77,7 @@ RWayTrie.prototype.keysWithPrefix_ = function (node, collect, keys) {
     if (node.val) {
         keys.push({key:collect, 'value':node.val});
     }
-    var that=this;
+    var that = this;
     node.cPtrs.forEach(function (e, i, arr) {
         var prefix = String.fromCharCode(i);
         that.keysWithPrefix_(e, (collect + prefix), keys);
