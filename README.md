@@ -144,4 +144,4 @@ tst.put(key,val) - insert a key value pair into the Trie
 tst.get(key) -- Search for key and return associated value or null
 tst.delete(key) -- Deletes a key and associated value
 ```
-Known Limitations: entrySet() TBD
+Known Limitations: None

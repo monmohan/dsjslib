@@ -1,5 +1,5 @@
 /**
- *
+ * Implementation of a Ternary Search Trie
  * @constructor
  */
 function TernarySearchTrie() {
@@ -89,9 +89,9 @@ TernarySearchTrie.prototype.recDelete_ = function (parent, node, path, key, pos)
     var nextPath = key.charAt(pos) === node.c ? 'e' : key.charAt(pos) > node.c ? 'g' : 'l';
     var isEq = nextPath === 'e';
     var nextNode = node[nextPath];
-    var continueDel =(pos === key.length - 1?
-        (isEq?this.deleteNode_(parent, node, path)
-            :this.recDelete_(node, nextNode, nextPath, key, pos)):
+    var continueDel = (pos === key.length - 1 ?
+        (isEq ? this.deleteNode_(parent, node, path)
+            : this.recDelete_(node, nextNode, nextPath, key, pos)) :
         this.recDelete_(node, nextNode, nextPath, key, isEq ? ++pos : pos));
 
     return continueDel && this.deleteNode_(parent, node, path);
@@ -140,6 +140,39 @@ TernarySearchTrie.prototype.put = function (key, val) {
     if (!this.root)this.root = this.mkNode_(key.charAt(0))
     return this.putNode_(this.root, key, val, 0);
 
+}
+
+TernarySearchTrie.prototype.keysWithPrefix_ = function (startAtNode, prefix, keys, nEqKeyPath) {
+    if (!startAtNode)return;
+    if (startAtNode.v) {
+        keys.push({'key':prefix, 'value':startAtNode.v});
+    }
+
+    var nodes = [startAtNode.l, startAtNode.e, startAtNode.g]
+
+    if (nodes[0])this.keysWithPrefix_(nodes[0], nEqKeyPath + nodes[0].c, keys, nEqKeyPath);
+    if (nodes[1])this.keysWithPrefix_(nodes[1], prefix + nodes[1].c, keys, nEqKeyPath + startAtNode.c);
+    if (nodes[2])this.keysWithPrefix_(nodes[2], nEqKeyPath + nodes[2].c, keys, nEqKeyPath);
+
+}
+
+TernarySearchTrie.prototype.keysWithPrefix = function (prefix) {
+    var keys = [], node = this.getNode_(this.root, prefix, 0);
+    if (!node) return keys;
+    if (!node.e)return [
+        {'key':prefix, 'value':node.v}
+    ];
+    this.keysWithPrefix_(node.e, prefix + node.e.c, keys, prefix);
+    return keys;
+}
+
+TernarySearchTrie.prototype.entrySet = function () {
+    var that = this, keys = [];
+    if (this.root) {
+        var superNode = this.mkNode_('', '', null, null, this.root);
+        this.keysWithPrefix_(superNode.e, superNode.e.c, keys, '');
+    }
+    return keys;
 }
 
 module.exports = TernarySearchTrie;
