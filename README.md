@@ -116,14 +116,19 @@ for this DS is impractical (although in javascript arrays are sparse so its not 
 , TernarySearchTrie can be more practical alternative.
 
 ```js
+
 var rTrie=new RWayTrie(R) - Creates a RWayTrie of alphabet size R . 
 For example if you know that the keys are made of ASCII chars only, R=128. 
 Each node in this trie will have an array of size R. 
 
 rTrie.put(key,val) - Inserts a key and set its value as val
+
 rTrie.get(key) - Search for a key and return associated value or null
+
 rTrie.delete(key) - Deletes a key 
+
 rTrie.entrySet() - Return a list of all key, value pairs in sorted order (of keys)
+
 rTrie.keysWithPrefix(prefix_chars) - Return a list of all key, value pairs where
                                      keys start with given prefix_chars
 ```
@@ -135,13 +140,19 @@ TernarySearchTrie [Map optimized for String keys]
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
 Data structure supporting String keys, for fast retrieval of 
-values associated with  string keys BUT have much less space 
-requirement than RWayTrie. Functions are same as RWayTrie
+values associated with  string and provide prefix searches.
+Functions are same as RWayTrie
 
 ```js
 var tst=new TernarySearchTrie() - Creates a TernarySearchTrie
+
 tst.put(key,val) - insert a key value pair into the Trie
+
 tst.get(key) -- Search for key and return associated value or null
+
 tst.delete(key) -- Deletes a key and associated value
+
+tst.keysWithPrefix(prefix_chars) - Return a list of all key, value pairs where
+                                     keys start with given prefix_chars
 ```
 Known Limitations: None
