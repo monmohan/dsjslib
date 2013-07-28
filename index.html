@@ -40,22 +40,34 @@ console.log(avl.root)
 
 <h2 id="skiplist-map">SkipList [Map]</h2>
 <p>[Ref - http://ocw.mit.edu Lecture on skip-lists] </p>
-<pre><code>//Create a Skip List //Optional compare function to order the keys. If not provided, a natural ordering is //assumed.
-<p>var skl=new SkipList(compareFn)</p>
-<p>//Add a key value skl.put(k,v)</p>
-<p>//Search for a key skl.get(k)</p>
-<p>//delete a key and its associated value skl.delete(k)</p>
-<p>//Get all entries(sorted). They are returned as key value pair objects skl.entrySet()</p>
+<pre><code>
+<p>//Create a Skip List 
+//Optional compare function to order the keys. If not provided, a natural ordering is assumed.
+var skl=new SkipList(compareFn)</p>
+<p>//Add a key value 
+skl.put(k,v)</p>
+<p>//Search for a key 
+skl.get(k)</p>
+<p>//delete a key and its associated value 
+skl.delete(k)</p>
+<p>//Get all entries(sorted). They are returned as key value pair objects 
+skl.entrySet()</p>
 </code></pre>
+<p>Known Limitations: None </p>
 
 <h2 id="btree">BTree</h2>
 <p>[Ref - Introduction to Algorithms By Coremen et al.] 
 <pre><code>
-Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys and a minimum of K-1 keys. var btree=new BTree(K)</p>
-<p>//Inserts a key and splits nodes as required btree.put(key,value)</p>
-<p>//Search by key btree.get(key)</p>
-<p>//Deletes a key and re-joins nodes and/or reduces the height of tree as required btree.delete(key)</p>
-<p>//Check various BTree invariants -- For sanity testing 1. Except root all nodes have degree -1 <keys<2*degree-1
+//Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys and a minimum of K-1 keys. 
+var btree=new BTree(K)</p>
+<p>//Inserts a key and splits nodes as required 
+btree.put(key,value)</p>
+<p>//Search by key 
+btree.get(key)</p>
+<p>//Deletes a key and re-joins nodes and/or reduces the height of tree as required 
+btree.delete(key)</p>
+<p>//Check various BTree invariants -- For sanity testing 
+1. Except root all nodes have degree -1 <keys<2*degree-1
 2. Child keys are less than corresponding parent key 
    (and greater than predecessor parent key)
 </p>
