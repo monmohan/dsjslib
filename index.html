@@ -17,7 +17,7 @@
 <li><a href="#avl-tree-map">AVL Tree</a></li>
 <li><a href="#skiplist-map">SkipList</a></li>
 <li><a href="#btree">BTree</a></li>
-<li><a href="rwaytrie-map-optimized-for-string-keys">RWayTrie/a></li>
+<li><a href="rwaytrie-map">RWayTrie</a></li>
 <li><a href="ternarysearchtrie-map">TernarySearchTrie</a></li>
 </ul>
 
@@ -84,7 +84,7 @@ btree.checkInvariants()
 <p>
 Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).</p>
 
-<h2 id="rwaytrie-map-optimized-for-string-keys">RWayTrie [Map optimized for String keys]</h2>
+<h2 id="rwaytrie-map">RWayTrie [Map optimized for String keys]</h2>
 <p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
 <p>Data structure supporting String keys, for fast retrieval of values associated with string keys. In comparison to a Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order. For large R the space requirement for this DS is impractical (although in javascript arrays are sparse so its not the same) , TernarySearchTrie can be more practical alternative.</p>
 <pre><code>
