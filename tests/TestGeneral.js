@@ -16,5 +16,4 @@ function Class1() {
     var o = new Class1();
     var i = new o.SubClass();
 
-
 })();

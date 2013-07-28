@@ -1,4 +1,4 @@
-var AVL = require("../src/AVLTree.js"), assert = require('assert');
+var AVL = require("../lib/AVLTree.js"), assert = require('assert');
 
 (function () {
     var bt = new AVL();

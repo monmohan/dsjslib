@@ -1,4 +1,4 @@
-var skiplist = require('../src/SkipList.js'), assert = require('assert'), util = require('util');
+var skiplist = require('../lib/SkipList.js'), assert = require('assert'), util = require('util');
 (function () {
 
     var skl = new skiplist();

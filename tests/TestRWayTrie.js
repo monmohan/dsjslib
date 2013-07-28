@@ -1,4 +1,4 @@
-var rtrie = require('../src/RWayTrie.js'), assert = require('assert');
+var rtrie = require('../lib/RWayTrie.js'), assert = require('assert');
 (function () {
     var trie = new rtrie(128); //ascii
 

@@ -1,4 +1,4 @@
-var btree = require("../src/BTree.js"), util = require("util"), assert = require('assert');
+var btree = require("../lib/BTree.js"), util = require("util"), assert = require('assert');
 ;
 (function () {
 

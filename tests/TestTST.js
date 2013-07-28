@@ -1,4 +1,4 @@
-var tstrie = require('../src/TernarySearchTrie.js'), assert = require('assert'), util = require('util');
+var tstrie = require('../lib/TernarySearchTrie.js'), assert = require('assert'), util = require('util');
 (function () {
     function testSearchAndInsert() {
         var tst = new tstrie();

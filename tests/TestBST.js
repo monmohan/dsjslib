@@ -1,4 +1,4 @@
-var BinarySearchTree = require("../src/BinarySearchTree.js"), assert = require('assert');
+var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('assert');
 (function () {
     var bt = new BinarySearchTree();
 
