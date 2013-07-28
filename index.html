@@ -13,6 +13,14 @@
 
 <h2 id="structs">Structures</h2>
 
+<ul>
+<li><a href="#avl-tree-map">AVL Tree</a></li>
+<li><a href="#skiplist-map">SkipList</a></li>
+<li><a href="#btree">BTree</a></li>
+<li><a href="rwaytrie-map-optimized-for-string-keys">RWayTrie/a></li>
+<li><a href="ternarysearchtrie-map">TernarySearchTrie</a></li>
+</ul>
+
 <h2 id="avl-tree-map">AVL Tree [Map]</h2>
 <p>Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like functionality backed by a balanced Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
 <pre><code>
@@ -111,7 +119,7 @@ rTrie.keysWithPrefix(prefix_chars) </p>
 
 <p>Known Limitations: None</p>
 
-<h2 id="ternarysearchtrie-map-optimized-for-string-keys">TernarySearchTrie [Map optimized for String keys]</h2>
+<h2 id="ternarysearchtrie-map">TernarySearchTrie [Map optimized for String keys]</h2>
 <p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
 <p>Data structure supporting String keys, for fast retrieval of values associated with string and provide prefix searches. Functions are same as RWayTrie</p>
 <p><pre><code> 
