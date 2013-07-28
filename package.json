@@ -1,5 +1,5 @@
 {
-    "name":"dsjs",
+    "name":"dsjslib",
     "version":"0.5.0",
     "description":"Implementation of commonly used datastructures in javascript",
     "main":"index.js",
