@@ -67,7 +67,7 @@ btree.get(key)</p>
 <p>//Deletes a key and re-joins nodes and/or reduces the height of tree as required 
 btree.delete(key)</p>
 <p>//Check various BTree invariants -- For sanity testing 
-1. Except root all nodes have degree -1 <keys<2*degree-1
+1. Except root all nodes have degree -1 &lt;keys&lt;2*degree-1
 2. Child keys are less than corresponding parent key 
    (and greater than predecessor parent key)
 </p>
@@ -80,37 +80,52 @@ Known Limitations: Currently only supports Numeric or String keys (uses < > for 
 <p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
 <p>Data structure supporting String keys, for fast retrieval of values associated with string keys. In comparison to a Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order. For large R the space requirement for this DS is impractical (although in javascript arrays are sparse so its not the same) , TernarySearchTrie can be more practical alternative.</p>
 <pre><code>
+<p>
 // Creates a RWayTrie of alphabet size R .
 //For example if you know that the keys are made of ASCII chars only, R=128. 
 //Each node in this trie will have an array of size R. 
 
 var rTrie=new RWayTrie(R) 
-
+</p>
+<p>
 // Inserts a key and set its value as val
 rTrie.put(key,val) 
-
+</p>
+<p>
 //Search for a key and return associated value or null
 rTrie.get(key) 
-
+</p>
+<p>
 //Deletes a key 
 rTrie.delete(key) 
-
+</p>
+<p>
 //Return a list of all key, value pairs in sorted order (of keys)
 rTrie.entrySet() 
-
+</p>
+<p>
 //Return a list of all key, value pairs where
 //keys start with given prefix_chars
-rTrie.keysWithPrefix(prefix_chars) </code></pre>
+rTrie.keysWithPrefix(prefix_chars) </p>
+</code></pre>
+
 <p>Known Limitations: None</p>
 
 <h2 id="ternarysearchtrie-map-optimized-for-string-keys">TernarySearchTrie [Map optimized for String keys]</h2>
 <p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
 <p>Data structure supporting String keys, for fast retrieval of values associated with string and provide prefix searches. Functions are same as RWayTrie</p>
-<p><pre><code> //Creates a TernarySearchTrie var tst=new TernarySearchTrie()</p>
-<p>//Insert a key value pair into the Trie tst.put(key,val)</p>
-<p>//Search for key and return associated value or null tst.get(key)</p>
-<p>//Deletes a key and associated value tst.delete(key)</p>
-<p>//Return a list of all key, value pairs where //keys start with given prefix_chars tst.keysWithPrefix(prefix_chars)</p>
+<p><pre><code> 
+<p>
+//Creates a TernarySearchTrie 
+var tst=new TernarySearchTrie()</p>
+<p>//Insert a key value pair into the Trie 
+tst.put(key,val)</p>
+<p>//Search for key and return associated value or null 
+tst.get(key)</p>
+<p>//Deletes a key and associated value 
+tst.delete(key)</p>
+<p>//Return a list of all key, value pairs where //keys start with given prefix_chars 
+tst.keysWithPrefix(prefix_chars)</p>
 </code></pre>
 <p>Known Limitations: None</p>
 </section>
