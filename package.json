@@ -1,0 +1,37 @@
+{
+    "name":"dsjs",
+    "version":"0.5.0",
+    "description":"Implementation of commonly used datastructures in javascript",
+    "main":"index.js",
+    "directories":{
+        "test":"tests"
+    },
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/monmohan/dsjs.git"
+    },
+    "keywords":[
+        "ds",
+        "structures",
+        "datastructures",
+        "javascript",
+        "AVL",
+        "AVLTree",
+        "Trie",
+        "TernarySearchTrie",
+        "TernarySearchTree",
+        "SkipList",
+        "BTree",
+        "BinarySearch",
+        "BinarySearchTree",
+        "SortedMap"
+    ],
+    "author":"monmohan@gmail.com",
+    "license":"Apache 2.0",
+    "bugs":{
+        "url":"https://github.com/monmohan/dsjs/issues"
+    },
+    "engines":{
+        "node":">= 0.4.0"
+    }
+}
