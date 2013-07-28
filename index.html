@@ -16,16 +16,25 @@
 <h2 id="avl-tree-map">AVL Tree [Map]</h2>
 <p>Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like functionality backed by a balanced Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
 <pre><code>
-<p>Create and AVLTree (extends a BinarySearchTree)
+<p>//Create and AVLTree (extends a BinarySearchTree)
  var avl=new AVLTree()</p>
-<p>//Insert a key value. It also rebalances the tree avl.put(key,value)</p>
-<p>//Get a value for key avl.get(key)</p>
-<p>//Renove key vallue, also rebalances the tree avl.delete(key)</p>
-<p>//Predecessor and Successor avl.predecessor(key) avl.successor(key)</p>
-<p>//Inorder traversal of the tree. callbackfn called for every node visited avl.traverse([node],callbackfn)</p>
-<p>//Min and Max - if start node not given, starts at root avl.min([startAtNode]) avl.max([startAtNode])</p>
-<p>// Validates the tree starting at given node (root otherwise). // Validates BST as well as AVL proeprties avl.checkInvariants([startAtNode])</p>
-<p>js //Print the tree starting at root (requires util module from Node.js) console.log(avl.root) 
+<p>//Insert a key value. It also rebalances the tree 
+avl.put(key,value)</p>
+<p>//Get a value for key 
+avl.get(key)</p>
+<p>//Renove key vallue, also rebalances the tree 
+avl.delete(key)</p>
+<p>//Predecessor and Successor avl.predecessor(key) 
+avl.successor(key)</p>
+<p>//Inorder traversal of the tree. callbackfn called for every node visited
+avl.traverse([node],callbackfn)</p>
+<p>//Min and Max - if start node not given, starts at root 
+avl.min([startAtNode]) avl.max([startAtNode])</p>
+<p>// Validates the tree starting at given node (root otherwise). 
+//Validates BST as well as AVL proeprties 
+avl.checkInvariants([startAtNode])</p>
+<p>//Print the tree starting at root (requires util module from Node.js) 
+console.log(avl.root) 
 </code></pre>
 <p>Known Limitations: Currently only supports Numeric or String keys (uses &lt; &gt; for comparison),</p>
 
