@@ -15,6 +15,7 @@ they are internally usedd when an insert or delete violates the AVL property of 
 
 ```js
 //Create and AVLTree (extends a BinarySearchTree)
+var AVLTree = require("dsjslib").AVLTree
 var avl=new AVLTree() 
 
 //Insert a key value. It also rebalances the tree
@@ -58,6 +59,7 @@ SkipList [Map]
 //Optional compare function to order the keys. If not provided, a natural ordering is
 //assumed.
 
+var SkipList = require("dsjslib").SkipList
 var skl=new SkipList(compareFn)
 
 //Add a key value
@@ -82,6 +84,9 @@ BTree
 ```js
 Creates a BTree of degree K .
 Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
+
+var BTree = require("dsjslib").BTree
+
 var btree=new BTree(K) 
 
 //Inserts a key and splits nodes as required
@@ -120,6 +125,7 @@ for this DS is impractical (although in javascript arrays are sparse so its not 
 //For example if you know that the keys are made of ASCII chars only, R=128. 
 //Each node in this trie will have an array of size R. 
 
+var RWayTrie = require("dsjslib").RWayTrie
 var rTrie=new RWayTrie(R) 
 
 // Inserts a key and set its value as val
@@ -151,6 +157,7 @@ Functions are same as RWayTrie
 
 ```js
 //Creates a TernarySearchTrie
+var TernarySearchTrie = require("dsjslib").TernarySearchTrie
 var tst=new TernarySearchTrie() 
 
 //Insert a key value pair into the Trie
