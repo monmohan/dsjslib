@@ -59,7 +59,7 @@ AVLTrees maintain balance in similar way i.e. rotating the tree
 
 ####Formal Notions
 
-1.  Height of a node is defined as following
+1.	Height of a node is defined as following
 	- Non-existent nodes have height -1
 	- Leaf nodes have height 0
 	- A non-leaf node height = Max{leftNodeHeight,rightNodeHeight}+1
@@ -82,8 +82,7 @@ Steps are
 
 ```
 
-AVLTree.prototype.put = function (key, value) {
-	//do simple BST insert
+	AVLTree.prototype.put = function (key, value) {	//do simple BST insert
     var ins = BST.prototype.put.call(this, key, value);
  	try {
 	//find where is the violation
@@ -95,11 +94,13 @@ AVLTree.prototype.put = function (key, value) {
     return ins;}
 
 ```
+
 And checking AVLProperty involves checking the difference in height between left and right subtree recursively
 
 
 ```
-AVLTree.prototype.checkAVLProperty = function (node) {if (!node) return;
+
+	AVLTree.prototype.checkAVLProperty = function (node) {if (!node) return;
     var lc = node.leftChild, rc = node.rightChild;
 
     var hdiff = (rc ? rc.height : -1) - (lc ? lc.height : -1);
@@ -159,17 +160,22 @@ Once we have found the node where violation occurs we need to fix that. There ar
 
 	Is symmetric to case c) above and in this case the violated node is left heavy but its left child is right heavy. Applying the same logic as above, it will be fixed by, first a left rotation of the left child and then a right rotation at the violated node.
 
-#####Implementation
+#####Implementation of Rotation
 ```
-AVLTree.prototype.rebalance = function (vError) {
-	//find the balance at node where violation occurs
+	
+	AVLTree.prototype.rebalance = function (vError)	//find the balance at node where violation occurs
+
     var balance = vError.hdiff, vNode = vError.node, rc = vNode.rightChild, lc = vNode.leftChild;	
     var rcrc = rc && rc.rightChild, rclc = rc && rc.leftChild;
+
 	//find the balance at child node 
     var childBalance = (rcrc ? rcrc.height : -1) - (rclc ? rclc.height : -1);
+
 	//Decide if its a two rotation or single rotation case
     var zigzag = balance > 1 ? childBalance < 0 : childBalance > 0;
+ 
     if (zigzag/*two rotation case*/) {
+		
 		//first rotate at child node
         this.rotate(balance > 1 ? vNode.rightChild : vNode.leftChild, childBalance > 0 ? 'l' : 'r')
     }
@@ -179,3 +185,12 @@ AVLTree.prototype.rebalance = function (vError) {
 ```
 
 
+##Summary	
+
+* *dsjslib.AVLTree* provides support for an ordered map (ordered on keys).
+*  The time complexity for put(K,V), get(K), delete(K) is O(logN) where N is the number of keys.
+*  Also supports listing of ordered pairs {key:k,value:v} in O(N)
+*  This would be much more efficient than using plain JavaScript objects and always sorting on demand 
+*  Check out the [**dsjslib**](http://monmohan.github.io/dsjslib) and the [**github repository**](http://github.com/monmohan/dsjslib) for more info.
+
+ 
