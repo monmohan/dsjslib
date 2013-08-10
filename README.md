@@ -11,21 +11,21 @@ backed by a balanced Tree. All functionality of BinarySearchTree is available.
 In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
 Caller doesn't need to invoke these functions, 
-they are internally usedd when an insert or delete violates the AVL property of the tree
+they are internally used when an insert or delete violates the AVL property of the tree
 
 ```js
 //Create and AVLTree (extends a BinarySearchTree)
 var AVLTree = require("dsjslib").AVLTree
-var avl=new AVLTree() 
+var avl=new AVLTree([compareFn]) //optional compare fn to sort the keys
 
-//Insert a key value. It also rebalances the tree
+//Insert a key value. It also re-balances the tree
 avl.put(key,value)
 
 //Get a value for key
 avl.get(key)
 
 
-//Renove key vallue, also rebalances the tree
+//Remove key vallue, also rebalances the tree
 avl.delete(key)
 
 //Predecessor and Successor
@@ -47,8 +47,6 @@ avl.checkInvariants([startAtNode])
 //Print the tree starting at root (requires util module from Node.js)
 console.log(avl.root)
 ```
-Known Limitations: Currently only supports Numeric or String keys (uses < > for comparison),
-
 
 
 SkipList [Map]

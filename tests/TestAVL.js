@@ -75,8 +75,50 @@ var AVL = require("../lib/AVLTree.js"), assert = require('assert');
 
     }
 
+    function testAVLCompfn(){
+        var compFn=function(obj1,obj2){
+            return obj2.k>obj1.k?1:(obj2.k===obj1.k)?0:-1;
+        }
+        var objkey, avl=new AVL(compFn);
+        var i= 0, sometext='JavaScript also contains a conditional ' +
+            'operator that assigns a value to a variable based on some condition';
+        var keys=sometext.split(/\s/);
+        while(i<20){
+            objkey={'k':keys[i%keys.length],'v':'somevalue'};
+            avl.put(objkey,"someobjvalue"+i);
+            i++;
+        }
+        avl.checkInvariants(avl.root)
+        assert.deepEqual(avl.entrySet(),[ { key: { k: 'JavaScript', v: 'somevalue' },
+            value: 'someobjvalue17' },
+            { key: { k: 'a', v: 'somevalue' }, value: 'someobjvalue11' },
+            { key: { k: 'also', v: 'somevalue' }, value: 'someobjvalue18' },
+            { key: { k: 'assigns', v: 'somevalue' },
+                value: 'someobjvalue7' },
+            { key: { k: 'based', v: 'somevalue' }, value: 'someobjvalue13' },
+            { key: { k: 'condition', v: 'somevalue' },
+                value: 'someobjvalue16' },
+            { key: { k: 'conditional', v: 'somevalue' },
+                value: 'someobjvalue4' },
+            { key: { k: 'contains', v: 'somevalue' },
+                value: 'someobjvalue19' },
+            { key: { k: 'on', v: 'somevalue' }, value: 'someobjvalue14' },
+            { key: { k: 'operator', v: 'somevalue' },
+                value: 'someobjvalue5' },
+            { key: { k: 'some', v: 'somevalue' }, value: 'someobjvalue15' },
+            { key: { k: 'that', v: 'somevalue' }, value: 'someobjvalue6' },
+            { key: { k: 'to', v: 'somevalue' }, value: 'someobjvalue10' },
+            { key: { k: 'value', v: 'somevalue' }, value: 'someobjvalue9' },
+            { key: { k: 'variable', v: 'somevalue' },
+                value: 'someobjvalue12' } ]
+        );
+
+    }
+
+
     testInsertWithRebalance();
     testDelete()
+    testAVLCompfn();
 
 
 })();
