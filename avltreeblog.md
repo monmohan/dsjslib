@@ -1,17 +1,23 @@
 #Sorted Maps in JavaScript
 JavaScript objects themselves can serve as Maps. 
+There are caveats there as well, [see here](http://www.less-broken.com/blog/2010/12/lightweight-javascript-dictionaries.html), but by and large
+one can use plain Objects as Maps in JavaScript
 
-```
-var map={}
-map.put=function(k,v){
-  map[k]=v;
-}
-```
+**However a JavaScript object by default can't be used as a ordered Map (ordered on keys)** . 
+ECMAScript specification doesn't define any explicit ordering of keys (while enumerating or otherwise). Most Browsers iterate over
+properties in the order they were created.
 
-**However a JavaScript object by default can't be used as a ordered Map (ordered on keys)** 
-Sorted Maps are a common data structure available in other languages (example TreeMap class in java collections)
+**Sorted Maps** are a data structure available in other languages (example *TreeMap* class in java collections)
+Note that the ordering happens on **dynamic data set**. This means that the ordering is maintained irrespective of new
+insertions or deletions to the Map. Compare that to say using **JavaScript Array sort() which is static** i.e additions/deletions
+of elements in the array will not maintain order or require repeated sorts to maintain order (which would roughly be O(N*logN) cost everytime)
+This structure can be used in applications where the need is to
+- automatically maintain a sorted order of objects
+- the set of objects can dynamically grow or shrink
+- able to iterate through the sorted list of objects
+- able to lookup the objects based on some key
 
-In this article, we will discuss in detail about AVL Tree implementation in JavaScript .
+In this article, we will discuss in detail about AVL Tree implementation in JavaScript which can be used create a sorted Map on dynamic data set.
 It is taken from [**dsjslib**](http://monmohan.github.io/dsjslib), a collection of some standard data structures (like sorted map) not available in JavaScript. 
 
 AVLTree in dsjslib is a Sorted Map with O(log N) access time for insert, delete and find operations . Also provides listing the sorted keys and values in O(N) time. 
