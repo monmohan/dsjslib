@@ -22,7 +22,7 @@
 </ul>
 
 <h2 id="avl-tree-map">AVL Tree [Map]</h2>
-<p>Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like functionality backed by a balanced Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
+<p>Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
 <pre><code>
 <p>//Create and AVLTree (extends a BinarySearchTree)
  var avl=new AVLTree()</p>
@@ -30,7 +30,7 @@
 avl.put(key,value)</p>
 <p>//Get a value for key 
 avl.get(key)</p>
-<p>//Renove key vallue, also rebalances the tree 
+<p>//Remove key vallue, also rebalances the tree 
 avl.delete(key)</p>
 <p>//Predecessor and Successor avl.predecessor(key) 
 avl.successor(key)</p>
