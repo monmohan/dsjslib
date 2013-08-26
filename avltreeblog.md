@@ -54,7 +54,7 @@ So lets take the same example and see what we can do to avoid a tree becoming a 
  
 At this stage, what if **we pull 9 node down and make 11 the root**, the tree looks like
 
-![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/threenodes.png "Binary Search Tree")
+![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/threenodes.png "Binary Search Tree attempt to balance")
 
 **Its still a binary search tree and also one in which the height of the tree is less than the earlier .**
 This is the idea behind AVL Trees to rotate the tree at certain nodes on insertion and deletion and maintain low height in the tree which guarantees O(logN) performance.
