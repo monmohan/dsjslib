@@ -27,7 +27,7 @@ The article assumes some familiarity with Binary Search Tree data structure
 
 ###Quick Look at Binary Search Trees (BST)
 A binary search tree is a binary (each node has maximum of two children) tree with the additional property that for each node, the key is greater than the key of its left child and less than the key of its right child. A simple but powerful data structure. 
-Below is a binary search tree built from the following sequence of keys – 
+Below is a binary search tree built from the following sequence of keys :
 15, 11, 21, 17, 13, 9
  
 ![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/basic_bst.png "Binary Search Tree")
@@ -110,7 +110,7 @@ AVLTree.prototype.checkAVLProperty = function (node) {if (!node) return;
     var lc = node.leftChild, rc = node.rightChild;
     var hdiff = (rc ? rc.height : -1) - (lc ? lc.height : -1);
     if (Math.abs(hdiff) > 1) {
-        if (log.DEBUG)console.log("AVL Height violation at Node key" + node.key);
+        if (debug)console.log("AVL Height violation at Node key" + node.key);
         throw {'node':node, 'hdiff':hdiff};
     }
     this.checkAVLProperty(node.parent);}
@@ -137,7 +137,7 @@ Once we have found the node where violation occurs we need to fix that. There ar
 
 3. *Right-Left heavy*
 
-	This case is little bit trickier. In this case (shown below), the violated node is right heavy but the right child is left heavy (its left child height is -1, right child height is 0 which is greater than -1)
+	This case is little bit trickier. In this case (example shown below), the violated node is right heavy but the right child is left heavy (its left child height is -1, right child height is 0 which is greater than -1)
 
 	![AVL Tree](http://monmohan.github.io/dsjslib/images/avltree/tree_avl_v2.png "Right-Left Heavy") 
 
@@ -197,6 +197,5 @@ AVLTree.prototype.rebalance = function (vError) {
 *  The time complexity for put(K,V), get(K), delete(K) is O(logN) where N is the number of keys.
 *  Also supports listing of ordered pairs {key:k,value:v} in O(N)
 *  This would be much more efficient than using plain JavaScript objects and always sorting on demand 
-*  Check out the [**dsjslib**](http://monmohan.github.io/dsjslib) and the [**github repository**](http://github.com/monmohan/dsjslib) for more info.
+*  Check out <a href="http://monmohan.github.io/dsjslib" target="_blank">dsjslib site</a> and the  <a href="http://github.com/monmohan/dsjslib" target="_blank">github repository</a>
 
- 
