@@ -47,6 +47,26 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
 
     }
 
+    function testWriteExpiry(){
+        c=new cache({'maximumSize':100,'expiresAfterWrite':1});
+
+        c.put('expirethiskey','expirewrite');
+        c.put('expirethiskey2','expirewrite2');
+        assert.deepEqual(c.get('expirethiskey'),'expirewrite');
+        setTimeout(function(){
+            assert.deepEqual(c.get('expirethiskey'),'expirewrite');
+            assert.deepEqual(c.get('expirethiskey2'),'expirewrite2');
+            matchEntriesInOrder(['expirethiskey2','expirethiskey',undefined]);
+        },50);
+
+        setTimeout(function(){
+            assert.equal(c.get('expirethiskey'),undefined)
+            assert.equal(c.get('expirethiskey2'),undefined)
+            assert.equal(c.size,0)
+        },150);
+
+    }
+
     function matchEntriesInOrder(expected){
         var entries=[];
         c._headEntry.forEach(function(e){
@@ -60,6 +80,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
     testLRU()
     testRedunantPut()
     testCacheclear()
-    console.log(Date.now());
+    testWriteExpiry()
+
 
 }())
