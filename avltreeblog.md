@@ -30,7 +30,7 @@ A binary search tree is a binary (each node has maximum of two children) tree wi
 Below is a binary search tree built from the following sequence of keys – 
 15, 11, 21, 17, 13, 9
  
-![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/avl_bal_1.png "Binary Search Tree")
+![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/basic_bst.png "Binary Search Tree")
 
 BST allow insert, delete and search of a key in order of height of the tree (O(h)). Searching basically involves comparing key in each node and then deciding to go left (if key is less than the node or right if key is greater) .. This means that the number of comparisons would less than or equal to the longest path from root to leaf (or in other words the height of the tree). So as long as the height of the tree is kept small we are good.
 
@@ -38,7 +38,7 @@ BUT In simple BSTs height depends on the sequence of keys being inserted.
 
 Here is a BST for following sequence of keys 9, 11, 13, 15, 17, 21
 
-![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/basic_bst.png "Binary Search Tree")
+![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/tree_linked_list.png "Binary Search Tree is now linked list")
 
 **It’s not a tree anymore but a linked list !! ..** 
 Now insert, delete and search take order of number of elements in the tree.
