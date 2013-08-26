@@ -14,12 +14,20 @@
 <h2 id="structs">Structures</h2>
 
 <ul>
+<li><a href="#installation">Installation</a></li>
 <li><a href="#avl-tree-map">AVL Tree</a></li>
 <li><a href="#skiplist-map">SkipList</a></li>
 <li><a href="#btree">BTree</a></li>
 <li><a href="#rwaytrie-map">RWayTrie</a></li>
 <li><a href="#ternarysearchtrie-map">TernarySearchTrie</a></li>
 </ul>
+
+<h2 id="installation">Installation</h2>
+
+<p>Install with <a href="http://npmjs.org">npm</a>:</p>
+
+<pre><code>$ npm install dsjslib
+</code></pre>
 
 <h2 id="avl-tree-map">AVL Tree [Map]</h2>
 <p>Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
