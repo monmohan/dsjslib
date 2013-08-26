@@ -38,7 +38,7 @@ BUT In simple BSTs height depends on the sequence of keys being inserted.
 
 Here is a BST for following sequence of keys 9, 11, 13, 15, 17, 21
 
-![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/tree_linked_list.png "Binary Search Tree")
+![Basic Tree](http://monmohan.github.io/dsjslib/images/avltree/basic_bst.png "Binary Search Tree")
 
 **It’s not a tree anymore but a linked list !! ..** 
 Now insert, delete and search take order of number of elements in the tree.
