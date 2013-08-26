@@ -30,7 +30,7 @@
 </code></pre>
 
 <h2 id="avl-tree-map">AVL Tree [Map]</h2>
-<p>Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
+<p>Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced binary Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
 <pre><code>
 <p>//Create and AVLTree (extends a BinarySearchTree)
  var avl=new AVLTree()</p>
@@ -52,7 +52,7 @@ avl.checkInvariants([startAtNode])</p>
 <p>//Print the tree starting at root (requires util module from Node.js) 
 console.log(avl.root) 
 </code></pre>
-<p>Known Limitations: Currently only supports Numeric or String keys (uses &lt; &gt; for comparison),</p>
+<p>Known Limitations: None </p>
 
 <h2 id="skiplist-map">SkipList [Map]</h2>
 <p>[Ref - http://ocw.mit.edu Lecture on skip-lists] </p>
