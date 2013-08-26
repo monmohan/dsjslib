@@ -50,6 +50,13 @@ h2 {
   border-bottom: 1px solid #eee;
 }
 
+h3 {
+    margin-top: 80px;
+    font-weight: 100;
+    letter-spacing: 1px;
+}
+
+
 #tag {
   opacity: 0;
   color: #C29D7F;

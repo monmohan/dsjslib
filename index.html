@@ -136,6 +136,24 @@ tst.delete(key)</p>
 tst.keysWithPrefix(prefix_chars)</p>
 </code></pre>
 <p>Known Limitations: None</p>
+<h2 id="cache">Cache [LRU Cache with stats] </h2>
+
+<p>[Reference: Google Guava https://code.google.com/p/guava-libraries/]</p>
+
+<code><pre>//Creates a Cache
+<p>    var Cache = require("dsjslib").Cache </p>
+
+    var cache=new Cache(
+    /*Cache spec object*/{
+    'maximumSize':100,
+    'expiresAfterWrite':60,
+    'loaderFunction':myloader})
+
+    Creates a cache of maximum size 100 entries with entries set to expire after 60 seconds post write
+    (unless evicted as LRU before that)
+</pre></code>
+
+<h3>This is Work in Progress</h3>
 </section>
 </body>
 </html>
