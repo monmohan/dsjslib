@@ -38,10 +38,18 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
         matchEntriesInOrder([ 'k20', 'k19', 'k18', 'k17', 'k16', 'k15', undefined ]);
     }
 
-    function testMixed(){
-        c=new cache({'maximumSize':20,
+    function testMaxWeight(){
+        assert.throws(function(){new cache({'maximumSize':20,
             'weigherFunction':function(key){return 10}
-        ,'expiresAfterWrite':10,'maximumWeight':1000})
+        ,'expiresAfterWrite':10,'maximumWeight':1000})});
+        assert.throws(function(){new cache({
+            'werFunction':function(key){return 10}
+            ,'expiresAfterWrite':10,'maximumWeight':1000})});
+        var ch=new cache({
+            'weigherFunction':function(key){return 10}
+            ,'expiresAfterWrite':10,'maximumWeight':1000});
+
+
 
     }
 
@@ -99,8 +107,8 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
                 //ignore
             }
         }
-        assert.deepEq(ch.stats)
-        console.log(ch.size);
+        assert.deepEqual(ch.stats,{"hitCount":5,"missCount":14,"requestCount":24})
+        assert.deepEqual(ch.size,14);
     }
 
     function matchEntriesInOrder(expected){
@@ -118,6 +126,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
     testCacheclear()
     testWriteExpiry()
     testStats()
+    testMaxWeight()
 
 
 }())
