@@ -26,7 +26,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
     }
 
 
-    function testRedunantPut() {
+    function testRedundantPut() {
 //add more elements
         for (var i = 5; i < 20; i++) {
             c.put('k' + i, 'v' + i);
@@ -38,8 +38,16 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
         matchEntriesInOrder([ 'k20', 'k19', 'k18', 'k17', 'k16', 'k15', undefined ]);
     }
 
+    function testMixed(){
+        c=new cache({'maximumSize':20,
+            'weigherFunction':function(key){return 10}
+        ,'expiresAfterWrite':10,'maximumWeight':1000})
+
+    }
+
     function testCacheclear(){
         c.invalidateAll();
+        assert.equal(c.size,0);
         c.get('something');//shouldn't throw error
         c.put('new','value');
         assert.deepEqual(c.get('new'),'value');
@@ -48,7 +56,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
     }
 
     function testWriteExpiry(){
-        c=new cache({'maximumSize':100,'expiresAfterWrite':1});
+        c=new cache({'maximumSize':100,'expiresAfterWrite':10});
 
         c.put('expirethiskey','expirewrite');
         c.put('expirethiskey2','expirewrite2');
@@ -57,7 +65,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
             assert.deepEqual(c.get('expirethiskey'),'expirewrite');
             assert.deepEqual(c.get('expirethiskey2'),'expirewrite2');
             matchEntriesInOrder(['expirethiskey2','expirethiskey',undefined]);
-        },50);
+        },1);
 
         setTimeout(function(){
             assert.equal(c.get('expirethiskey'),undefined)
@@ -65,6 +73,34 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
             assert.equal(c.size,0)
         },150);
 
+    }
+
+    function testStats(){
+        var ch=new cache({'maximumSize':100,"loaderFunction":function(key){
+            if(parseInt(key.substring(1,key.length))<15)
+                return "value"+key;
+
+        },'recordStats':1})
+        //load keys
+        for (var i = 1; i < 11; i++) {
+            ch.get('k' + i);
+        }
+        console.log(ch.stats)
+        //access few
+        for (i = 1; i < 11; i+=2) {
+            ch.get('k' + i);
+        }
+        console.log(ch.stats)
+        //access unknown values
+        for (i = 11; i < 20; i++) {
+            try {
+                ch.get('k' + i);
+            } catch (e) {
+                //ignore
+            }
+        }
+        assert.deepEq(ch.stats)
+        console.log(ch.size);
     }
 
     function matchEntriesInOrder(expected){
@@ -78,9 +114,10 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
 
     testPutAndGet()
     testLRU()
-    testRedunantPut()
+    testRedundantPut()
     testCacheclear()
     testWriteExpiry()
+    testStats()
 
 
 }())
