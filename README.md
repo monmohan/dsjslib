@@ -40,7 +40,8 @@ var cache=new Cache(
 
 //Create a cache with max size, TTL, auto loader function and also adds a removal listener. 
 //The function specified by the 'onRemove' property is called when an entry is evicted. 
-//THis function takes three arguments key, value, cause . Cause can be one of 'expired', 'capacity' or 'explicit'
+//THis function takes three arguments key, value, cause . 
+//Cause can be one of 'expired', 'capacity' or 'explicit'
 
 var cache=new Cache(
 /*Cache spec object*/{
@@ -54,12 +55,13 @@ var cache=new Cache(
 //Creates a Cache with capacity based on maximum weight instead of number of entries
 //maximumWeight specifies the capacity and weigherFunction would be invoked to get 
 // the weight of key, value. 
+//Note that eviction strategy for Cache can max weight or max size but not both
+//TTL (expireAfterWrite) can be used with both capacity strategies
 
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumWeight':1000,
 'weigherFunction':myWeigherFn,
-'expiresAfterWrite':60,
 'loaderFunction':myloader,
 'onRemove':removeListenerFn
 })
