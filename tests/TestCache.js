@@ -1,8 +1,18 @@
 var cache = require('../lib/Cache.js'), assert = require('assert');
-(function(){
-    var c=new cache({'maximumSize':6}),
+(function () {
+    var c = new cache({'maximumSize' : 6}),
         res;
+    function matchEntriesInOrder(expected, cache) {
+        var entries = [],
+            c_ = cache || c;
+        c_._headEntry.forEach(function (e) {
+            entries.push(e.key);
+        })
+        console.log(entries);
+        assert.deepEqual(entries, expected);
+    }
 
+    //TESTS ----------------
     function testPutAndGet() {
         for (var i = 0; i < 6; i++) {
             c.put('k' + i, 'v' + i);
@@ -38,64 +48,56 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
         matchEntriesInOrder([ 'k20', 'k19', 'k18', 'k17', 'k16', 'k15', undefined ]);
     }
 
-    function testMaxWeight(){
-        assert.throws(function(){new cache({'maximumSize':20,
-            'weigherFunction':function(key){return 10}
-        ,'expiresAfterWrite':10,'maximumWeight':1000})});
-        assert.throws(function(){new cache({
-            'werFunction':function(key){return 10}
-            ,'expiresAfterWrite':10,'maximumWeight':1000})});
-        var ch=new cache({
-            'weigherFunction':function(key){return 10}
-            ,'expiresAfterWrite':10,'maximumWeight':1000});
 
-
-
-    }
-
-    function testCacheclear(){
+    function testCacheclear() {
         c.invalidateAll();
-        assert.equal(c.size,0);
+        assert.equal(c.size, 0);
         c.get('something');//shouldn't throw error
-        c.put('new','value');
-        assert.deepEqual(c.get('new'),'value');
-        matchEntriesInOrder(['new',undefined]);
+        c.put('new', 'value');
+        assert.deepEqual(c.get('new'), 'value');
+        matchEntriesInOrder(['new', undefined]);
 
     }
 
-    function testWriteExpiry(){
-        c=new cache({'maximumSize':100,'expiresAfterWrite':10});
+    function testWriteExpiry() {
+        var cwexp = new cache({'maximumSize' : 100,
+            'expiresAfterWrite' : 5,'onRemove':function(k,v,c){
+                console.log(Array.prototype.slice.call(arguments).join());
+                assert.ok(k === 'expirethiskey' || k === 'expirethiskey2')
+                assert.ok(v === 'expirewrite' || v === 'expirewrite2')
+                assert.equal(c,'expired');
+            }});
 
-        c.put('expirethiskey','expirewrite');
-        c.put('expirethiskey2','expirewrite2');
-        assert.deepEqual(c.get('expirethiskey'),'expirewrite');
-        setTimeout(function(){
-            assert.deepEqual(c.get('expirethiskey'),'expirewrite');
-            assert.deepEqual(c.get('expirethiskey2'),'expirewrite2');
-            matchEntriesInOrder(['expirethiskey2','expirethiskey',undefined]);
-        },1);
+        cwexp.put('expirethiskey', 'expirewrite');
+        cwexp.put('expirethiskey2', 'expirewrite2');
+        assert.deepEqual(cwexp.get('expirethiskey'), 'expirewrite');
+        setTimeout(function () {
+            assert.deepEqual(cwexp.get('expirethiskey'), 'expirewrite');
+            assert.deepEqual(cwexp.get('expirethiskey2'), 'expirewrite2');
+            matchEntriesInOrder(['expirethiskey2', 'expirethiskey', undefined],cwexp);
+        }, 1);
 
-        setTimeout(function(){
-            assert.equal(c.get('expirethiskey'),undefined)
-            assert.equal(c.get('expirethiskey2'),undefined)
-            assert.equal(c.size,0)
-        },150);
+        setTimeout(function () {
+            assert.equal(cwexp.get('expirethiskey'), undefined)
+            assert.equal(cwexp.get('expirethiskey2'), undefined)
+            assert.equal(cwexp.size, 0)
+        }, 8000);
 
     }
 
-    function testStats(){
-        var ch=new cache({'maximumSize':100,"loaderFunction":function(key){
-            if(parseInt(key.substring(1,key.length))<15)
-                return "value"+key;
+    function testStats() {
+        var ch = new cache({'maximumSize' : 100, "loaderFunction" : function (key) {
+            if (parseInt(key.substring(1, key.length)) < 15)
+                return "value" + key;
 
-        },'recordStats':1})
+        }, 'recordStats' : 1})
         //load keys
         for (var i = 1; i < 11; i++) {
             ch.get('k' + i);
         }
         console.log(ch.stats)
         //access few
-        for (i = 1; i < 11; i+=2) {
+        for (i = 1; i < 11; i += 2) {
             ch.get('k' + i);
         }
         console.log(ch.stats)
@@ -107,17 +109,101 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
                 //ignore
             }
         }
-        assert.deepEqual(ch.stats,{"hitCount":5,"missCount":14,"requestCount":24})
-        assert.deepEqual(ch.size,14);
+        assert.deepEqual(ch.stats, {"hitCount" : 5, "missCount" : 14, "requestCount" : 24})
+        assert.deepEqual(ch.size, 14);
     }
 
-    function matchEntriesInOrder(expected){
-        var entries=[];
-        c._headEntry.forEach(function(e){
-            entries.push(e.key);
-        })
-        console.log(entries);
-        assert.deepEqual(entries,expected);
+    function testMaxWeight() {
+        assert.throws(function () {
+            new cache({'maximumSize' : 20,
+                'weigherFunction' : function (key) {
+                    return 10
+                }, 'expiresAfterWrite' : 10, 'maximumWeight' : 1000})
+        });
+        assert.throws(function () {
+            new cache({
+                'werFunction' : function (key) {
+                    return 10
+                }, 'expiresAfterWrite' : 5, 'maximumWeight' : 1000})
+        });
+        var chmx = new cache({
+            'weigherFunction' : function (key, value) {
+                return 50
+            }, 'expiresAfterWrite' : 4, 'maximumWeight' : 1000,
+            'loaderFunction' : function (k) {
+                return k + 'val';
+            }, 'recordStats' : true});
+
+        for (var i = 1; i < 21; i++) {
+            chmx.get('k' + i);
+        }
+        for (var j = 0; j < 4; j++) {
+            for (i = 20; i > 0; i--) {
+                chmx.get('k' + i);
+            }
+        }
+        //put should still work
+        chmx.put("k7", 100);
+
+        matchEntriesInOrder(["k7","k1", "k2", "k3", "k4", "k5", "k6", "k8", "k9", "k10",
+            "k11", "k12", "k13", "k14", "k15", "k16", "k17", "k18", "k19", "k20", undefined], chmx)
+        assert.deepEqual(chmx.stats, { hitCount : 80, missCount : 20, requestCount : 100 })
+
+        //max weight comes into play
+        for (i = 100; i > 80; i--) {
+            chmx.get('k' + i);
+        }
+
+        matchEntriesInOrder(["k81", "k82", "k83", "k84", "k85", "k86", "k87", "k88", "k89",
+            "k90", "k91", "k92", "k93", "k94", "k95", "k96", "k97", "k98", "k99", "k100", "k7", undefined], chmx)
+
+        setTimeout(function () {
+            //max weight comes into play
+            assert.equal(chmx.size, 21);
+            for (i = 100; i > 80; i--) {
+                chmx.getIfPresent('k' + i);
+
+            }
+            assert.equal(chmx.size, 1);
+            matchEntriesInOrder(['k7',undefined],chmx);
+            chmx.getIfPresent('k7');
+            assert.equal(chmx.size, 0);
+            matchEntriesInOrder([undefined],chmx);
+            //now populate
+            for (i = 85; i > 80; i--) {
+                chmx.get('k' + i);
+            }
+            assert.equal(chmx.size, 5);
+            matchEntriesInOrder(["k81","k82","k83","k84","k85",undefined],chmx);
+            //now remove
+            for (i = 81; i <= 85; i+=2) {
+                chmx.invalidate('k' + i);
+            }
+            matchEntriesInOrder(["k82","k84",undefined] ,chmx)
+
+        }, 5000);
+    }
+
+    function testRemoval(){
+        var chr=new cache({'maximumSize':10,'onRemove':function(key,value,cause){
+            console.log(key+' was evicted'+'because of '+cause+' value='+value);
+            assert.equal(cause,'capacity')
+        }})
+
+        for (var i = 1; i <= 12; i+=1) {
+            chr.put('k' + i,'v'+i);
+        }
+
+        chr=new cache({'maximumSize':10,'onRemove':function(key,value,cause){
+            console.log(key+' was evicted'+'because of '+cause+' value='+value);
+            assert.equal(cause,'explicit')
+        }})
+        for (i = 1; i <= 5; i+=1) {
+            chr.put('k' + i,'v'+i);
+        }
+        chr.invalidate('k3');
+
+
     }
 
     testPutAndGet()
@@ -127,6 +213,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
     testWriteExpiry()
     testStats()
     testMaxWeight()
+    testRemoval()
 
 
 }())
