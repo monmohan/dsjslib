@@ -176,6 +176,9 @@ Known Limitations: None
 Cache [LRU Cache with stats]
 ------------------------------
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
+A in-memory cache implementation inspired by Google Guava Loading Cache (a Java SDK).
+The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
+cache are captured e.g providing a loader function, removal listener etc.
 
 ```js
 //Creates a Cache
@@ -184,11 +187,51 @@ var Cache = require("dsjslib").Cache
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
+'expiresAfterWrite':60
+})
+
+Creates a cache of maximum size 100, entries set to expire after 60 seconds post write
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
 'expiresAfterWrite':60,
 'loaderFunction':myloader})
 
-Creates a cache of maximum size 100 entries with entries set to expire after 60 seconds post write 
-(unless evicted as LRU before that)
+Creates a cache of maximum size 100, entries set to expire after 60 seconds post write, an automatic loader function to
+load the value in Cache if not present.
+To elaborate
+cache.get(key) 
+will call myloader to get the value for the key if the value is not in cache. Myloader function should take an argument 
+(key) and return the value to be stored for the key.
+
+If one doesn't want the default loading behavior, use
+cache.getIfPresent(key)
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
+})
+
+Also add a removal listener. The function is called when an entry is evicted. Function takes three arguments
+key, value, cause . Cause can be one of 'expired', 'capacity' or 'explicit'
+
+Weight based 
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumWeight':1000,
+'weigherFunction':myWeigherFn,
+'expiresAfterWrite':60,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
+})
+
+Creates a Cache with capacity based on maximum weight instead of number of entries
+
+
 ```
 
 **This is Work in Progress**
