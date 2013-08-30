@@ -1,8 +1,3 @@
-This is a collection of data structures and utilities, implemented in JavaScript. Its written and tested using
-Node.js but the dependencies are mostly peripheral (e.g util for logging and assert module for testing). 
-So the code can be used in Browser as well with minor changes.
-
-
 Cache [LRU Cache with stats]
 ------------------------------
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
@@ -12,8 +7,11 @@ The cache is much simpler since it doesn't have to deal with concurrent threads,
 cache are captured e.g auto loader function, removal listener, stats recording etc.
 
 ```js
-//Creates a Cache
+
 var Cache = require("dsjslib").Cache
+
+//General format
+var cache = new Cache(cacheSpecObject)
 
 //Create a cache of maximum size 100, entries set to expire after 60 seconds post write
 var cache=new Cache(
@@ -22,20 +20,18 @@ var cache=new Cache(
 'expiresAfterWrite':60
 })
 
-
 //Create a cache of maximum size 100, entries set to expire after 60 seconds post write, 
-//an automatic loader function to load the value in Cache if not present.
-
-// cache.get(key) will call myloader to get the value for the key if the value is not in cache. 
-//Myloader function should take an argument  (key) and return the value to be stored for the key.
-//If default loading behavior is not desired then  use
-//cache.getIfPresent(key)
+//and a caller provided automatic loader function to load the value in Cache if not present.
+//myloader function should take an argument  (key) and return the value to be stored for the key.
+//undefined and null values can't be stored and an error will be raised 
 
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
 'expiresAfterWrite':60,
-'loaderFunction':myloader})
+'loaderFunction':myLoaderFn
+})
+
 
 
 //Create a cache with max size, TTL, auto loader function and also adds a removal listener. 
@@ -75,6 +71,31 @@ var cache=new Cache(
 'recordStats':true
 })
 
+```
+**API**
+
+```js
+//Get value for key,
+//Automatically load the value if not present and an auto loader function is configured
+cache.get(key)
+
+//Get value for key as present in cache, not attempt to load the key will be done
+//even if a loader is configured
+
+cache.getIfPresent(key)
+
+//Add a key value 
+cache.put(key,value)
+
+//Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
+//and removal cause as 'explicit'
+cache.inavlidate(key)
+
+//Invalidate all keys in cache, removal listeners are not invoked
+cache.inavlidateAll()
+
+//Gets statistics of cache usage
+cache.stats returns an object {'hitCount':<number>,'missCount':<number>,'reqeustCount':<number>}
 
 
 ```
