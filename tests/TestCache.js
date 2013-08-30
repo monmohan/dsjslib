@@ -1,4 +1,4 @@
-var cache = require('../lib/Cache.js'), assert = require('assert');
+var cache = require('../lib/Cache.js'), assert = require('assert'), fs=require('fs');
 (function () {
     var c = new cache({'maximumSize' : 6}),
         res;
@@ -207,14 +207,48 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
 
     }
 
-    testPutAndGet()
+    function testRandom(){
+        var keys=[];
+        var i= 0,
+            evictions=0
+        fs.readFile('/depot/dsjs/tests/resources/largetextfile.txt', function (err, data) {
+            var rCache=new cache({
+                'maximumSize':1200,
+                'loaderFunction':function(k){
+                    var v= keys[(++i)%2000];
+                    if(!v)console.log('no v for i='+i);
+                    return v;
+
+                },
+                'onRemove':function(k,v,c){
+                    evictions++;
+                }
+            })
+
+            if (err) throw err;
+            keys=(""+data).match(/\S+/g);
+            console.log(keys);
+
+            keys.forEach(function(k){
+                assert.ok(rCache.get(k));
+            });
+
+            console.log(rCache.get('Downloaded'));
+            assert.equal(rCache.size,1200);
+            assert.equal(evictions,454);
+
+        });
+    }
+
+    /*testPutAndGet()
     testLRU()
     testRedundantPut()
     testCacheclear()
     testWriteExpiry()
     testStats()
     testMaxWeight()
-    testRemoval()
+    testRemoval()*/
+    testRandom()
 
 
 }())
