@@ -109,6 +109,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert');
                 //ignore
             }
         }
+        console.log(ch.stats);
         assert.deepEqual(ch.stats, {"hitCount" : 5, "missCount" : 14, "requestCount" : 24})
         assert.deepEqual(ch.size, 14);
     }
