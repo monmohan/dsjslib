@@ -1,6 +1,83 @@
-This is a collection of data structures, implemented in JavaScript. Its written and tested using
+This is a collection of data structures and utilities, implemented in JavaScript. Its written and tested using
 Node.js but the dependencies are mostly peripheral (e.g util for logging and assert module for testing). 
 So the code can be used in Browser as well with minor changes.
+
+
+Cache [LRU Cache with stats]
+------------------------------
+[Reference: Google Guava https://code.google.com/p/guava-libraries/]
+
+In-memory cache implementation for Node, inspired by Google Guava Loading Cache .
+The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
+cache are captured e.g auto loader function, removal listener, stats recording etc.
+
+```js
+//Creates a Cache
+var Cache = require("dsjslib").Cache
+
+//Create a cache of maximum size 100, entries set to expire after 60 seconds post write
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60
+})
+
+
+//Create a cache of maximum size 100, entries set to expire after 60 seconds post write, 
+//an automatic loader function to load the value in Cache if not present.
+
+// cache.get(key) will call myloader to get the value for the key if the value is not in cache. 
+//Myloader function should take an argument  (key) and return the value to be stored for the key.
+//If default loading behavior is not desired then  use
+//cache.getIfPresent(key)
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myloader})
+
+
+//Create a cache with max size, TTL, auto loader function and also adds a removal listener. 
+//The function specified by the 'onRemove' property is called when an entry is evicted. 
+//THis function takes three arguments key, value, cause . 
+//Cause can be one of 'expired', 'capacity' or 'explicit'
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
+})
+
+
+//Creates a Cache with capacity based on maximum weight instead of number of entries
+//maximumWeight specifies the capacity and weigherFunction would be invoked to get 
+// the weight of key, value. 
+//Note that eviction strategy for Cache can max weight or max size but not both
+//TTL (expireAfterWrite) can be used with both capacity strategies
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumWeight':1000,
+'weigherFunction':myWeigherFn,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
+})
+
+//Record stats of the cache
+//Hit, Miss and request counts are recorded
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+.................
+'recordStats':true
+})
+
+
+
+```
 
 
 
@@ -173,23 +250,6 @@ tst.keysWithPrefix(prefix_chars)
 ```
 Known Limitations: None
 
-Cache [LRU Cache with stats]
-------------------------------
-[Reference: Google Guava https://code.google.com/p/guava-libraries/]
 
-```js
-//Creates a Cache
-var Cache = require("dsjslib").Cache
 
-var cache=new Cache(
-/*Cache spec object*/{
-'maximumSize':100,
-'expiresAfterWrite':60,
-'loaderFunction':myloader})
-
-Creates a cache of maximum size 100 entries with entries set to expire after 60 seconds post write 
-(unless evicted as LRU before that)
-```
-
-**This is Work in Progress**
 
