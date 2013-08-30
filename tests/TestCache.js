@@ -240,14 +240,14 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs=require('
         });
     }
 
-    /*testPutAndGet()
+    testPutAndGet()
     testLRU()
     testRedundantPut()
     testCacheclear()
     testWriteExpiry()
     testStats()
     testMaxWeight()
-    testRemoval()*/
+    testRemoval()
     testRandom()
 
 
