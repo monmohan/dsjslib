@@ -1,15 +1,4 @@
-
-'expiresAfterWrite':60
-})
-
-
-//Create a cache of maximum size 100, entries set to expire after 60 seconds post write, 
-//and a caller provided automatic loader function to load the value in Cache if not present.
-//myloader function should take an argument  (key) and return the value to be stored for the key.
-//undefined and null values can't be stored and an error will be raised 
-
-
-var cache=new Cache(Cache [LRU Cache with stats]
+Cache [LRU Cache with stats]
 ------------------------------
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
 
@@ -28,10 +17,21 @@ var cache = new Cache(cacheSpecObject)
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
+'expiresAfterWrite':60
+})
+
+//Create a cache of maximum size 100, entries set to expire after 60 seconds post write, 
+//and a caller provided automatic loader function to load the value in Cache if not present.
+//myloader function should take an argument  (key) and return the value to be stored for the key.
+//undefined and null values can't be stored and an error will be raised 
+
+var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
 'expiresAfterWrite':60,
-'loaderFunction':myloader})
+'loaderFunction':myLoaderFn
+})
+
 
 
 //Create a cache with max size, TTL, auto loader function and also adds a removal listener. 
