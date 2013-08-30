@@ -8,19 +8,20 @@
 <section id="content">
 <h1><a href="https://github.com/monmohan/dsjs.git">dsjslib</a></h1>
 <h2>
-<p>This is a collection of data structures, implemented in JavaScript. Its written and tested using Node.js but the dependencies are mostly peripheral 
+<p>This is a collection of data structures and utilities, implemented in JavaScript. Its written and tested using Node.js but the dependencies are mostly peripheral
 (e.g util for logging and assert module for testing). So the code can be used in Browser as well with minor changes.</p></h2>
 
-<h2 id="structs">Structures</h2>
+<h2 id="structs">Table of Contents</h2>
 
 <ul>
 <li><a href="#installation">Installation</a></li>
+<li><a href="#cache">Cache</a></li>
 <li><a href="#avl-tree-map">AVL Tree</a></li>
 <li><a href="#skiplist-map">SkipList</a></li>
 <li><a href="#btree">BTree</a></li>
 <li><a href="#rwaytrie-map">RWayTrie</a></li>
 <li><a href="#ternarysearchtrie-map">TernarySearchTrie</a></li>
-<li><a href="#cache">Cache</a></li>
+
 </ul>
 
 <h2 id="installation">Installation</h2>
@@ -145,22 +146,107 @@ tst.delete(key)</p>
 tst.keysWithPrefix(prefix_chars)</p>
 </code></pre>
 <p>Known Limitations: None</p>
+
 <h2 id="cache">Cache [LRU Cache with stats] </h2>
 
-<p>[Reference: Google Guava https://code.google.com/p/guava-libraries/]</p>
-    <h3>This is Work in Progress</h3>
+<p>[Reference: Google Guava https://code.google.com/p/guava-libraries/]
+
+    In-memory cache implementation for Node, inspired by Google Guava Loading Cache .
+    The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
+    cache are captured e.g auto loader function, removal listener, stats recording etc.
+</p>
+
 <code><pre>
-    //Creates a Cache
-    var Cache = require("dsjslib").Cache
+var Cache = require("dsjslib").Cache
 
-    var cache=new Cache(
-    /*Cache spec object*/{
-    'maximumSize':100,
-    'expiresAfterWrite':60,
-    'loaderFunction':myloader})
+//General format
+var cache = new Cache(cacheSpecObject)
 
-    Creates a cache of maximum size 100 entries with entries set to expire after 60 seconds post write
-    (unless evicted as LRU before that)
+//Create a cache of maximum size 100, entries set to expire after 60 seconds post write
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60
+})
+
+//Create a cache of maximum size 100, entries set to expire after 60 seconds post write,
+//and a caller provided automatic loader function to load the value in Cache if not present.
+//myloader function should take an argument  (key) and return the value to be stored for the key.
+//undefined and null values can't be stored and an error will be raised
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myLoaderFn
+})
+
+
+
+//Create a cache with max size, TTL, auto loader function and also adds a removal listener.
+//The function specified by the 'onRemove' property is called when an entry is evicted.
+//THis function takes three arguments key, value, cause .
+//Cause can be one of 'expired', 'capacity' or 'explicit'
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
+})
+
+
+//Creates a Cache with capacity based on maximum weight instead of number of entries
+//maximumWeight specifies the capacity and weigherFunction would be invoked to get
+// the weight of key, value.
+//Note that eviction strategy for Cache can max weight or max size but not both
+//TTL (expireAfterWrite) can be used with both capacity strategies
+
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumWeight':1000,
+'weigherFunction':myWeigherFn,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
+})
+
+//Record stats of the cache
+//Hit, Miss and request counts are recorded
+var cache=new Cache(
+/*Cache spec object*/{
+'maximumSize':100,
+.................
+'recordStats':true
+})
+    </pre></code>
+
+
+<h3>API</h3>
+
+<code><pre>
+//Get value for key,
+//Automatically load the value if not present and an auto loader function is configured
+cache.get(key)
+
+//Get value for key as present in cache, not attempt to load the key will be done
+//even if a loader is configured
+
+cache.getIfPresent(key)
+
+//Add a key value
+cache.put(key,value)
+
+//Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
+//and removal cause as 'explicit'
+cache.inavlidate(key)
+
+//Invalidate all keys in cache, removal listeners are not invoked
+cache.inavlidateAll()
+
+//Gets statistics of cache usage
+cache.stats returns an object {'hitCount':<number>,'missCount':<number>,'reqeustCount':<number>}
+
 </pre></code>
 </section>
 </body>
