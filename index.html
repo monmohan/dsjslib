@@ -1,7 +1,9 @@
 <html>
   <head>
     <title>dsjslib - a JavaScript data structure library</title>
-    <link rel="stylesheet" href="homestyle.css" />
+    <link rel="stylesheet" href="index.css" />
+      <script type="text/javascript"  src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
+      <script type="text/javascript" src="decorate.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
 <body>
@@ -32,118 +34,135 @@
 </code></pre>
 
 <h2 id="avl-tree-map">AVL Tree [Map]</h2>
-<p>Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced binary Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree</p>
+Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced binary Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
 <pre><code>
-<p>//Create and AVLTree (extends a BinarySearchTree)
- var avl=new AVLTree()</p>
-<p>//Insert a key value. It also rebalances the tree 
-avl.put(key,value)</p>
-<p>//Get a value for key 
-avl.get(key)</p>
-<p>//Remove key vallue, also rebalances the tree 
-avl.delete(key)</p>
-<p>//Predecessor and Successor avl.predecessor(key) 
-avl.successor(key)</p>
-<p>//Inorder traversal of the tree. callbackfn called for every node visited
-avl.traverse([node],callbackfn)</p>
-<p>//Min and Max - if start node not given, starts at root 
-avl.min([startAtNode]) avl.max([startAtNode])</p>
-<p>// Validates the tree starting at given node (root otherwise). 
+//Create and AVLTree (extends a BinarySearchTree)
+var avl=require('dsjslib').AVLTree
+
+//Insert a key value. It also rebalances the tree
+avl.put(key,value)
+
+//Get a value for key
+avl.get(key)
+
+//Remove key vallue, also rebalances the tree
+avl.delete(key)
+
+//Predecessor and Successor avl.predecessor(key)
+avl.successor(key)
+
+//Inorder traversal of the tree. callbackfn called for every node visited
+avl.traverse([node],callbackfn)and Max - if start node not given, starts at root
+avl.min([startAtNode]) avl.max([startAtNode])
+
+//Validates the tree starting at given node (root otherwise).
 //Validates BST as well as AVL proeprties 
-avl.checkInvariants([startAtNode])</p>
-<p>//Print the tree starting at root (requires util module from Node.js) 
-console.log(avl.root) 
+avl.checkInvariants([startAtNode])
+
+//Print the tree starting at root (requires util module from Node.js)
+console.log(avl.root)
+
 </code></pre>
 <p>Known Limitations: None </p>
 
 <h2 id="skiplist-map">SkipList [Map]</h2>
 <p>[Ref - http://ocw.mit.edu Lecture on skip-lists] </p>
 <pre><code>
-<p>//Create a Skip List 
+//Create a Skip List
 //Optional compare function to order the keys. If not provided, a natural ordering is assumed.
-var skl=new SkipList(compareFn)</p>
-<p>//Add a key value 
-skl.put(k,v)</p>
-<p>//Search for a key 
-skl.get(k)</p>
-<p>//delete a key and its associated value 
-skl.delete(k)</p>
-<p>//Get all entries(sorted). They are returned as key value pair objects 
-skl.entrySet()</p>
+var skl=new SkipList(compareFn)
+
+//Add a key value
+skl.put(k,v)
+
+//Search for a key
+skl.get(k)
+
+//delete a key and its associated value
+skl.delete(k)
+
+//Get all entries(sorted). They are returned as key value pair objects
+skl.entrySet()
 </code></pre>
-<p>Known Limitations: None </p>
+Known Limitations: None
 
 <h2 id="btree">BTree</h2>
-<p>[Ref - Introduction to Algorithms By Coremen et al.] 
+[Ref - Introduction to Algorithms By Coremen et al.]
 <pre><code>
 //Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys and a minimum of K-1 keys. 
-var btree=new BTree(K)</p>
-<p>//Inserts a key and splits nodes as required 
-btree.put(key,value)</p>
-<p>//Search by key 
-btree.get(key)</p>
-<p>//Deletes a key and re-joins nodes and/or reduces the height of tree as required 
-btree.delete(key)</p>
-<p>//Check various BTree invariants -- For sanity testing 
+var btree=new BTree(K)
+
+//Inserts a key and splits nodes as required
+btree.put(key,value)
+
+//Search by key
+btree.get(key)
+
+//Deletes a key and re-joins nodes and/or reduces the height of tree as required
+btree.delete(key)
+
+//Check various BTree invariants -- For sanity testing
 1. Except root all nodes have degree -1 &lt;keys&lt;2*degree-1
 2. Child keys are less than corresponding parent key 
    (and greater than predecessor parent key)
-</p>
+
 btree.checkInvariants()
 </code></pre>
-<p>
-Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).</p>
+
+Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
 
 <h2 id="rwaytrie-map">RWayTrie [Map optimized for String keys]</h2>
 <p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
-<p>Data structure supporting String keys, for fast retrieval of values associated with string keys. In comparison to a Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order. For large R the space requirement for this DS is impractical (although in javascript arrays are sparse so its not the same) , TernarySearchTrie can be more practical alternative.</p>
+Data structure supporting String keys, for fast retrieval of values associated with string keys. In comparison to a Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order. For large R the space requirement for this DS is impractical (although in javascript arrays are sparse so its not the same) , TernarySearchTrie can be more practical alternative.
 <pre><code>
-<p>
+
 // Creates a RWayTrie of alphabet size R .
 //For example if you know that the keys are made of ASCII chars only, R=128. 
 //Each node in this trie will have an array of size R. 
 
 var rTrie=new RWayTrie(R) 
-</p>
-<p>
+
+
 // Inserts a key and set its value as val
 rTrie.put(key,val) 
-</p>
-<p>
+
+
 //Search for a key and return associated value or null
 rTrie.get(key) 
-</p>
-<p>
-//Deletes a key 
-rTrie.delete(key) 
-</p>
-<p>
+
+//Deletes a key
+rTrie.delete(key)
+
 //Return a list of all key, value pairs in sorted order (of keys)
 rTrie.entrySet() 
-</p>
-<p>
+
+
 //Return a list of all key, value pairs where
 //keys start with given prefix_chars
-rTrie.keysWithPrefix(prefix_chars) </p>
+rTrie.keysWithPrefix(prefix_chars)
 </code></pre>
 
 <p>Known Limitations: None</p>
 
 <h2 id="ternarysearchtrie-map">TernarySearchTrie [Map optimized for String keys]</h2>
 <p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
-<p>Data structure supporting String keys, for fast retrieval of values associated with string and provide prefix searches. Functions are same as RWayTrie</p>
-<p><pre><code> 
-<p>
+Data structure supporting String keys, for fast retrieval of values associated with string and provide prefix searches. Functions are same as RWayTrie
+<pre><code>
+
 //Creates a TernarySearchTrie 
-var tst=new TernarySearchTrie()</p>
-<p>//Insert a key value pair into the Trie 
-tst.put(key,val)</p>
-<p>//Search for key and return associated value or null 
-tst.get(key)</p>
-<p>//Deletes a key and associated value 
-tst.delete(key)</p>
-<p>//Return a list of all key, value pairs where //keys start with given prefix_chars 
-tst.keysWithPrefix(prefix_chars)</p>
+var tst=new TernarySearchTrie()
+
+//Insert a key value pair into the Trie
+tst.put(key,val)
+
+//Search for key and return associated value or null
+tst.get(key)
+
+//Deletes a key and associated value
+tst.delete(key)
+
+//Return a list of all key, value pairs where //keys start with given prefix_chars
+tst.keysWithPrefix(prefix_chars)
 </code></pre>
 <p>Known Limitations: None</p>
 
@@ -156,14 +175,18 @@ tst.keysWithPrefix(prefix_chars)</p>
     cache are captured e.g auto loader function, removal listener, stats recording etc.
 </p>
 
-<code><pre>
+<pre><code>
+
 var Cache = require("dsjslib").Cache
 
+
 //General format
+
 var cache = new Cache(cacheSpecObject)
 
 //Create a cache of maximum size 100, entries set to expire after 60 seconds post write
-var cache=new Cache(
+
+ var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
 'expiresAfterWrite':60
@@ -211,22 +234,26 @@ var cache=new Cache(
 'onRemove':removeListenerFn
 })
 
+
 //Record stats of the cache
 //Hit, Miss and request counts are recorded
+
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
 .................
 'recordStats':true
 })
-    </pre></code>
+    </code></pre>
 
 
 <h3>API</h3>
 
-<code><pre>
+<pre><code>
+
 //Get value for key,
 //Automatically load the value if not present and an auto loader function is configured
+
 cache.get(key)
 
 //Get value for key as present in cache, not attempt to load the key will be done
@@ -236,7 +263,6 @@ cache.getIfPresent(key)
 
 //Add a key value
 cache.put(key,value)
-
 //Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
 //and removal cause as 'explicit'
 cache.inavlidate(key)
@@ -245,9 +271,9 @@ cache.inavlidate(key)
 cache.inavlidateAll()
 
 //Gets statistics of cache usage
-cache.stats returns an object {'hitCount':<number>,'missCount':<number>,'reqeustCount':<number>}
+cache.stats returns an object {'hitCount':number,'missCount':number,'reqeustCount':number}
 
-</pre></code>
+</code></pre>
 </section>
 </body>
 </html>
