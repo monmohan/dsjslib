@@ -18,7 +18,12 @@ var cache = new Cache(cacheSpecObject)
 The cache can be a simple loading cache which knows how to load entries when a miss occurs 
 Example below creates a cache of maximum size 100 and a caller provided automatic loader function
 to load the value in Cache if not present. myloader function should take an argument  (key) and 
-return the value to be stored for the key. undefined and null values can't be stored and an error will be raised 
+return the value to be stored for the key. undefined and null values can't be stored and an error will be raised.
+Loading cache centralizes loading logic and avoids patterns like 
+                                     ```
+                                     if(!getFromCache()){
+                                     loadMyData(), putInCache()}```
+sprayed all over your code
 
 ```js
 var cache=new Cache(
