@@ -16,16 +16,14 @@ var cache = new Cache(cacheSpecObject)
 **Loading Cache:**
 
 The cache can be a simple loading cache which knows how to load entries when a miss occurs 
-e.g. Below creates a cache of maximum size 100, entries set to expire after 60 seconds post write, 
-and a caller provided automatic loader function to load the value in Cache if not present.
-myloader function should take an argument  (key) and return the value to be stored for the key
-undefined and null values can't be stored and an error will be raised 
+Example below creates a cache of maximum size 100 and a caller provided automatic loader function
+to load the value in Cache if not present. myloader function should take an argument  (key) and 
+return the value to be stored for the key. undefined and null values can't be stored and an error will be raised 
 
 ```js
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
-'expiresAfterWrite':60,
 'loaderFunction':myLoaderFn
 })
 ```
