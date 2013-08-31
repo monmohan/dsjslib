@@ -89,10 +89,10 @@ cache.put(key,value)
 
 //Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
 //and removal cause as 'explicit'
-cache.inavlidate(key)
+cache.invalidate(key)
 
 //Invalidate all keys in cache, removal listeners are not invoked
-cache.inavlidateAll()
+cache.invalidateAll()
 
 //Gets statistics of cache usage
 cache.stats returns an object {'hitCount':<number>,'missCount':<number>,'reqeustCount':<number>}
