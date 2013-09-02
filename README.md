@@ -2,73 +2,102 @@ Cache [LRU Cache with stats]
 ------------------------------
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
 
-In-memory cache implementation for Node, inspired by Google Guava Loading Cache .
+In-memory LRU cache implementation for Node, inspired by Google Guava Loading Cache .
 The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
 cache are captured e.g auto loader function, removal listener, stats recording etc.
 
+**General Format**
 ```js
-
 var Cache = require("dsjslib").Cache
-
 //General format
 var cache = new Cache(cacheSpecObject)
+```
 
-//Create a cache of maximum size 100, entries set to expire after 60 seconds post write
+**Loading Cache:**
+
+The cache can be a simple loading cache which knows how to load entries when a miss occurs 
+Example below creates a cache of maximum size 100 and a caller provided automatic loader function
+to load the value in Cache if not present. myloader function should take an argument  (key) and 
+return the value to be stored for the key. undefined and null values can't be stored and an error will be raised.
+Loading cache centralizes loading logic and avoids patterns like 
+                                     ```
+                                     if(!getFromCache()){
+                                     loadMyData(), putInCache()}```
+sprayed all over your code
+
+```js
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
-'expiresAfterWrite':60
-})
-
-//Create a cache of maximum size 100, entries set to expire after 60 seconds post write, 
-//and a caller provided automatic loader function to load the value in Cache if not present.
-//myloader function should take an argument  (key) and return the value to be stored for the key.
-//undefined and null values can't be stored and an error will be raised 
-
-var cache=new Cache(
-/*Cache spec object*/{
-'maximumSize':100,
-'expiresAfterWrite':60,
 'loaderFunction':myLoaderFn
 })
+```
 
+**Eviction**
 
+Cache can automatically evict elements based on criteria.
 
-//Create a cache with max size, TTL, auto loader function and also adds a removal listener. 
-//The function specified by the 'onRemove' property is called when an entry is evicted. 
-//THis function takes three arguments key, value, cause . 
-//Cause can be one of 'expired', 'capacity' or 'explicit'
-
+*Eviction: Maximum size*
+Elements will be evicted in LRU order. Eviction occurs on write operation.
+```js
 var cache=new Cache(
 /*Cache spec object*/{
 'maximumSize':100,
-'expiresAfterWrite':60,
-'loaderFunction':myloader,
-'onRemove':removeListenerFn
 })
+```
 
+*Eviction: Maximum Weight*
+e.g. below creates a Cache with capacity based on maximum weight instead of size. 
+weigherFunction would be invoked to get the weight of key, value.  Eviction still ocurs in LRU order.
+Weight is used to determince if the capacity has exceeded not for selecting what to evict. 
+Note that eviction strategy for Cache can be based on max weight or max size but not both.
 
-//Creates a Cache with capacity based on maximum weight instead of number of entries
-//maximumWeight specifies the capacity and weigherFunction would be invoked to get 
-// the weight of key, value. 
-//Note that eviction strategy for Cache can max weight or max size but not both
-//TTL (expireAfterWrite) can be used with both capacity strategies
-
+```js
 var cache=new Cache(
-/*Cache spec object*/{
+{
 'maximumWeight':1000,
 'weigherFunction':myWeigherFn,
 'loaderFunction':myloader,
 'onRemove':removeListenerFn
 })
+```
+*Eviction: Time to Live (TTL)*
+Elements expire after the specified time has elapsed since the entry creation or update.
+Useful for dropping stale data.
 
-//Record stats of the cache
-//Hit, Miss and request counts are recorded
+```js
 var cache=new Cache(
-/*Cache spec object*/{
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myloader
+})
+```
+
+**Cache performance**
+
+Cache stats can be recorded. Hit, Miss and request counts are recorded.
+Useful to get feedback so that cache configuration can be tuned.
+
+```js
+var cache=new Cache(
+{
 'maximumSize':100,
 .................
 'recordStats':true
+})
+
+```
+
+**Removal Notifications**
+
+If configured, removal notifications are sent as elements get evicted from cache. Useful to close associated resources.
+The notification callback gets key, value & cause as arguments.
+```js
+var cache=new Cache(
+'maximumSize':100,
+'expiresAfterWrite':60,
+'loaderFunction':myloader,
+'onRemove':removeListenerFn
 })
 
 ```
@@ -89,10 +118,10 @@ cache.put(key,value)
 
 //Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
 //and removal cause as 'explicit'
-cache.inavlidate(key)
+cache.invalidate(key)
 
 //Invalidate all keys in cache, removal listeners are not invoked
-cache.inavlidateAll()
+cache.invalidateAll()
 
 //Gets statistics of cache usage
 cache.stats returns an object {'hitCount':<number>,'missCount':<number>,'reqeustCount':<number>}
