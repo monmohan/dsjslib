@@ -111,7 +111,7 @@ skl.entrySet()
 
 BTree
 ----------------------
-[Ref - Introduction to Algorithms By Coremen et al.]
+[Ref - Introduction to Algorithms By Cormen et al.]
 ```js
 Creates a BTree of degree K .
 Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
