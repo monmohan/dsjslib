@@ -4,15 +4,25 @@ Cache [LRU Cache with stats]
 
 In-memory LRU cache implementation for Node, inspired by Google Guava Loading Cache .
 The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
-cache are captured e.g auto loader function, removal listener, stats recording etc.
+cache are captured like
+- Auto loader function
+- Removal listener
+- Auto expiry After Write (TTL)
+- Max Size and weight
+- Cache Stats recording
+
 For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Cache-Feature-and-usage-overview
 
 **API**
 
 ```js
-//Get value for key,
+//Get value for key, NOTE: ** This is asynchronous and result is available from callback function**
 //Automatically load the value if not present and an auto loader function is configured
-cache.get(key)
+//callback is called with two arguments (error,result) . error contains any error reported by auto loader 
+//or any error while creating the entry in cache, otherwise its null. result contains the result from the
+//cache (which in turn may have been received from the auto loader if the entry had expired or was not present)
+
+cache.get(key, callback)
 
 //Get value for key as present in cache, not attempt to load the key will be done
 //even if a loader is configured
