@@ -21,10 +21,12 @@ For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Ca
 //callback is called with two arguments (error,result) . error contains any error reported by auto loader 
 //or any error while creating the entry in cache, otherwise its null. result contains the result from the
 //cache (which in turn may have been received from the auto loader if the entry had expired or was not present)
+//If no autoloader is configured (or the entry was present in cache), the callback is called immediately with
+//the result in cache
 
 cache.get(key, callback)
 
-//Get value for key as present in cache, not attempt to load the key will be done
+//Get value for key as present in cache, No attempt to load the key will be done
 //even if a loader is configured
 
 cache.getIfPresent(key)
