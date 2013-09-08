@@ -1,7 +1,7 @@
 {
   "name": "dsjslib",
-  "version": "0.6.1",
-  "description": "Implementation of commonly used datastructures and utilities in javascript",
+  "version": "0.6.2",
+  "description": "Implementation of commonly used datastructures and utilities in Javascript.While most APIs are stable, this is still in dev and some interfaces might change",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -31,7 +31,8 @@
     "maxsize",
     "least recently used",
     "loading",
-    "guava"
+    "guava",
+    "async"
   ],
   "author": "monmohan@gmail.com",
   "license": "MIT",
