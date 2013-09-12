@@ -1,20 +1,31 @@
 var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require('fs');
 (function () {
-    var c = new cache({'maximumSize' : 6}),
-        res;
 
-    function matchEntriesInOrder(expected, cache) {
+    function matchEntriesInOrder(expected, cache, limit, queue) {
         var entries = [],
-            c_ = cache || c;
-        c_._accessQueue.head.forEach(function (e) {
-            entries.push(e.key);
-        },c_._accessQueue);
+            c_ = cache ,
+            q = queue || c_._accessQueue;
+        var num = 0;
+        q.head.forEach(function (e) {
+            if (limit) {
+                if (num < limit) {
+                    entries.push(e.key);
+                    num++;
+                }
+            } else {
+                entries.push(e.key);
+            }
+
+        }, q);
         console.log(entries);
         assert.deepEqual(entries, expected);
     }
 
     //TESTS ----------------
     function testPutAndGet() {
+        var c = new cache({'maximumSize' : 6}),
+            res;
+
         for (var i = 0; i < 6; i++) {
             c.put('k' + i, 'v' + i);
         }
@@ -24,36 +35,47 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
             });//repeated lookup
 
         }
-        matchEntriesInOrder([ 'k2', 'k5', 'k4', 'k3', 'k1', 'k0', undefined ])
+        matchEntriesInOrder([ 'k2', 'k5', 'k4', 'k3', 'k1', 'k0', undefined ], c)
 
     }
 
     function testLRU() {
-        for (var i = 1; i < 4; i++) {
+        var c = new cache({'maximumSize' : 6}),
+            res;
+        for (var i = 0; i < 6; i++) {
+            c.put('k' + i, 'v' + i);
+        }
+
+        for (i = 1; i < 4; i++) {
             c.get('k' + i, function (err, v) {/*ignore*/
             });//lookup few to move them to head
         }
-        matchEntriesInOrder([ 'k3', 'k2', 'k1', 'k5', 'k4', 'k0', undefined ])
+        matchEntriesInOrder([ 'k3', 'k2', 'k1', 'k5', 'k4', 'k0', undefined ], c);
         c.invalidate('k5');
-        matchEntriesInOrder([ 'k3', 'k2', 'k1', 'k4', 'k0', undefined ]);
+        matchEntriesInOrder([ 'k3', 'k2', 'k1', 'k4', 'k0', undefined ], c);
         return i;
     }
 
 
     function testRedundantPut() {
-//add more elements
-        for (var i = 5; i < 20; i++) {
+        var c = new cache({'maximumSize' : 6}),
+            res;
+        //add more elements
+        for (var i = 1; i < 20; i++) {
             c.put('k' + i, 'v' + i);
         }
-        matchEntriesInOrder([ 'k19', 'k18', 'k17', 'k16', 'k15', 'k14', undefined ])
+        matchEntriesInOrder([ 'k19', 'k18', 'k17', 'k16', 'k15', 'k14', undefined ], c)
         for (i = 5; i < 20; i++) {
             c.put('k20', 'v20');//repeatedly put
         }
-        matchEntriesInOrder([ 'k20', 'k19', 'k18', 'k17', 'k16', 'k15', undefined ]);
+        matchEntriesInOrder([ 'k20', 'k19', 'k18', 'k17', 'k16', 'k15', undefined ], c);
     }
 
 
     function testCacheclear() {
+        var c = new cache({'maximumSize' : 6}),
+            res;
+
         c.invalidateAll();
         assert.equal(c.size, 0);
         c.get('something');//shouldn't throw error
@@ -61,7 +83,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         c.get('new', function (err, res) {
             assert.deepEqual(res, 'value');
         });
-        matchEntriesInOrder(['new', undefined]);
+        matchEntriesInOrder(['new', undefined], c);
 
     }
 
@@ -69,43 +91,107 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         var cwexp = new cache({'maximumSize' : 100,
             'expiresAfterWrite' : 5, 'onRemove' : function (k, v, c) {
                 console.log(Array.prototype.slice.call(arguments).join());
-                assert.ok(k === 'expirethiskey' || k === 'expirethiskey2')
-                assert.ok(v === 'expirewrite' || v === 'expirewrite2')
-                assert.equal(c, 'expired');
+                var i = parseInt(k.substring(5, k.length), 10);
+                assert.ok(k === keys[i]);
+                assert.ok(v === values[i]);
+                //assert.equal(c, 'expired');
             }});
 
-        cwexp.put('expirethiskey', 'expirewrite');
-        cwexp.put('expirethiskey2', 'expirewrite2');
-        cwexp.get('expirethiskey', function (err, res) {
-            assert.deepEqual(res, 'expirewrite');
-        });
+
+        var keys = [], values = [];
+        for (var i = 0; i < 100; i++) {
+            keys.push("exkey" + i);
+            values.push("value" + i);
+            cwexp.put("exkey" + i, "value" + i);
+        }
+
+        assert.equal(cwexp.size, 100);
+
+        for (i = 0; i < 100; i += 10) {
+            var k = keys[i];
+            cwexp.get(k, function (err, res) {
+                assert.deepEqual(res, values[parseInt(k.substring(5, k.length), 10)]);
+            });
+
+        }
+
+        matchEntriesInOrder([ 'exkey90',
+            'exkey80',
+            'exkey70',
+            'exkey60',
+            'exkey50',
+            'exkey40',
+            'exkey30',
+            'exkey20',
+            'exkey10',
+            'exkey0' ], cwexp, 10);
+
+        assert.equal(cwexp.size, 100);
+        //write queue remains unchanged
+        matchEntriesInOrder([ 'exkey99',
+            'exkey98',
+            'exkey97',
+            'exkey96',
+            'exkey95',
+            'exkey94',
+            'exkey93',
+            'exkey92',
+            'exkey91',
+            'exkey90' ]
+            , cwexp, 10, cwexp._writeQueue);
+
+        //invalidate
+        cwexp.invalidate('exkey96');
+        matchEntriesInOrder([ 'exkey99',
+            'exkey98',
+            'exkey97',
+            'exkey95',
+            'exkey94',
+            'exkey93',
+            'exkey92',
+            'exkey91',
+            'exkey90',
+            'exkey89']
+            , cwexp, 10, cwexp._writeQueue);
+        cwexp.put('exkey10', 'value10');//touch to move it ahead in write queue
+        matchEntriesInOrder(["exkey10", "exkey99", "exkey98", "exkey97", "exkey95", "exkey94", "exkey93", "exkey92", "exkey91", "exkey90"]
+            , cwexp, 10, cwexp._writeQueue);
+        //invalidate a common entry
+        cwexp.invalidate('exkey10');
+        matchEntriesInOrder(["exkey99", "exkey98", "exkey97", "exkey95", "exkey94", "exkey93", "exkey92", "exkey91", "exkey90", 'exkey89']
+            , cwexp, 10, cwexp._writeQueue);
+        matchEntriesInOrder([ 'exkey90',
+            'exkey80',
+            'exkey70',
+            'exkey60',
+            'exkey50',
+            'exkey40',
+            'exkey30',
+            'exkey20',
+            'exkey0', "exkey99" ], cwexp, 10, cwexp._accessQueue);
+
+        assert.equal(cwexp.size, 98);
+
         setTimeout(function () {
-            cwexp.get('expirethiskey', function (err, res) {
-                assert.deepEqual(res, 'expirewrite');
+            cwexp.get('exkey70', function (err, res) {
+                assert.deepEqual(res, 'value70');
             });
 
-            cwexp.get('expirethiskey2', function (err, res) {
-                assert.deepEqual(res, 'expirewrite2');
+            cwexp.get('exkey7', function (err, res) {
+                assert.deepEqual(res, 'value7');
             });
-
-            matchEntriesInOrder(['expirethiskey2', 'expirethiskey', undefined], cwexp);
+            cwexp.put('exkey15', 'value15');
+            assert.equal(cwexp.size, 98);
         }, 1);
 
         setTimeout(function () {
-            cwexp.get('expirethiskey', function (err, res) {
-                assert.deepEqual(res, undefined);
-            });
-
-            cwexp.get('expirethiskey', function (err, res) {
-                assert.deepEqual(res, undefined);
-            }); //get on expired key should not puke
-
-            cwexp.get('expirethiskey2', function (err, res) {
-                assert.deepEqual(res, undefined);
-            });
-
-            assert.equal(cwexp.size, 0);
-        }, 8000);
+            cwexp.put('exkey12', 'value12');
+            cwexp.put('exkey90', 'value90');
+            cwexp.get('exkey12');
+            assert.equal(cwexp.size, 2/*recently added ones*/);
+            matchEntriesInOrder(["exkey90", "exkey12", undefined], cwexp, null, cwexp._writeQueue);
+            matchEntriesInOrder(["exkey12", "exkey90", undefined], cwexp, null, cwexp._accessQueue);
+        }, 10000);
 
     }
 
@@ -236,9 +322,9 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
             chr.put('k' + i, 'v' + i);
         }
         chr.invalidate('k3');
-        matchEntriesInOrder( ["k5","k4","k2","k1",undefined],chr);
+        matchEntriesInOrder(["k5", "k4", "k2", "k1", undefined], chr);
         chr.invalidate('k5');
-        matchEntriesInOrder( ["k4","k2","k1",undefined],chr);
+        matchEntriesInOrder(["k4", "k2", "k1", undefined], chr);
 
 
     }
