@@ -6,9 +6,9 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
     function matchEntriesInOrder(expected, cache) {
         var entries = [],
             c_ = cache || c;
-        c_._headEntry.forEach(function (e) {
+        c_._accessQueue.head.forEach(function (e) {
             entries.push(e.key);
-        })
+        },c_._accessQueue);
         console.log(entries);
         assert.deepEqual(entries, expected);
     }
@@ -236,6 +236,9 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
             chr.put('k' + i, 'v' + i);
         }
         chr.invalidate('k3');
+        matchEntriesInOrder( ["k5","k4","k2","k1",undefined],chr);
+        chr.invalidate('k5');
+        matchEntriesInOrder( ["k4","k2","k1",undefined],chr);
 
 
     }
