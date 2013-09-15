@@ -1,5 +1,15 @@
-Cache [LRU Cache with stats]
-------------------------------
+Data Structures and Utilities
+----------------------------
+* [LRU Cache with Stats] (#lru-node-cache)
+* [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
+* [Skip List] (#skip-list) - Sorted Map backed by Skip List
+* [BTree] (#btree)
+* [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
+* [Ternary Search Trie] (#tstrie) - Map optimized for prefix searching on String keys
+
+<a name='lru-node-cahe'/>
+###Cache [LRU Cache with stats]
+
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
 
 In-memory LRU cache implementation for Node, inspired by Google Guava Loading Cache .
@@ -58,8 +68,9 @@ cache.stats returns an object {'hitCount':<number>,
 
 
 
-AVL Tree [Map]
---------------------------
+<a name='avl-tree'/>
+###AVL Tree [Map]
+
 Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like functionality 
 backed by a balanced Tree. All functionality of BinarySearchTree is available. 
 In addition Tree is height balanced by rotation whenever an insert is done
@@ -103,8 +114,9 @@ console.log(avl.root)
 ```
 
 
-SkipList [Map]
-----------------------
+<a name='skip-list'/>
+###SkipList [Map]
+
 [Ref - http://ocw.mit.edu Lecture on skip-lists]
 ```js
 //Create a Skip List
@@ -129,9 +141,9 @@ skl.entrySet()
 
 ```
 
+<a name='btree'/>
+###BTree
 
-BTree
-----------------------
 [Ref - Introduction to Algorithms By Cormen et al.]
 ```js
 Creates a BTree of degree K .
@@ -162,8 +174,9 @@ btree.checkInvariants()
 Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
                          
 
-RWayTrie [Map optimized for String keys]
-----------------------
+<a name='rwaytrie'/>
+###RWayTrie [Map optimized for String keys]
+
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
 Data structure supporting String keys, for fast retrieval of values associated with string keys.
@@ -199,8 +212,9 @@ rTrie.keysWithPrefix(prefix_chars)
 
 Known Limitations: None
 
-TernarySearchTrie [Map optimized for String keys]
-------------------------------
+<a name='tstrie'/>
+###TernarySearchTrie [Map optimized for String keys]
+
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
 Data structure supporting String keys, for fast retrieval of 
