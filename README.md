@@ -29,17 +29,11 @@ For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Ca
 /**
 * Get value for key, NOTE: ** This is ASYNChronous and result is available from callback function**
 * Automatically load the value if not present and an auto loader function is configured
-* callback is called with two arguments (error,result) . 
-* error contains any error reported by auto loader,
-* or
-* any error while creating the entry in cache,
-* otherwise its null. 
-* result contains the result from the cache 
-* which in turn may have been received from the autoloader, if the entry had expired or was not present .
-* If no autoloader is configured 
-* or 
-* the entry was present in cache, 
-* the callback is called immediately with the result in cache
+* callback is called with two arguments (error,result) . error contains any error reported by auto loader,
+* or any error while creating the entry in cache, otherwise its null. result contains the result
+* from the cache, which in turn may have been received from the autoloader, if the entry had expired
+* or was not present. If no autoloader is configured or the entry was present in cache, the callback is called 
+* immediately with the result in cache
 */
 cache.get(key, callback)
 
