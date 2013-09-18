@@ -283,7 +283,7 @@ mm.entries()
 Known Limitations: None
 
 <a name='tree-multi-map'/>
-###MultiMap 
+###TreeMultiMap 
 ####[Sorted (on keys) Map supporting multiple values for single key]
 
 [Reference: https://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multimap]
@@ -292,7 +292,7 @@ A Map supporting arbitrary multiple values with a single key. In addition the Ma
 This Map is backed by an AVLTree Map
 
 ```js
-//Creates a MultiMap
+//Creates a TreeMultiMap
 var TreeMultiMap = require("dsjslib").TreeMultiMap
 var mm=new TreeMultiMap() 
 
