@@ -6,6 +6,8 @@ Data Structures and Utilities
 * [BTree] (#btree)
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
 * [Ternary Search Trie] (#tstrie) - Map optimized for prefix searching on String keys
+* [MultiMap] (#multi-map) - Map supporting multiple values for a key
+* [TreeMultiMap] (#tree-multi-map) - Sorted Map (sorted on keys), supporting multiple values for a key
 
 <a name='lru-node-cahe'/>
 ###Cache [LRU Cache with stats]
@@ -236,5 +238,82 @@ tst.keysWithPrefix(prefix_chars)
 Known Limitations: None
 
 
+<a name='multi-map'/>
+###MultiMap 
+####[Map supporting multiple values for single key]
+
+[Reference: https://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multimap]
+
+A Map supporting arbitrary multiple values with a single key
+
+```js
+//Creates a MultiMap
+var MultiMap = require("dsjslib").MultiMap
+var mm=new MultiMap() 
+
+//Insert a key value pair into the Map.
+//If the key is already present, the value will be added to the existing list,
+//otherwise, an array is created and the value is added to the array
+
+mm.put(key,val) 
+
+//Search for key and return associated value array or empty array
+//This method never returns null even if the key is not present
+//Any changes made to the returned array modify the underlying array in the MultiMap as well
+
+mm.get(key) 
+
+//Test if a key is present in Map or not. This doesn't modify the Map to create empty array if
+//the key was not present.
+mm.hasKey(key)
+
+//If a value is provided, only that value is removed from the list
+//If value is not provided, key and all values are deleted from the MultiMap
+
+mm.delete(key, [value]) 
+
+//Return a list of all key, value pairs.
+//The key value pairs are returned as objects {'key':<K>,'value':<V>}
+//Note that for keys associated with multiple values there is one object per value returned in the entry
+//for example for key1->val1,val2,val3 , the entries will be
+//[{'key':key1,'value':val1},{'key':key1,'value':val2},{'key':key1,'value':val3}]
+
+mm.entries()
+```
+Known Limitations: None
+
+<a name='tree-multi-map'/>
+###TreeMultiMap 
+####[Sorted (on keys) Map supporting multiple values for single key]
+
+[Reference: https://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multimap]
+
+A Map supporting arbitrary multiple values with a single key. In addition the Map is sorted on keys dynamically.
+This Map is backed by an AVLTree Map
+
+```js
+//Creates a TreeMultiMap
+var TreeMultiMap = require("dsjslib").TreeMultiMap
+var mm=new TreeMultiMap() 
+
+//@see MultiMap
+mm.put(key,val) 
+
+//@see MultiMap
+mm.get(key) 
+
+//@see MultiMap
+mm.hasKey(key)
+
+//@see MultiMap
+mm.remove(key, [value]) 
+
+//Return a list of all key, value pairs. In addition, the returned list is sorted on keys
+//The key value pairs are returned as objects {'key':<K>,'value':<V>}
+//Note that for keys associated with multiple values there is one object per value returned in the entry
+//for example for key1->val1,val2,val3 , the entries will be
+//[{'key':key1,'value':val1},{'key':key1,'value':val2},{'key':key1,'value':val3}]
+mm.entries()
+```
 
 
