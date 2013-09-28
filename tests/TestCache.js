@@ -30,12 +30,17 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
             c.put('k' + i, 'v' + i);
         }
         for (i = 1; i < 4; i++) {
-            c.get('k2', function (err, result) {
-                assert.deepEqual(result, 'v2');
-            });//repeated lookup
+            assert.deepEqual(c.getSync('k2'), 'v2');//repeated lookup
 
         }
-        matchEntriesInOrder([ 'k2', 'k5', 'k4', 'k3', 'k1', 'k0', undefined ], c)
+        matchEntriesInOrder([ 'k2', 'k5', 'k4', 'k3', 'k1', 'k0', undefined ], c);
+        //test async
+        c.get('k5', function (e, r) {
+            assert.deepEqual(r, 'v5');//repeated lookup
+        });
+        //change the value before callback was fired to make sure its async
+        //c.put('k5','Newv5');
+
 
     }
 
@@ -47,8 +52,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         }
 
         for (i = 1; i < 4; i++) {
-            c.get('k' + i, function (err, v) {/*ignore*/
-            });//lookup few to move them to head
+            c.getSync('k' + i);//lookup few to move them to head
         }
         matchEntriesInOrder([ 'k3', 'k2', 'k1', 'k5', 'k4', 'k0', undefined ], c);
         c.invalidate('k5');
@@ -78,11 +82,9 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
         c.invalidateAll();
         assert.equal(c.size, 0);
-        c.get('something');//shouldn't throw error
+        c.getSync('something');//shouldn't throw error
         c.put('new', 'value');
-        c.get('new', function (err, res) {
-            assert.deepEqual(res, 'value');
-        });
+        c.getSync('new');
         matchEntriesInOrder(['new', undefined], c);
 
     }
@@ -109,9 +111,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
         for (i = 0; i < 100; i += 10) {
             var k = keys[i];
-            cwexp.get(k, function (err, res) {
-                assert.deepEqual(res, values[parseInt(k.substring(5, k.length), 10)]);
-            });
+            assert.deepEqual(cwexp.getSync(k), values[parseInt(k.substring(5, k.length), 10)]);
 
         }
 
@@ -173,13 +173,8 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         assert.equal(cwexp.size, 98);
 
         setTimeout(function () {
-            cwexp.get('exkey70', function (err, res) {
-                assert.deepEqual(res, 'value70');
-            });
-
-            cwexp.get('exkey7', function (err, res) {
-                assert.deepEqual(res, 'value7');
-            });
+            assert.deepEqual(cwexp.getSync('exkey70'), 'value70');
+            assert.deepEqual(cwexp.getSync('exkey7'), 'value7');
             cwexp.put('exkey15', 'value15');
             assert.equal(cwexp.size, 98);
         }, 1);
@@ -187,7 +182,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         setTimeout(function () {
             cwexp.put('exkey12', 'value12');
             cwexp.put('exkey90', 'value90');
-            cwexp.get('exkey12');
+            cwexp.getSync('exkey12');
             assert.equal(cwexp.size, 2/*recently added ones*/);
             matchEntriesInOrder(["exkey90", "exkey12", undefined], cwexp, null, cwexp._writeQueue);
             matchEntriesInOrder(["exkey12", "exkey90", undefined], cwexp, null, cwexp._accessQueue);
@@ -206,27 +201,23 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         for (var i = 1; i < 11; i++) {
             var key = 'k' + i;
             (function () {
-                ch.get(key, function (err, r) {
-                    console.log(key);
-                    assert.deepEqual(r, "value" + key);
-                });
+                var r = ch.getSync(key);
+                console.log(key);
+                assert.deepEqual(r, "value" + key);
+
             }());
         }
         console.log(ch.stats);
         //access few
         for (i = 1; i < 11; i += 2) {
-            ch.get('k' + i, function (err, r) {
-                assert.deepEqual(r, "value" + 'k' + i);
-            });
+            var r = ch.getSync('k' + i);
+            assert.deepEqual(r, "value" + 'k' + i);
+
         }
-        console.log(ch.stats)
+        console.log(ch.stats);
         //access unknown values
         for (i = 11; i < 20; i++) {
-            try {
-                ch.get('k' + i);
-            } catch (e) {
-                //ignore
-            }
+            ch.getSync('k' + i);
         }
         console.log(ch.stats);
         assert.deepEqual(ch.stats, {"hitCount" : 5, "missCount" : 19, "requestCount" : 24})
@@ -255,11 +246,11 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
             }, 'recordStats' : true});
 
         for (var i = 1; i < 21; i++) {
-            chmx.get('k' + i);
+            chmx.getSync('k' + i);
         }
         for (var j = 0; j < 4; j++) {
             for (i = 20; i > 0; i--) {
-                chmx.get('k' + i);
+                chmx.getSync('k' + i);
             }
         }
         //put should still work
@@ -271,7 +262,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
         //max weight comes into play
         for (i = 100; i > 80; i--) {
-            chmx.get('k' + i);
+            chmx.getSync('k' + i);
         }
 
         matchEntriesInOrder(["k81", "k82", "k83", "k84", "k85", "k86", "k87", "k88", "k89",
@@ -291,7 +282,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
             matchEntriesInOrder([undefined], chmx);
             //now populate
             for (i = 85; i > 80; i--) {
-                chmx.get('k' + i);
+                chmx.getSync('k' + i);
             }
             assert.equal(chmx.size, 5);
             matchEntriesInOrder(["k81", "k82", "k83", "k84", "k85", undefined], chmx);
@@ -329,18 +320,23 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
     }
 
-    function testRandom() {
-        var keys;
-        var i = 0;
-        var evictions = 0,
+    function testAsyncGet() {
+        var keys = [];
+        var i = 0,
+            evictions = 0,
             rCache = new cache({
-                'maximumSize' : 1200,
+                'maximumSize' : 20,
                 'loaderFunction' : function (k, callback) {
-                    var v = keys[(++i) % 2000];
-                    if (!v) {
-                        console.log('no v for i=' + i);
-                    }
-                    return callback(null, v);
+                    fs.open('/depot/dsjs/tests/resources/largetextfile.txt', 'r', function (error, fd) {
+                        var buffer = new Buffer(1000);
+                        fs.read(fd, buffer, 0, buffer.length, 0, function (e, bytesRead, buffer) {
+                            var data = buffer.toString("utf8", 0, buffer.length);
+                            var values = data.match(/\S+/g);
+                            fs.close(fd);
+                            callback(error, values[k]);
+
+                        });
+                    });
 
                 },
                 'onRemove' : function (k, v, c) {
@@ -348,22 +344,21 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
                 }
             });
 
-        keys = fs.readFile('/depot/dsjs/tests/resources/largetextfile.txt', function (err, data) {
-            if (err) {
-                throw err;
-            }
-            keys = ("" + data).match(/\S+/g);
-            keys.forEach(function (k) {
-                rCache.get(k, function (err, v) {
-                    assert.ok(v);
+        var done = false;
+        for (i = 0; i < 50; i++) {
+            (function () {
+                var key = i;
+                rCache.get(key, function (err, v) {
+                    keys[key] = v;
+                    if (key === 49) {
+                        assert.equal(rCache.size, 20);
+                        assert.equal(evictions, 30);
+
+                    }
                 });
-            });
+            }());
+        }
 
-            console.log(rCache.get('Downloaded'));
-            assert.equal(rCache.size, 1200);
-            assert.equal(evictions, 454);
-
-        });
 
     }
 
@@ -401,16 +396,40 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
     }
 
-    testPutAndGet()
-    testLRU()
-    testRedundantPut()
-    testCacheclear()
-    testWriteExpiry()
-    testStats()
-    testMaxWeight()
-    testRemoval()
-    testRandom()
+    function testAsyncNegative() {
+        var sCache = new cache({
+            'maximumSize' : 100,
+            'loaderFunction' : function (key, callback) {
+                //slow need to load from file
+                fs.readFile('/depot/dsjs/tests/resources/largetextfile.txt', "utf-8", function (err, data) {
+                    callback(err, data);
+                });
+            }
+
+        });
+        sCache.get('x');
+        sCache.get('x');
+        sCache.get('x');
+        sCache.get('x');
+        setTimeout(function () {
+            console.log(sCache.size);
+            matchEntriesInOrder(["x", undefined], sCache);
+        }, 10000);
+
+
+    }
+
+    testPutAndGet();
+    testLRU();
+    testRedundantPut();
+    testCacheclear();
+    testWriteExpiry();
+    testStats();
+    testMaxWeight();
+    testRemoval();
+    testAsyncGet();
     testExpensiveCacheLoader();
+    testAsyncNegative();
 
 
 }())
