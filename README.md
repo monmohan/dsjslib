@@ -1,7 +1,8 @@
 Data Structures and Utilities
 ----------------------------
-* [LRU Cache with Stats] (#lru-node-cache)
+* [LRU Cache with Stats] (#lru-node-cache) - Google Guava inspired LRU cache
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
+* [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
 * [BTree] (#btree)
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
@@ -72,7 +73,15 @@ backed by a balanced Tree. All functionality of BinarySearchTree is available.
 In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
 Caller doesn't need to invoke these functions, 
-they are internally used when an insert or delete violates the AVL property of the tree
+they are internally used when an insert or delete violates the AVL property of the tree.
+The keys are ordered based on the natural ordering or an optional compare function.
+The compare function takes the form
+```js
+ myCompFn(arg1, arg2)
+
+```
+and returns a negative integer, zero, or a positive integer as 
+the first argument is greater than, equal to, or less than the second.
 
 ```js
 //Create and AVLTree (extends a BinarySearchTree)
@@ -294,7 +303,7 @@ This Map is backed by an AVLTree Map
 ```js
 //Creates a TreeMultiMap
 var TreeMultiMap = require("dsjslib").TreeMultiMap
-var mm=new TreeMultiMap() 
+var mm=new TreeMultiMap([compareFn]) 
 
 //@see MultiMap
 mm.put(key,val) 
@@ -315,5 +324,53 @@ mm.remove(key, [value])
 //[{'key':key1,'value':val1},{'key':key1,'value':val2},{'key':key1,'value':val3}]
 mm.entries()
 ```
+
+<a name='priority-queue'/>
+###PriorityQueue 
+####[A Priority Queue based on Binary Heap]
+
+[Reference: http://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html]
+
+A queue backed by a Binary Heap. Basic queue operation offer and poll run in O(lgn) time.
+The elements in this queue are ordered according to their natural ordering or 
+based on the compare function provided. The compare function takes the form
+```js
+ myCompFn(arg1, arg2)
+
+```
+and returns a negative integer, zero, or a positive integer as 
+the first argument is greater than, equal to, or less than the second.
+
+```js
+//Creates a TreeMultiMap
+var PriorityQueue = require("dsjslib").PriorityQueue
+var pq=new PriorityQueue([compareFn]) 
+
+
+//Insert the object in queue. Re-heapifies the queue.
+pq.offer(obj) 
+
+//Returns and removes the element at the head of the queue . Re-heapifies the queue..
+//The head of this queue is the maximum element 
+//with respect to the specified ordering. If multiple elements 
+//are tied for max value, the head is one of those elements -- ties are broken arbitrarily.
+pq.poll() 
+
+//Get the head of the queeue without removing it from the queue
+pq.peek() 
+
+//Returns array of elements in the queue. Ordering of those elements in undefined
+pq.entries()
+
+//Cleanup and remove all elements from the queue
+pq.clear()
+
+//Returns the number of elements in the queue
+pq.size()
+
+
+```
+
+
 
 
