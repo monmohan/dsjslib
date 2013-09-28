@@ -36,9 +36,19 @@ For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Ca
 * or any error while creating the entry in cache, otherwise its null. result contains the result
 * from the cache, which in turn may have been received from the autoloader, if the entry had expired
 * or was not present. If no autoloader is configured or the entry was present in cache, the callback is called 
-* immediately with the result in cache
+* with the result in cache. In conformance to async laws, the callback is still asynchronous and 
+* not called immediately. For synchronouse get, see getSync()
 */
 cache.get(key, callback)
+
+/**
+* Get value for key, NOTE: ** This is SYNChronous and result is returned by the function itself**
+* Automatically load the value if not present and an auto loader function is configured.
+* In this case, we assume that autoloader will also be calling the cache callback synchronously
+* Returns result contains the result from the cache, which in turn may have been 
+* received from the autoloader, if the entry had expired or was not present. 
+*/
+cache.getSync(key)
 
 //Get value for key as present in cache, No attempt to load the key will be done
 //even if a loader is configured
