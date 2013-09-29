@@ -16,9 +16,9 @@ Data Structures and Utilities
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
 
 In-memory LRU cache implementation for Node, inspired by Google Guava Loading Cache .
-The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
+The cache is simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
 cache are captured like
-- Auto loader function
+- Auto loader function 
 - Removal listener
 - Auto expiry After Write (TTL)
 - Max Size and weight
