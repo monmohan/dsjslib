@@ -410,7 +410,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
     }
 
-    function testAsyncNegative() {
+    function testAsyncIssues() {
         var sCache = new cache({
             'maximumSize' : 5,
             'loaderFunction' : function (key, callback) {
@@ -419,7 +419,7 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
                     callback(err, data);
                 });
             },
-            'expiresAfterWrite' : 200
+            'expiresAfterWrite' : 15
 
         });
         sCache.get('x', function (e, r) {
@@ -456,11 +456,72 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         }, 10000);
 
 
-        /*setTimeout(function () {
-         console.log(sCache.size);
-         console.log(sCache.stats);
-         matchEntriesInOrder(["y","x", undefined], sCache);
-         }, 22000); */
+        setTimeout(function () {
+            console.log(sCache.size);
+            assert.deepEqual(sCache.getIfPresent('x'), undefined);
+            assert.deepEqual(sCache.stats, { hitCount : 2, missCount : 6, requestCount : 8 });
+            matchEntriesInOrder(["y", undefined], sCache);
+            sCache.get('y', function (e, r) { //should reload
+                assert.deepEqual(r.substring(0, 10), 'Oliver Nic');
+                assert.deepEqual(sCache.stats, { hitCount : 2, missCount : 7, requestCount : 9 });
+                sCache.get('y', function (e, r) { //should reload
+                    assert.deepEqual(r.substring(0, 10), 'Oliver Nic');
+                    assert.deepEqual(sCache.stats, { hitCount : 3, missCount : 7, requestCount : 10 });
+
+                });
+
+            });
+
+
+        }, 22000);
+
+
+    }
+
+    function testAsyncNegative() {
+        var throwErr = true,
+            valueErr,
+            err = new Error("random error"),
+            sCache = new cache({
+                'maximumSize' : 5,
+                'loaderFunction' : function (key, callback) {
+                    //always throws error
+                    callback(throwErr ?
+                        err : null, throwErr ? 'errdata' :
+                        valueErr ? null : 'gooddata');
+                },
+                'expiresAfterWrite' : 200
+
+            });
+        sCache.get('x', function (e, r) {
+            assert.deepEqual(err, e);
+            assert.deepEqual('errdata', r);
+        });
+
+
+        setTimeout(function () {
+            assert.deepEqual(sCache.size, 0);
+            assert.deepEqual(sCache.stats, { hitCount : 0, missCount : 1, requestCount : 1 });
+            matchEntriesInOrder([undefined], sCache);
+            throwErr = false;
+            valueErr = true;
+            sCache.get('x', function (e, r) {
+                assert.deepEqual(e.message, 'Illegal value for key null');
+                assert.equal(r, null);
+                throwErr = valueErr = false;
+                sCache.get('x', function (e, r) {
+                    assert.deepEqual(e, null);
+                    assert.deepEqual('gooddata', r);
+                });
+                sCache.get('y', function (e, r) {
+                    assert.deepEqual(e, null);
+                    assert.deepEqual('gooddata', r);
+                });
+
+            });
+
+
+        }, 10000);
 
 
     }
@@ -475,7 +536,8 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
     testRemoval();
     testAsyncGet();
     testExpensiveCacheLoader();
-    testAsyncNegative();
+    testAsyncIssues()
+    testAsyncNegative()
 
 
 }())
