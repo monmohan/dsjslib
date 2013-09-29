@@ -217,7 +217,21 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
         console.log(ch.stats);
         //access unknown values
         for (i = 11; i < 20; i++) {
-            ch.getSync('k' + i);
+            if (i < 15) {
+                assert.doesNotThrow(
+                    function () {
+                        ch.getSync('k' + i);
+                    }
+                );
+            } else {
+                assert.throws(
+                    function () {
+                        ch.getSync('k' + i)
+                    }
+
+                    , /null/);
+            }
+
         }
         console.log(ch.stats);
         assert.deepEqual(ch.stats, {"hitCount" : 5, "missCount" : 19, "requestCount" : 24})
@@ -398,23 +412,55 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
     function testAsyncNegative() {
         var sCache = new cache({
-            'maximumSize' : 100,
+            'maximumSize' : 5,
             'loaderFunction' : function (key, callback) {
                 //slow need to load from file
                 fs.readFile('/depot/dsjs/tests/resources/largetextfile.txt', "utf-8", function (err, data) {
                     callback(err, data);
                 });
-            }
+            },
+            'expiresAfterWrite' : 200
 
         });
-        sCache.get('x');
-        sCache.get('x');
-        sCache.get('x');
-        sCache.get('x');
+        sCache.get('x', function (e, r) {
+            console.log('1 called back ' + (r && r.substring(0, 5)));
+        });
+        sCache.get('x', function (e, r) {
+            console.log('2 called back ' + (r && r.substring(0, 5)));
+        });
+        sCache.get('y', function (e, r) {
+            console.log('y1 called back ' + (r && r.substring(0, 10)));
+        });
+
+        sCache.get('x', function (e, r) {
+            console.log('3 called back ' + (r && r.substring(0, 5)));
+        });
+
+
+        assert.deepEqual(sCache.getIfPresent('x'), undefined);
         setTimeout(function () {
-            console.log(sCache.size);
-            matchEntriesInOrder(["x", undefined], sCache);
+            assert.deepEqual(sCache.size, 2);
+            assert.deepEqual(sCache.stats, { hitCount : 0, missCount : 5, requestCount : 5 });
+            matchEntriesInOrder(["y", "x", undefined], sCache);
+            sCache.get('y', function (e, r) {
+                assert.deepEqual(r.substring(0, 10), 'Oliver Nic');
+            });
+
+            sCache.get('x', function (e, r) {
+                assert.deepEqual(r.substring(0, 5), 'Olive');
+                matchEntriesInOrder(["x", "y", undefined], sCache);
+                assert.deepEqual(sCache.size, 2);
+                assert.deepEqual(sCache.stats, { hitCount : 2, missCount : 5, requestCount : 7 });
+            });
+
         }, 10000);
+
+
+        /*setTimeout(function () {
+         console.log(sCache.size);
+         console.log(sCache.stats);
+         matchEntriesInOrder(["y","x", undefined], sCache);
+         }, 22000); */
 
 
     }
