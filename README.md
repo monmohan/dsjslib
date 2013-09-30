@@ -352,7 +352,7 @@ and returns a negative integer, zero, or a positive integer as
 the first argument is greater than, equal to, or less than the second.
 
 ```js
-//Creates a TreeMultiMap
+//Creates a PriorityQueue
 var PriorityQueue = require("dsjslib").PriorityQueue
 var pq=new PriorityQueue([compareFn]) 
 
@@ -366,7 +366,7 @@ pq.offer(obj)
 //are tied for max value, the head is one of those elements -- ties are broken arbitrarily.
 pq.poll() 
 
-//Get the head of the queeue without removing it from the queue
+//Get the head of the queue without removing it from the queue
 pq.peek() 
 
 //Returns array of elements in the queue. Ordering of those elements in undefined
