@@ -1,4 +1,5 @@
-var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs = require('fs');
+var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs = require('fs'),
+    AVLTree = require('../lib/AVLTree.js');
 (function () {
 
     function testOffer(testDoneFn) {
@@ -33,7 +34,7 @@ var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs
         }, 12000);
     }
 
-    function testPoll() {
+    function testPoll(testComplete) {
         console.log('**** test Poll***');
         var times = [],
             delay = 2000,
@@ -55,6 +56,7 @@ var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs
             }
             assert.equal(dq.size(), 0);
             assert.deepEqual(dq._queue, []);
+            testComplete();
         }
 
         setTimeout(function () {
@@ -76,11 +78,54 @@ var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs
 
     }
 
+    function testTake() {
+        console.log('**testTake***');
+        var delay = 1000,
+            now = Date.now(),
+            done = false;
 
-    testOffer(function () {
-        testPoll();
-    });
+        var dq = new DelayQueue(function (task) {
+            return task.schedule - Date.now();
+        });
+        //use AVL Tree to keep tasks sorted on time
+        //for testing
+        var avltree = new AVLTree();
+        //random
+        var task = {'schedule' : now + 10 * delay};
+        dq.offer(task);
+        avltree.put(task.schedule, task);
 
+        task = {'schedule' : now + 9 * delay};
+        dq.offer(task);
+        avltree.put(task.schedule, task);
+
+        task = {'schedule' : now + 14 * delay};
+        dq.offer(task);
+        avltree.put(task.schedule, task);
+
+        task = {'schedule' : now + 3 * delay};
+        dq.offer(task);
+        avltree.put(task.schedule, task);
+
+        assert.equal(dq.poll(), null);
+        assert.deepEqual(dq.peek(), avltree.min().value);
+        var sorted = avltree.entrySet();
+        var taskHandler = function (task) {
+            assert.deepEqual(task, sorted.shift().value);
+            done = dq.size() === 0;
+            if (!done) {
+                dq.take(taskHandler);
+            }
+        };
+        dq.take(taskHandler);
+        assert.equal(dq.size(), 4);
+
+    }
+
+    testTake();
+    /*testOffer(function () {
+     testPoll(testTake);
+     });*/
 
 
 }());
