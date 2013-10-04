@@ -110,7 +110,7 @@ var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs
         assert.equal(dq.poll(), null);
         assert.deepEqual(dq.peek(), avltree.min().value);
         var sorted = avltree.entrySet();
-        var taskHandler = function (task) {
+        var taskHandler = function (err, task) {
             assert.deepEqual(task, sorted.shift().value);
             done = dq.size() === 0;
             if (!done) {
@@ -122,10 +122,10 @@ var DelayQueue = require('../lib/DelayQueue.js'), assert = require('assert'), fs
 
     }
 
-    testTake();
-    /*testOffer(function () {
+
+    testOffer(function () {
      testPoll(testTake);
-     });*/
+     });
 
 
 }());
