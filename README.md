@@ -420,8 +420,9 @@ dq.poll()
 
 
 //Retrieve and remove the head of queue when it expires. Unlike poll() which returns immediately with either null
-//or the head element (if its expires), this method registers the user callback which will be invoked when 
-//the an item is available i.e. delay has expired. The callback is asynchronous 
+//or the head element (if it has expired), this method registers the user callback which will be invoked when 
+//the an item is available i.e. delay has expired. The callback is asynchronous and takes two argruments err and item
+//err contains any error encountered and item is the head object once its available.
 
 dq.take(calback)
 
