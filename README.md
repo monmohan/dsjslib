@@ -3,6 +3,7 @@ Data Structures and Utilities
 * [LRU Cache with Stats] (#lru-node-cache) - Google Guava inspired LRU cache
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
 * [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
+* [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
 * [BTree] (#btree)
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
@@ -381,6 +382,64 @@ pq.size()
 
 ```
 
+<a name='delay-queue'/>
+###DelayQueue 
+####[Queue of 'Delayed' items, item can only be taken when its delay has expired]
+
+[Reference: http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/DelayQueue.html]
+
+The head of the queue is that Delayed item whose delay expired furthest in the past. 
+If no delay has expired there is no head and poll() will return null. 
+Expiration occurs when the supplied delayFn(item) returns a value less than or equal to zero. 
+Even though unexpired items cannot be removed using take() or poll(), they are otherwise treated as normal item. 
+For example, the size method returns the count of both expired and unexpired items. 
+This queue does not permit null items.
+
+This queue requires a delay function while construction
+```js
+ someDelayFn(item)
+
+```
+The function should return a negative integer, zero, or a positive integer depending on how much time remains
+before the item is expired. The argument to the function is the item for which delay is being queried
+
+
+```js
+//Creates a DelayQueue
+var DelayQueue = require("dsjslib").DelayQueue
+var dq=new DelayQueue(delayFn) 
+
+
+//Insert the object in queue. Re-heapifies the queue on delay order
+dq.offer(obj) 
+
+//Returns and removes the element at the head of the queue . Re-heapifies the queue..
+//The head of this queue is the element whose delay expires furthest in the past
+//if there is no such element with negative or zero expired delay, this method returns null
+dq.poll()
+
+
+//Retrieve and remove the head of queue when it expires. Unlike poll() which returns immediately with either null
+//or the head element (if its expires), this method registers the user callback which will be invoked when 
+//the an item is available i.e. delay has expired. The callback is asynchronous 
+
+dq.take(calback)
+
+//Retrieves, but does not remove, the head of this queue, or returns null if this queue is empty. Unlike poll, 
+//if no expired item is available in the queue, this method returns the item that will expire next, if one exists
+dq.peek() 
+
+//Returns array of elements in the queue. Ordering of those elements in undefined
+dq.entries()
+
+//Cleanup and remove all elements from the queue
+dq.clear()
+
+//Returns the number of elements in the queue
+dq.size()
+
+
+```
 
 
 
