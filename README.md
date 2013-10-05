@@ -396,6 +396,11 @@ For example, the size method returns the count of both expired and unexpired ite
 This queue does not permit null items.
 
 This queue requires a delay function while construction
+
+For example usage see wiki - 
+
+https://github.com/monmohan/dsjslib/wiki/Example:-DealyQueue-for-Scheduled-Task-Management
+
 ```js
  someDelayFn(item)
 
