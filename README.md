@@ -11,6 +11,8 @@ Data Structures and Utilities
 * [MultiMap] (#multi-map) - Map supporting multiple values for a key
 * [TreeMultiMap] (#tree-multi-map) - Sorted Map (sorted on keys), supporting multiple values for a key
 
+**Current version 0.6.4 is stable and thoroughly tested**
+
 <a name='lru-node-cahe'/>
 ###Cache [LRU Cache with stats]
 
