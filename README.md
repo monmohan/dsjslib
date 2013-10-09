@@ -11,6 +11,8 @@ Data Structures and Utilities
 * [MultiMap] (#multi-map) - Map supporting multiple values for a key
 * [TreeMultiMap] (#tree-multi-map) - Sorted Map (sorted on keys), supporting multiple values for a key
 
+**Current version 0.6.4 is stable and thoroughly tested**
+
 <a name='lru-node-cahe'/>
 ###Cache [LRU Cache with stats]
 
@@ -396,6 +398,11 @@ For example, the size method returns the count of both expired and unexpired ite
 This queue does not permit null items.
 
 This queue requires a delay function while construction
+
+For example usage see wiki - 
+
+https://github.com/monmohan/dsjslib/wiki/Example:-DealyQueue-for-Scheduled-Task-Management
+
 ```js
  someDelayFn(item)
 
