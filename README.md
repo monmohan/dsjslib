@@ -4,6 +4,7 @@ Data Structures and Utilities
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
 * [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
 * [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
+* [Linked Deque] (#linked-deque) - An optionally capactity constrained deque based on linked nodes
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
 * [BTree] (#btree)
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
@@ -449,5 +450,64 @@ dq.size()
 
 ```
 
+<a name='linked-deque'/>
+###LinkedDeque
+####[An optionally-bounded deque based on linked nodes.]
+
+[Reference: http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingDeque.html]
+
+A deque using linked nodes instead of standard javascript Array. In addition the deque can be
+optionally capacity constrained, if unspecified, the value is set to Number.MAX_VALUE.
+Standard javascript Array's shift, unshift, push and pop operations are implemented for linked nodes.
+
+```js
+//Creates a LinkedDeque
+var LinkedDeque = require("dsjslib").LinkedDeque
+var ldq=new LinkedDeque([capacity]) 
+
+
+//Add obj to the head of the deque. Equivalen to ldq.unshift(obj)
+//Returns true if obj was successfully added, false if it failed (for example, if the deque is at 
+//full capacity)
+ldq.offerFirst(obj)
+
+//Add obj to the head of the deque.
+ldq.unshift(obj)
+
+//Add obj to the tail of the deque. Equivalen to ldq.push(obj)
+//Returns true if obj was successfully added, false if it failed (for example, if the deque is at 
+//full capacity)
+ldq.offerLast(obj)
+
+//Add obj to the end of the deque.
+ldq.push(obj)
+
+
+//Returns and removes the element at the head of the deque.
+//Returns null if there is no such element
+//Equivalent to ldq.shift()
+ldq.pollFirst() 
+
+//Returns and removes the element at the head of the deque
+ldq.shift()
+
+//Returns and removes the element at the tail of the deque
+//Returns null if there is no such element
+//Equivalent to ldq.pop()
+ldq.pollLast()
+
+//Returns and removes the element at the tail of the queue
+ldq.pop()
+
+//Returns an array containing all of the elements in this deque, 
+//in proper sequence (from first to last element).
+//The returned array has no links/pointers to the deque.
+pq.toArray() 
+
+//Get the size of the dequee
+pq.size()
+
+
+```
 
 
