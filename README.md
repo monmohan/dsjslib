@@ -4,7 +4,7 @@ Data Structures and Utilities
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
 * [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
 * [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
-* [Linked Deque] (#linked-deque) - A (optionally) capactity constrained dequeue based on linked nodes
+* [Linked Deque] (#linked-deque) - An optionally capactity constrained deque based on linked nodes
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
 * [BTree] (#btree)
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
