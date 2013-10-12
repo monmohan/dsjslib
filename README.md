@@ -467,26 +467,32 @@ var ldq=new LinkedDeque([capacity])
 
 
 //Add obj to the head of the deque. Equivalen to ldq.unshift(obj)
+//Returns true if obj was successfully added, false if it failed (for example, if the deque is at 
+//full capacity)
 ldq.offerFirst(obj)
 
 //Add obj to the head of the deque.
 ldq.unshift(obj)
 
 //Add obj to the tail of the deque. Equivalen to ldq.push(obj)
+//Returns true if obj was successfully added, false if it failed (for example, if the deque is at 
+//full capacity)
 ldq.offerLast(obj)
 
 //Add obj to the end of the deque.
 ldq.push(obj)
 
 
-//Returns and removes the element at the head of the deque 
+//Returns and removes the element at the head of the deque.
+//Returns null if there is no such element
 //Equivalent to ldq.shift()
 ldq.pollFirst() 
 
 //Returns and removes the element at the head of the deque
 ldq.shift()
 
-//Returns and removes the element at the tail of the queue
+//Returns and removes the element at the tail of the deque
+//Returns null if there is no such element
 //Equivalent to ldq.pop()
 ldq.pollLast()
 
