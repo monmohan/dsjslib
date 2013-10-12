@@ -13,7 +13,7 @@ Data Structures and Utilities
 
 **Current version 0.6.4 is stable and thoroughly tested**
 
-<a name='lru-node-cahe'/>
+<a name='lru-node-cache'/>
 ###Cache [LRU Cache with stats]
 
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
