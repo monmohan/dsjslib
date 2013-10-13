@@ -42,16 +42,16 @@
     function testClear(){
         var ldq=new LinkedDeque(10);
         ldq.offerFirst(10);
-        ldq.offerFirst(30);
+        ldq.offerLast(30);
         ldq.offerFirst(20);
-        assert.equal(true,ldq.offerFirst(40));
+        assert.equal(true,ldq.offerFirst({'value':40}));
         assert.equal(true,ldq.offerLast(50));
         assert.equal(true,ldq.push("60"));
         assert.equal(ldq.size(),6);
         console.log(ldq.toArray());
         ldq.clear();
         assert.equal(ldq.size(),0);
-        assert.equal(ldq.head,null);
+        assert.equal(ldq._head,null);
         assert.equal(ldq._tail,null);
 
 
