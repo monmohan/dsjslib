@@ -77,15 +77,26 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
 
 
     function testCacheclear() {
-        var c = new cache({'maximumSize' : 6}),
+        var c = new cache({'maximumSize' : 10,'onRemove':function(k,v,c){
+                console.log('key '+k+'was invalidated'+' cause = '+c);
+                assert.deepEqual(c,"explicit");
+            },
+                'loaderFunction':function(k,cbfn){
+                    cbfn (null,typeof k==='number'?2*k:0);
+                }
+            }),
             res;
-
+        for(var i=1;i<10;i++){
+            c.getSync(i);
+        }
+        assert.deepEqual(c.getSync(5),10);
+        assert.equal(c.size, 9);
         c.invalidateAll();
         assert.equal(c.size, 0);
-        c.getSync('something');//shouldn't throw error
+        console.log(c.getSync('something'));
         c.put('new', 'value');
         c.getSync('new');
-        matchEntriesInOrder(['new', undefined], c);
+        matchEntriesInOrder(['new', 'something', undefined], c);
 
     }
 
@@ -540,4 +551,4 @@ var cache = require('../lib/Cache.js'), assert = require('assert'), fs = require
     testAsyncNegative()
 
 
-}())
+}());
