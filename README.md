@@ -6,7 +6,7 @@ Data Structures and Utilities
 * [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
 * [Linked Deque] (#linked-deque) - An optionally capactity constrained deque based on linked nodes
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
-* [BTree] (#btree)
+* [BTree] (#btree) - Self balancing generalized Search Tree
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
 * [Ternary Search Trie] (#tstrie) - Map optimized for prefix searching on String keys
 * [MultiMap] (#multi-map) - Map supporting multiple values for a key
