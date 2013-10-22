@@ -1,7 +1,7 @@
 {
   "name": "dsjslib",
-  "version": "0.6.4",
-  "description": "Implementation of commonly used datastructures and utilities in Javascript.While most APIs are stable, this is still in dev and some interfaces might change",
+  "version": "0.6.5",
+  "description": "Implementation of commonly used datastructures and utilities in Javascript.",
   "main": "index.js",
   "directories": {
     "test": "tests"
