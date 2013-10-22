@@ -6,7 +6,7 @@ Data Structures and Utilities
 * [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
 * [Linked Deque] (#linked-deque) - An optionally capactity constrained deque based on linked nodes
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
-* [BTree] (#btree)
+* [BTree] (#btree) - Self balancing generalized Search Tree
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
 * [Ternary Search Trie] (#tstrie) - Map optimized for prefix searching on String keys
 * [MultiMap] (#multi-map) - Map supporting multiple values for a key
@@ -456,9 +456,10 @@ dq.size()
 
 [Reference: http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingDeque.html]
 
-A deque using linked nodes instead of standard javascript Array. In addition the deque can be
+A Deque using linked nodes instead of standard javascript Array. In addition the Deque can be
 optionally capacity constrained, if unspecified, the value is set to Number.MAX_VALUE.
 Standard javascript Array's shift, unshift, push and pop operations are implemented for linked nodes.
+
 
 ```js
 //Creates a LinkedDeque
@@ -466,47 +467,50 @@ var LinkedDeque = require("dsjslib").LinkedDeque
 var ldq=new LinkedDeque([capacity]) 
 
 
-//Add obj to the head of the deque. Equivalen to ldq.unshift(obj)
-//Returns true if obj was successfully added, false if it failed (for example, if the deque is at 
+//Add obj to the head of the Deque. Equivalen to ldq.unshift(obj)
+//Returns true if obj was successfully added, false if it failed (for example, if the Deque is at 
 //full capacity)
 ldq.offerFirst(obj)
 
-//Add obj to the head of the deque.
+//Add obj to the head of the Deque.
 ldq.unshift(obj)
 
-//Add obj to the tail of the deque. Equivalen to ldq.push(obj)
-//Returns true if obj was successfully added, false if it failed (for example, if the deque is at 
+//Add obj to the tail of the Deque. Equivalen to ldq.push(obj)
+//Returns true if obj was successfully added, false if it failed (for example, if the Deque is at 
 //full capacity)
 ldq.offerLast(obj)
 
-//Add obj to the end of the deque.
+//Add obj to the end of the Deque.
 ldq.push(obj)
 
 
-//Returns and removes the element at the head of the deque.
+//Returns and removes the element at the head of the Deque.
 //Returns null if there is no such element
 //Equivalent to ldq.shift()
 ldq.pollFirst() 
 
-//Returns and removes the element at the head of the deque
+//Returns and removes the element at the head of the Deque
 ldq.shift()
 
-//Returns and removes the element at the tail of the deque
+//Returns and removes the element at the tail of the Deque
 //Returns null if there is no such element
 //Equivalent to ldq.pop()
 ldq.pollLast()
 
-//Returns and removes the element at the tail of the queue
+//Returns and removes the element at the tail of the Deque
 ldq.pop()
 
-//Returns an array containing all of the elements in this deque, 
+//Returns an array containing all of the elements in this Deque, 
 //in proper sequence (from first to last element).
-//The returned array has no links/pointers to the deque.
-pq.toArray() 
+//The returned array has no links/pointers to the Deque. 
+//No items are removed from the Deque
+ldq.toArray() 
 
-//Get the size of the dequee
-pq.size()
+//Get the size of the Deque
+ldq.size()
 
+//Remove all items from the Deque
+ldq.clear()
 
 ```
 
