@@ -190,7 +190,10 @@ btree.checkInvariants()
 
 ```
 
-Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
+**Known Limitations:**
+Currently only supports Numeric or String keys (uses < > for natural ordering).
+Its more of an academic implementation at this point because all nodes are always in memory. A more robust/practical
+implementation which loads data from disk as required will be added soon.
                          
 
 <a name='rwaytrie'/>
