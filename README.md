@@ -12,7 +12,7 @@ Data Structures and Utilities
 * [MultiMap] (#multi-map) - Map supporting multiple values for a key
 * [TreeMultiMap] (#tree-multi-map) - Sorted Map (sorted on keys), supporting multiple values for a key
 
-**Current version 0.6.4 is stable and thoroughly tested**
+**Current version 0.6.5 is stable and thoroughly tested on Node v0.10**
 
 <a name='lru-node-cache'/>
 ###Cache [LRU Cache with stats]
@@ -190,7 +190,10 @@ btree.checkInvariants()
 
 ```
 
-Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
+**Known Limitations:**
+Currently only supports Numeric or String keys (uses < > for natural ordering).
+Its more of an academic implementation at this point because all nodes are always in memory. A more robust/practical
+implementation which loads data from disk as required will be added soon.
                          
 
 <a name='rwaytrie'/>
