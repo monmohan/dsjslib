@@ -39,8 +39,27 @@ var BitSet = require('../lib/BitSet.js'), assert = require('assert'), fs = requi
 
     }
 
+    function testCardinality() {
+        var bs = new BitSet();
+        bs.set(10);
+        bs.set(2);
+        assert.equal(bs.cardinality(), 2, 'wrong cardinality');
+        bs = new BitSet(1000);
+        for (var i = 0; i < 20; i++) {
+            bs.set(i * 10);
+        }
+        assert.equal(bs.cardinality(), 20, 'wrong cardinality');
+        //clear a few
+        for (i = 0; i < 20; i++) {
+            bs.clear(i * 20);
+        }
+        assert.equal(bs.cardinality(), 10, 'wrong cardinality');
+
+    }
+
     testBasic();
     testLargeBitSet();
+    testCardinality();
 
 
 })();
