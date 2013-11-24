@@ -53,7 +53,7 @@ var BitSet = require('../lib/BitSet.js'), assert = require('assert'), fs = requi
         for (i = 0; i < 20; i++) {
             bs.clear(i * 20);
         }
-        assert.equal(bs.cardinality(), 10, 'wrong cardinality');
+        assert.equal(bs.cardinality(), 10, 'wrong cardinality after clearing');
 
     }
 
