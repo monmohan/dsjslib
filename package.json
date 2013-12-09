@@ -37,7 +37,10 @@
      "DelayQueue",
      "PriorityQueue",
      "Heap",
-     "BinaryHeap"
+     "BinaryHeap",
+      "BitSet",
+      "BitArray",
+      "BitVector"
   ],
   "author": "monmohan@gmail.com",
   "license": "MIT",

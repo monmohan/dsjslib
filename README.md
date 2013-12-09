@@ -4,7 +4,8 @@ Data Structures and Utilities
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
 * [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
 * [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
-* [Linked Deque] (#linked-deque) - An optionally capactity constrained deque based on linked nodes
+* [Linked Deque] (#linked-deque) - An optionally capacity constrained deque based on linked nodes
+* [BitSet] (#bit-set) - An array of bits with operations to set, examine and clear individual bits
 * [Skip List] (#skip-list) - Sorted Map backed by Skip List
 * [BTree] (#btree) - Self balancing generalized Search Tree
 * [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
@@ -516,5 +517,42 @@ ldq.size()
 ldq.clear()
 
 ```
+<a name='bit-set'/>
+###BitSet
+####[A fixed (at construction time) size Bit Array, emulates an array of booleans but with much lesser space]
+
+[Reference: http://en.wikipedia.org/wiki/Bit_array]
+
+This class implements an vector of bits. The size is given at creation time.
+Each component of the bit set has a boolean value. The bits of a BitSet are indexed by nonnegative integers.
+Individual indexed bits can be examined, set, or cleared. By default, all bits in the set initially
+have the value false.
+
+```js
+//create a BitSet of size 1024
+var BitSet = require("dsjslib").BitSet
+var bitSet=new BitSet(1024)
+
+//Set the bit at bitIndex to 'true'. Throws out of range error if bit index is greater than the specified size during creation
+bitSet.set(bitIndex)
+
+//Examine a bit. Returns true if the bit at bitIndex is set, false otherwise.
+bitSet.get(bitIndex)
+
+//Set the bit at bitIndex to false.
+bitSet.clear(bitIndex)
+
+//reset all bits to false
+bitSet.clear()
+
+//Return the number of bits set to true in this BitSet.
+bitSet.cardinality()
+
+//Sets the bit at the specified index to the complement of its current value.
+bitSet.flip(bitIndex)
+
+```
+
+
 
 
