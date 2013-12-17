@@ -3,6 +3,16 @@ dsjslib
 This is a collection of different data structures and utilities, implemented in JavaScript.
 Its written and tested using Node.js which is also the target platform.
 
+<a href="http://monmohan.github.io/dsjslib">
+<img title="Documentation" src="http://monmohan.github.io/dsjslib/images/documentation.png"></a>
+<p>
+<a href="http://monmohan.github.io/dsjslib">
+API Documentation >></a>
+</p>
+
+Overview
+----------------
+
 * <h3>Maps</h3>
     * <h4>Sorted Maps</h4> Maps sorted according to natural ordering of keys or by comparator function provided at creation time.
     Two different backing stores are available
