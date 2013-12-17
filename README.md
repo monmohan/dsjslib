@@ -16,7 +16,8 @@ Data Structures and Utilities
 **Current version 0.6.5 is stable and thoroughly tested on Node v0.10**
 
 <a name='lru-node-cache'/>
-###Cache [LRU Cache with stats]
+###Cache
+[LRU Cache with stats]
 
 [Reference: Google Guava https://code.google.com/p/guava-libraries/]
 
@@ -31,54 +32,6 @@ cache are captured like
 
 For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Cache-Feature-and-usage-overview
 
-**API**
-
-```js
-/**
-* Get value for key, NOTE: ** This is ASYNChronous and result is available from callback function**
-* Automatically load the value if not present and an auto loader function is configured
-* callback is called with two arguments (error,result) . error contains any error reported by auto loader,
-* or any error while creating the entry in cache, otherwise its null. result contains the result
-* from the cache, which in turn may have been received from the autoloader, if the entry had expired
-* or was not present. If no autoloader is configured or the entry was present in cache, the callback is called 
-* with the result in cache. In conformance to async laws, the callback is still asynchronous and 
-* not called immediately. For synchronouse get, see getSync()
-*/
-cache.get(key, callback)
-
-/**
-* Get value for key, NOTE: ** This is SYNChronous and result is returned by the function itself**
-* Automatically load the value if not present and an auto loader function is configured.
-* In this case, we assume that autoloader will also be calling the cache callback synchronously
-* Returns result contains the result from the cache, which in turn may have been 
-* received from the autoloader, if the entry had expired or was not present. 
-*/
-cache.getSync(key)
-
-//Get value for key as present in cache, No attempt to load the key will be done
-//even if a loader is configured
-
-cache.getIfPresent(key)
-
-//Add a key value 
-cache.put(key,value)
-
-//Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
-//and removal cause as 'explicit'
-cache.invalidate(key)
-
-//Invalidate all keys in cache, removal listeners are not invoked
-cache.invalidateAll()
-
-//Gets statistics of cache usage
-cache.stats returns an object {'hitCount':<number>,
-                               'missCount':<number>,
-                               'reqeustCount':<number>}
-
-
-```
-
-
 
 <a name='avl-tree'/>
 ###AVL Tree [Map]
@@ -90,106 +43,17 @@ See rotate(), reBalance() and checkAVLProperty() functions for explanation.
 Caller doesn't need to invoke these functions, 
 they are internally used when an insert or delete violates the AVL property of the tree.
 The keys are ordered based on the natural ordering or an optional compare function.
-The compare function takes the form
-```js
- myCompFn(arg1, arg2)
-
-```
-and returns a negative integer, zero, or a positive integer as 
-the first argument is greater than, equal to, or less than the second.
-
-```js
-//Create and AVLTree (extends a BinarySearchTree)
-var AVLTree = require("dsjslib").AVLTree
-var avl=new AVLTree([compareFn]) //optional compare fn to sort the keys
-
-//Insert a key value. It also re-balances the tree
-avl.put(key,value)
-
-//Get a value for key
-avl.get(key)
-
-
-//Remove key vallue, also rebalances the tree
-avl.delete(key)
-
-//Predecessor and Successor
-avl.predecessor(key)  avl.successor(key) 
-
-
-//Inorder traversal of the tree. callbackfn called for every node visited
-avl.traverse([node],callbackfn)
-
-//Min and Max - if start node not given, starts at root
-avl.min([startAtNode]) avl.max([startAtNode])
-
-// Validates the tree starting at given node (root otherwise). 
-// Validates BST as well as AVL proeprties
-avl.checkInvariants([startAtNode])
-                                     
-```
-```js
-//Print the tree starting at root (requires util module from Node.js)
-console.log(avl.root)
-```
 
 
 <a name='skip-list'/>
 ###SkipList [Map]
 
 [Ref - http://ocw.mit.edu Lecture on skip-lists]
-```js
-//Create a Skip List
-//Optional compare function to order the keys. If not provided, a natural ordering is
-//assumed.
-
-var SkipList = require("dsjslib").SkipList
-var skl=new SkipList(compareFn)
-
-//Add a key value
-skl.put(k,v)
-
-//Search for a key
-skl.get(k)
-
-//delete a key and its associated value
-skl.delete(k)
-
-//Get all entries(sorted). They are returned as key value pair objects
-skl.entrySet()
-
-
-```
 
 <a name='btree'/>
 ###BTree
 
 [Ref - Introduction to Algorithms By Cormen et al.]
-```js
-Creates a BTree of degree K .
-Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
-
-var BTree = require("dsjslib").BTree
-
-var btree=new BTree(K) 
-
-//Inserts a key and splits nodes as required
-btree.put(key,value)
-
-//Search by key
-btree.get(key)
-
-//Deletes a key and re-joins nodes and/or reduces the height of tree as required
-btree.delete(key)
-
-//Check various BTree invariants -- For sanity testing
-1. Except root all nodes have degree -1 <keys<2*degree-1
-2. Child keys are less than corresponding parent key 
-   (and greater than predecessor parent key)
-
-btree.checkInvariants()
-
-```
 
 **Known Limitations:**
 Currently only supports Numeric or String keys (uses < > for natural ordering).
@@ -208,33 +72,6 @@ and listing all keys in sorted order. For large R the space requirement
 for this DS is impractical (although in javascript arrays are sparse so its not the same)
 , TernarySearchTrie can be more practical alternative.
 
-```js
-// Creates a RWayTrie of alphabet size R .
-//For example if you know that the keys are made of ASCII chars only, R=128. 
-//Each node in this trie will have an array of size R. 
-
-var RWayTrie = require("dsjslib").RWayTrie
-var rTrie=new RWayTrie(R) 
-
-// Inserts a key and set its value as val
-rTrie.put(key,val) 
-
-//Search for a key and return associated value or null
-rTrie.get(key) 
-
-//Deletes a key 
-rTrie.delete(key) 
-
-//Return a list of all key, value pairs in sorted order (of keys)
-rTrie.entrySet() 
-
-//Return a list of all key, value pairs where
-//keys start with given prefix_chars
-rTrie.keysWithPrefix(prefix_chars) 
-```
-
-Known Limitations: None
-
 <a name='tstrie'/>
 ###TernarySearchTrie [Map optimized for String keys]
 
@@ -244,27 +81,6 @@ Data structure supporting String keys, for fast retrieval of
 values associated with  string and provide prefix searches.
 Functions are same as RWayTrie
 
-```js
-//Creates a TernarySearchTrie
-var TernarySearchTrie = require("dsjslib").TernarySearchTrie
-var tst=new TernarySearchTrie() 
-
-//Insert a key value pair into the Trie
-tst.put(key,val) 
-
-//Search for key and return associated value or null
-tst.get(key) 
-
-//Deletes a key and associated value
-tst.delete(key) 
-
-//Return a list of all key, value pairs where
-//keys start with given prefix_chars
-tst.keysWithPrefix(prefix_chars)                                      
-```
-Known Limitations: None
-
-
 <a name='multi-map'/>
 ###MultiMap 
 ####[Map supporting multiple values for single key]
@@ -273,41 +89,6 @@ Known Limitations: None
 
 A Map supporting arbitrary multiple values with a single key
 
-```js
-//Creates a MultiMap
-var MultiMap = require("dsjslib").MultiMap
-var mm=new MultiMap() 
-
-//Insert a key value pair into the Map.
-//If the key is already present, the value will be added to the existing list,
-//otherwise, an array is created and the value is added to the array
-
-mm.put(key,val) 
-
-//Search for key and return associated value array or empty array
-//This method never returns null even if the key is not present
-//Any changes made to the returned array modify the underlying array in the MultiMap as well
-
-mm.get(key) 
-
-//Test if a key is present in Map or not. This doesn't modify the Map to create empty array if
-//the key was not present.
-mm.hasKey(key)
-
-//If a value is provided, only that value is removed from the list
-//If value is not provided, key and all values are deleted from the MultiMap
-
-mm.delete(key, [value]) 
-
-//Return a list of all key, value pairs.
-//The key value pairs are returned as objects {'key':<K>,'value':<V>}
-//Note that for keys associated with multiple values there is one object per value returned in the entry
-//for example for key1->val1,val2,val3 , the entries will be
-//[{'key':key1,'value':val1},{'key':key1,'value':val2},{'key':key1,'value':val3}]
-
-mm.entries()
-```
-Known Limitations: None
 
 <a name='tree-multi-map'/>
 ###TreeMultiMap 
@@ -318,31 +99,6 @@ Known Limitations: None
 A Map supporting arbitrary multiple values with a single key. In addition the Map is sorted on keys dynamically.
 This Map is backed by an AVLTree Map
 
-```js
-//Creates a TreeMultiMap
-var TreeMultiMap = require("dsjslib").TreeMultiMap
-var mm=new TreeMultiMap([compareFn]) 
-
-//@see MultiMap
-mm.put(key,val) 
-
-//@see MultiMap
-mm.get(key) 
-
-//@see MultiMap
-mm.hasKey(key)
-
-//@see MultiMap
-mm.remove(key, [value]) 
-
-//Return a list of all key, value pairs. In addition, the returned list is sorted on keys
-//The key value pairs are returned as objects {'key':<K>,'value':<V>}
-//Note that for keys associated with multiple values there is one object per value returned in the entry
-//for example for key1->val1,val2,val3 , the entries will be
-//[{'key':key1,'value':val1},{'key':key1,'value':val2},{'key':key1,'value':val3}]
-mm.entries()
-```
-
 <a name='priority-queue'/>
 ###PriorityQueue 
 ####[A Priority Queue based on Binary Heap]
@@ -351,43 +107,7 @@ mm.entries()
 
 A queue backed by a Binary Heap. Basic queue operation offer and poll run in O(lgn) time.
 The elements in this queue are ordered according to their natural ordering or 
-based on the compare function provided. The compare function takes the form
-```js
- myCompFn(arg1, arg2)
-
-```
-and returns a negative integer, zero, or a positive integer as 
-the first argument is greater than, equal to, or less than the second.
-
-```js
-//Creates a PriorityQueue
-var PriorityQueue = require("dsjslib").PriorityQueue
-var pq=new PriorityQueue([compareFn]) 
-
-
-//Insert the object in queue. Re-heapifies the queue.
-pq.offer(obj) 
-
-//Returns and removes the element at the head of the queue . Re-heapifies the queue..
-//The head of this queue is the maximum element 
-//with respect to the specified ordering. If multiple elements 
-//are tied for max value, the head is one of those elements -- ties are broken arbitrarily.
-pq.poll() 
-
-//Get the head of the queue without removing it from the queue
-pq.peek() 
-
-//Returns array of elements in the queue. Ordering of those elements in undefined
-pq.entries()
-
-//Cleanup and remove all elements from the queue
-pq.clear()
-
-//Returns the number of elements in the queue
-pq.size()
-
-
-```
+based on the compare function provided.
 
 <a name='delay-queue'/>
 ###DelayQueue 
@@ -406,53 +126,7 @@ This queue requires a delay function while construction
 
 For example usage see wiki - 
 
-https://github.com/monmohan/dsjslib/wiki/Example:-DealyQueue-for-Scheduled-Task-Management
-
-```js
- someDelayFn(item)
-
-```
-The function should return a negative integer, zero, or a positive integer depending on how much time remains
-before the item is expired. The argument to the function is the item for which delay is being queried
-
-
-```js
-//Creates a DelayQueue
-var DelayQueue = require("dsjslib").DelayQueue
-var dq=new DelayQueue(delayFn) 
-
-
-//Insert the object in queue. Re-heapifies the queue on delay order
-dq.offer(obj) 
-
-//Returns and removes the element at the head of the queue . Re-heapifies the queue..
-//The head of this queue is the element whose delay expires furthest in the past
-//if there is no such element with negative or zero expired delay, this method returns null
-dq.poll()
-
-
-//Retrieve and remove the head of queue when it expires. Unlike poll() which returns immediately with either null
-//or the head element (if it has expired), this method registers the user callback which will be invoked when 
-//the an item is available i.e. delay has expired. The callback is asynchronous and takes two argruments err and item
-//err contains any error encountered and item is the head object once its available.
-
-dq.take(calback)
-
-//Retrieves, but does not remove, the head of this queue, or returns null if this queue is empty. Unlike poll, 
-//if no expired item is available in the queue, this method returns the item that will expire next, if one exists
-dq.peek() 
-
-//Returns array of elements in the queue. Ordering of those elements in undefined
-dq.entries()
-
-//Cleanup and remove all elements from the queue
-dq.clear()
-
-//Returns the number of elements in the queue
-dq.size()
-
-
-```
+https://github.com/monmohan/dsjslib/wiki/Example:-DelayQueue-for-Scheduled-Task-Management
 
 <a name='linked-deque'/>
 ###LinkedDeque
@@ -465,58 +139,6 @@ optionally capacity constrained, if unspecified, the value is set to Number.MAX_
 Standard javascript Array's shift, unshift, push and pop operations are implemented for linked nodes.
 
 
-```js
-//Creates a LinkedDeque
-var LinkedDeque = require("dsjslib").LinkedDeque
-var ldq=new LinkedDeque([capacity]) 
-
-
-//Add obj to the head of the Deque. Equivalen to ldq.unshift(obj)
-//Returns true if obj was successfully added, false if it failed (for example, if the Deque is at 
-//full capacity)
-ldq.offerFirst(obj)
-
-//Add obj to the head of the Deque.
-ldq.unshift(obj)
-
-//Add obj to the tail of the Deque. Equivalen to ldq.push(obj)
-//Returns true if obj was successfully added, false if it failed (for example, if the Deque is at 
-//full capacity)
-ldq.offerLast(obj)
-
-//Add obj to the end of the Deque.
-ldq.push(obj)
-
-
-//Returns and removes the element at the head of the Deque.
-//Returns null if there is no such element
-//Equivalent to ldq.shift()
-ldq.pollFirst() 
-
-//Returns and removes the element at the head of the Deque
-ldq.shift()
-
-//Returns and removes the element at the tail of the Deque
-//Returns null if there is no such element
-//Equivalent to ldq.pop()
-ldq.pollLast()
-
-//Returns and removes the element at the tail of the Deque
-ldq.pop()
-
-//Returns an array containing all of the elements in this Deque, 
-//in proper sequence (from first to last element).
-//The returned array has no links/pointers to the Deque. 
-//No items are removed from the Deque
-ldq.toArray() 
-
-//Get the size of the Deque
-ldq.size()
-
-//Remove all items from the Deque
-ldq.clear()
-
-```
 <a name='bit-set'/>
 ###BitSet
 ####[A fixed (at construction time) size Bit Array, emulates an array of booleans but with much lesser space]
@@ -527,32 +149,6 @@ This class implements an vector of bits. The size is given at creation time.
 Each component of the bit set has a boolean value. The bits of a BitSet are indexed by nonnegative integers.
 Individual indexed bits can be examined, set, or cleared. By default, all bits in the set initially
 have the value false.
-
-```js
-//create a BitSet of size 1024
-var BitSet = require("dsjslib").BitSet
-var bitSet=new BitSet(1024)
-
-//Set the bit at bitIndex to 'true'. Throws out of range error if bit index is greater than the specified size during creation
-bitSet.set(bitIndex)
-
-//Examine a bit. Returns true if the bit at bitIndex is set, false otherwise.
-bitSet.get(bitIndex)
-
-//Set the bit at bitIndex to false.
-bitSet.clear(bitIndex)
-
-//reset all bits to false
-bitSet.clear()
-
-//Return the number of bits set to true in this BitSet.
-bitSet.cardinality()
-
-//Sets the bit at the specified index to the complement of its current value.
-bitSet.flip(bitIndex)
-
-```
-
 
 
 
