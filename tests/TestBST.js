@@ -68,6 +68,43 @@ var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('
         ])
     }
 
+    function testBSTCompfn(){
+        var compFn=function(obj1,obj2){
+          return obj2.k>obj1.k?1:(obj2.k===obj1.k)?0:-1;
+        }
+        var objkey, bst=new BinarySearchTree(compFn);
+        var i= 0, sometext='JavaScript also contains a conditional ' +
+            'operator that assigns a value to a variable based on some condition';
+        var keys=sometext.split(/\s/);
+        while(i<20){
+          objkey={'k':keys[i%keys.length],'v':'somevalue'};
+          bst.put(objkey,"someobjvalue"+i);
+          i++;
+        }
+        var sorted=[];
+        bst.traverse(function (node) {
+          sorted.push(node.key);
+        });
+        console.log(sorted);
+        assert.deepEqual(sorted,[ { k: 'JavaScript', v: 'somevalue' },
+            { k: 'a', v: 'somevalue' },
+            { k: 'also', v: 'somevalue' },
+            { k: 'assigns', v: 'somevalue' },
+            { k: 'based', v: 'somevalue' },
+            { k: 'condition', v: 'somevalue' },
+            { k: 'conditional', v: 'somevalue' },
+            { k: 'contains', v: 'somevalue' },
+            { k: 'on', v: 'somevalue' },
+            { k: 'operator', v: 'somevalue' },
+            { k: 'some', v: 'somevalue' },
+            { k: 'that', v: 'somevalue' },
+            { k: 'to', v: 'somevalue' },
+            { k: 'value', v: 'somevalue' },
+            { k: 'variable', v: 'somevalue' } ]
+        )
+        assert.deepEqual(bst.get({ k: 'on', v: 'somevalue' }).value,'someobjvalue14');
+    }
+
 
     (function testBSTfuncs() {
         testInsert();
@@ -78,6 +115,7 @@ var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('
         console.log(bt.root);
         testEntrySet();
         bt.checkInvariants()
+        testBSTCompfn()
     })();
 
 

@@ -1,112 +1,69 @@
-This is a collection of data structures, implemented in JavaScript. Its written and tested using
-Node.js but the dependencies are mostly peripheral (e.g util for logging and assert module for testing). 
-So the code can be used in Browser as well with minor changes.
+Data Structures and Utilities
+----------------------------
+* [LRU Cache with Stats] (#lru-node-cache) - Google Guava inspired LRU cache
+* [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
+* [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
+* [Delay Queue] (#delay-queue) - Queue of 'Delayed' items, item can only be taken when its delay has expired.
+* [Linked Deque] (#linked-deque) - An optionally capacity constrained deque based on linked nodes
+* [BitSet] (#bit-set) - An array of bits with operations to set, examine and clear individual bits
+* [Skip List] (#skip-list) - Sorted Map backed by Skip List
+* [BTree] (#btree) - Self balancing generalized Search Tree
+* [Multi Way Trie] (#rwaytrie) - Map optimized for prefix searching on String keys 
+* [Ternary Search Trie] (#tstrie) - Map optimized for prefix searching on String keys
+* [MultiMap] (#multi-map) - Map supporting multiple values for a key
+* [TreeMultiMap] (#tree-multi-map) - Sorted Map (sorted on keys), supporting multiple values for a key
+
+**Current version 0.6.5 is stable and thoroughly tested on Node v0.10**
+
+<a name='lru-node-cache'/>
+###Cache
+[LRU Cache with stats]
+
+[Reference: Google Guava https://code.google.com/p/guava-libraries/]
+
+In-memory LRU cache implementation for Node, inspired by Google Guava Loading Cache .
+The cache is simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
+cache are captured like
+- Auto loader function 
+- Removal listener
+- Auto expiry After Write (TTL)
+- Max Size and weight
+- Cache Stats recording
+
+For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Cache-Feature-and-usage-overview
 
 
+<a name='avl-tree'/>
+###AVL Tree [Map]
 
-AVL Tree [Map]
---------------------------
 Extends BinarySearchTree (see src/BinarySearchTree.js) to provide a Map like functionality 
 backed by a balanced Tree. All functionality of BinarySearchTree is available. 
 In addition Tree is height balanced by rotation whenever an insert is done
 See rotate(), reBalance() and checkAVLProperty() functions for explanation. 
 Caller doesn't need to invoke these functions, 
-they are internally usedd when an insert or delete violates the AVL property of the tree
-
-```js
-//Create and AVLTree (extends a BinarySearchTree)
-var avl=new AVLTree() 
-
-//Insert a key value. It also rebalances the tree
-avl.put(key,value)
-
-//Get a value for key
-avl.get(key)
+they are internally used when an insert or delete violates the AVL property of the tree.
+The keys are ordered based on the natural ordering or an optional compare function.
 
 
-//Renove key vallue, also rebalances the tree
-avl.delete(key)
+<a name='skip-list'/>
+###SkipList [Map]
 
-//Predecessor and Successor
-avl.predecessor(key)  avl.successor(key) 
-
-
-//Inorder traversal of the tree. callbackfn called for every node visited
-avl.traverse([node],callbackfn)
-
-//Min and Max - if start node not given, starts at root
-avl.min([startAtNode]) avl.max([startAtNode])
-
-// Validates the tree starting at given node (root otherwise). 
-// Validates BST as well as AVL proeprties
-avl.checkInvariants([startAtNode])
-                                     
-```
-```js
-//Print the tree starting at root (requires util module from Node.js)
-console.log(avl.root)
-```
-Known Limitations: Currently only supports Numeric or String keys (uses < > for comparison),
-
-
-
-SkipList [Map]
-----------------------
 [Ref - http://ocw.mit.edu Lecture on skip-lists]
-```js
-//Create a Skip List
-//Optional compare function to order the keys. If not provided, a natural ordering is
-//assumed.
 
-var skl=new SkipList(compareFn)
+<a name='btree'/>
+###BTree
 
-//Add a key value
-skl.put(k,v)
+[Ref - Introduction to Algorithms By Cormen et al.]
 
-//Search for a key
-skl.get(k)
-
-//delete a key and its associated value
-skl.delete(k)
-
-//Get all entries(sorted). They are returned as key value pair objects
-skl.entrySet()
-
-
-```
-
-
-BTree
-----------------------
-[Ref - Introduction to Algorithms By Coremen et al.]
-```js
-Creates a BTree of degree K .
-Any node in the Tree can have a maximum of 2*K-1 keys  and a minimum of K-1 keys.
-var btree=new BTree(K) 
-
-//Inserts a key and splits nodes as required
-btree.put(key,value)
-
-//Search by key
-btree.get(key)
-
-//Deletes a key and re-joins nodes and/or reduces the height of tree as required
-btree.delete(key)
-
-//Check various BTree invariants -- For sanity testing
-1. Except root all nodes have degree -1 <keys<2*degree-1
-2. Child keys are less than corresponding parent key 
-   (and greater than predecessor parent key)
-
-btree.checkInvariants()
-
-```
-
-Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
+**Known Limitations:**
+Currently only supports Numeric or String keys (uses < > for natural ordering).
+Its more of an academic implementation at this point because all nodes are always in memory. A more robust/practical
+implementation which loads data from disk as required will be added soon.
                          
 
-RWayTrie [Map optimized for String keys]
-----------------------
+<a name='rwaytrie'/>
+###RWayTrie [Map optimized for String keys]
+
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
 Data structure supporting String keys, for fast retrieval of values associated with string keys.
@@ -115,55 +72,83 @@ and listing all keys in sorted order. For large R the space requirement
 for this DS is impractical (although in javascript arrays are sparse so its not the same)
 , TernarySearchTrie can be more practical alternative.
 
-```js
-// Creates a RWayTrie of alphabet size R .
-//For example if you know that the keys are made of ASCII chars only, R=128. 
-//Each node in this trie will have an array of size R. 
+<a name='tstrie'/>
+###TernarySearchTrie [Map optimized for String keys]
 
-var rTrie=new RWayTrie(R) 
-
-// Inserts a key and set its value as val
-rTrie.put(key,val) 
-
-//Search for a key and return associated value or null
-rTrie.get(key) 
-
-//Deletes a key 
-rTrie.delete(key) 
-
-//Return a list of all key, value pairs in sorted order (of keys)
-rTrie.entrySet() 
-
-//Return a list of all key, value pairs where
-//keys start with given prefix_chars
-rTrie.keysWithPrefix(prefix_chars) 
-```
-
-Known Limitations: None
-
-TernarySearchTrie [Map optimized for String keys]
-------------------------------
 [Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]
 
 Data structure supporting String keys, for fast retrieval of 
 values associated with  string and provide prefix searches.
 Functions are same as RWayTrie
 
-```js
-//Creates a TernarySearchTrie
-var tst=new TernarySearchTrie() 
+<a name='multi-map'/>
+###MultiMap 
+####[Map supporting multiple values for single key]
 
-//Insert a key value pair into the Trie
-tst.put(key,val) 
+[Reference: https://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multimap]
 
-//Search for key and return associated value or null
-tst.get(key) 
+A Map supporting arbitrary multiple values with a single key
 
-//Deletes a key and associated value
-tst.delete(key) 
 
-//Return a list of all key, value pairs where
-//keys start with given prefix_chars
-tst.keysWithPrefix(prefix_chars)                                      
-```
-Known Limitations: None
+<a name='tree-multi-map'/>
+###TreeMultiMap 
+####[Sorted (on keys) Map supporting multiple values for single key]
+
+[Reference: https://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multimap]
+
+A Map supporting arbitrary multiple values with a single key. In addition the Map is sorted on keys dynamically.
+This Map is backed by an AVLTree Map
+
+<a name='priority-queue'/>
+###PriorityQueue 
+####[A Priority Queue based on Binary Heap]
+
+[Reference: http://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html]
+
+A queue backed by a Binary Heap. Basic queue operation offer and poll run in O(lgn) time.
+The elements in this queue are ordered according to their natural ordering or 
+based on the compare function provided.
+
+<a name='delay-queue'/>
+###DelayQueue 
+####[Queue of 'Delayed' items, item can only be taken when its delay has expired]
+
+[Reference: http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/DelayQueue.html]
+
+The head of the queue is that Delayed item whose delay expired furthest in the past. 
+If no delay has expired there is no head and poll() will return null. 
+Expiration occurs when the supplied delayFn(item) returns a value less than or equal to zero. 
+Even though unexpired items cannot be removed using take() or poll(), they are otherwise treated as normal item. 
+For example, the size method returns the count of both expired and unexpired items. 
+This queue does not permit null items.
+
+This queue requires a delay function while construction
+
+For example usage see wiki - 
+
+https://github.com/monmohan/dsjslib/wiki/Example:-DelayQueue-for-Scheduled-Task-Management
+
+<a name='linked-deque'/>
+###LinkedDeque
+####[An optionally-bounded deque based on linked nodes.]
+
+[Reference: http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingDeque.html]
+
+A Deque using linked nodes instead of standard javascript Array. In addition the Deque can be
+optionally capacity constrained, if unspecified, the value is set to Number.MAX_VALUE.
+Standard javascript Array's shift, unshift, push and pop operations are implemented for linked nodes.
+
+
+<a name='bit-set'/>
+###BitSet
+####[A fixed (at construction time) size Bit Array, emulates an array of booleans but with much lesser space]
+
+[Reference: http://en.wikipedia.org/wiki/Bit_array]
+
+This class implements an vector of bits. The size is given at creation time.
+Each component of the bit set has a boolean value. The bits of a BitSet are indexed by nonnegative integers.
+Individual indexed bits can be examined, set, or cleared. By default, all bits in the set initially
+have the value false.
+
+
+
