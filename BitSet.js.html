@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: BitSet.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: BitSet.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>(function () {
+    "use strict";
+
+    var ADDRESS_BITS_PER_WORD = 5;//32 bits
+
+    /**
+     *
+     * @class BitSet
+     * @classdesc This class implements an vector of bits. The size is given at creation time.
+     * Each component of the bit set has a boolean value. The bits of a BitSet are indexed by nonnegative integers.
+     * Individual indexed bits can be examined, set, or cleared. By default, all bits in the set initially
+     * have the value false.
+     * [Reference:http://en.wikipedia.org/wiki/Bit_array](http://en.wikipedia.org/wiki/Bit_array)
+     * @param size {Number} maximum allowed size of the BitSet
+     * @desc
+     * ####Example
+     * ```js
+     * var BitSet = require("dsjslib").BitSet
+     * var bitset=new BitSet(1024)
+     * ```
+     */
+    function BitSet(size) {
+        var arr = [];
+        if (typeof size !== 'number' || size &lt;= 0) throw new Error("Illegal BitSet size specified");
+        this._wordsUsed = ((size - 1) >> ADDRESS_BITS_PER_WORD) + 1;
+        this.size = size;
+        for (var i = 0; i &lt; this._wordsUsed; i++) {
+            arr[i] = 0;
+        }
+
+        this._words = arr;
+
+    }
+
+    /**
+     * Set the bit at bitIndex to 'true'.
+     * Throws out of range error if bit index is greater than the specified size during creation
+     * @memberOf BitSet.prototype
+     * @instance
+     * @param bitIndex {Number} index to set
+     */
+    BitSet.prototype.set = function (bitIndex) {
+        var wordIndex = _getWordIndex(bitIndex);
+        var actualIndex = bitIndex &amp; 0X1F;
+        if (wordIndex &lt; this._wordsUsed) {
+            this._words[wordIndex] |= 1 &lt;&lt; actualIndex;
+        } else {
+            throw new Error('Out of range ' + bitIndex + ' BitSet size is ' + this.size);
+        }
+    };
+
+    /**
+     * Examine a bit.
+     * @memberOf BitSet.prototype
+     * @instance
+     * @param bitIndex
+     * @returns {Boolean}  Returns true if the bit at bitIndex is set, false otherwise.
+     */
+    BitSet.prototype.get = function (bitIndex) {
+        var wordIndex = _getWordIndex(bitIndex);
+        var actualIndex = bitIndex &amp; 0X1F;
+        return(wordIndex &lt; this._wordsUsed) &amp;&amp; (
+            ((this._words[wordIndex]) &amp; (1 &lt;&lt; actualIndex) ) !== 0
+            );
+
+    };
+
+    /**
+     * @memberOf BitSet.prototype
+     * @instance
+     * @param bitIndex  {Number=} Set the bit at bitIndex to false.
+     * Clears all bits if bitIndex is not provided
+     */
+    BitSet.prototype.clear = function (bitIndex) {
+        var words = this._wordsUsed;
+        if (typeof bitIndex === 'undefined') {
+            while (words) {
+                this._words[--words] = 0;
+            }
+
+        } else {
+            var wordIndex = _getWordIndex(bitIndex);
+            var actualIndex = bitIndex &amp; 0X1F;
+
+            if (wordIndex &lt; this._wordsUsed) {
+                this._words[wordIndex] &amp;= ~(1 &lt;&lt; actualIndex);
+            }
+
+        }
+
+    };
+
+    /**
+     * Sets the bit at the specified index to the complement of its current value.
+     * @memberOf BitSet.prototype
+     * @instance
+     * @param bitIndex Index for the operation
+     * @throws {Error} Out of range if bitIndex given is greater than the size
+     */
+    BitSet.prototype.flip = function (bitIndex) {
+        var wordIndex = _getWordIndex(bitIndex);
+        var actualIndex = bitIndex &amp; 0X1F;
+
+        if (wordIndex &lt; this._wordsUsed) {
+            this._words[wordIndex] ^= (1 &lt;&lt; actualIndex);
+        } else {
+            throw new Error('Out of range ' + bitIndex + ' BitSet size is ' + this.size);
+        }
+
+    };
+
+    /**
+     * Return the number of bits set to true in this BitSet
+     * Courtesy Hacker's Delight 5.1
+     * @memberOf BitSet.prototype
+     * @instance
+     * @returns {Number} number of bits set to true in this BitSet
+     */
+    BitSet.prototype.cardinality = function () {
+        return this._words.reduce(function (sum, w) {
+            w = w - ((w >>> 1) &amp; 0x55555555);
+            w = (w &amp; 0x33333333) + ((w >>> 2) &amp; 0x33333333);
+            w = (w + (w >>> 4)) &amp; 0x0f0f0f0f;
+            w = w + (w >>> 8);
+            w = w + (w >>> 16);
+            return sum + (w &amp; 0x3F);
+
+        }, 0);
+
+    };
+
+
+    /**
+     * Logical AND with other BitSet.
+     * The current BitSet is modified as a result of this operation
+     * @memberOf BitSet.prototype
+     * @instance
+     * @param oBitSet {BitSet} The BitSet to logically AND this BitSet with
+     */
+    BitSet.prototype.and = function (oBitSet) {
+        var words = this._wordsUsed;
+        while (words > oBitSet._wordsUsed) {
+            this._words[--words] = 0;
+
+        }
+        while (words) {
+            words--;
+            this._words[words] &amp;= oBitSet._words[words];
+        }
+
+    }
+
+    /**
+     *
+     * @param bitIndex
+     * @return {*}
+     * @private
+     */
+    function _getWordIndex(bitIndex) {
+        if ((typeof bitIndex !== 'number') || bitIndex &lt; 0)
+            throw new Error("Invalid Parameter " + bitIndex);
+        return bitIndex >> ADDRESS_BITS_PER_WORD;
+
+    }
+
+
+    module.exports = BitSet;
+
+
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-dsjslib.html">dsjslib</a></li></ul><h3>Classes</h3><ul><li><a href="AVLTree.html">AVLTree</a></li><li><a href="BinarySearchTree.html">BinarySearchTree</a></li><li><a href="BitSet.html">BitSet</a></li><li><a href="BTree.html">BTree</a></li><li><a href="Cache.html">Cache</a></li><li><a href="DelayQueue.html">DelayQueue</a></li><li><a href="LinkedDeque.html">LinkedDeque</a></li><li><a href="MultiMap.html">MultiMap</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li><li><a href="RWayTrie.html">RWayTrie</a></li><li><a href="SkipList.html">SkipList</a></li><li><a href="TernarySearchTrie.html">TernarySearchTrie</a></li><li><a href="TreeMultiMap.html">TreeMultiMap</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha2</a> on Tue Dec 17 2013 17:49:01 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

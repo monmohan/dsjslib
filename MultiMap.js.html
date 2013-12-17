@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MultiMap.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: MultiMap.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>(function () {
+    "use strict";
+    /**
+     * @class MultiMap
+     * @classdesc A Map supporting arbitrary multiple values with a single key.
+     * (key --> [values])
+     * [Reference: MultiMap in Google Guava libraries](https://code.google.com/p/guava-libraries/wiki/NewCollectionTypesExplained#Multimap)
+     * @desc
+     * #### Example -
+     * ```js
+     * var MultiMap = require("dsjslib").MultiMap
+     * var mmap=new MultiMap()
+     * ```
+     */
+    function MultiMap() {
+        this._mmap = {
+            'wrapped' : Object.create(null),
+            'get' : function (k) {
+                return this.wrapped[k];
+            },
+            'set' : function (k, v) {
+                this.wrapped[k] = v;
+            },
+            'delete' : function (k) {
+                delete this.wrapped[k];
+            },
+            'keys' : function () {
+                return Object.keys(this.wrapped);
+            }
+
+        };
+        this.size = 0;
+    }
+
+    /**
+     * Insert a key value pair into the Map.
+     * If the key is already present, the value will be added to the existing list,
+     * otherwise, an array is created and the value is added to the array
+     * @memberOf MultiMap.prototype
+     * @instance
+     * @param key {*}
+     * @param value {*}
+     * @returns {MultiMap} this
+     */
+    MultiMap.prototype.put = function (key, value) {
+        var values = this._mmap.get(key);
+        values = values || [];
+        values.push(value);
+        this._mmap.set(key, values);
+        this.size++;
+        return this;
+
+    };
+
+    /**
+     * Search for key and return associated value array or empty array
+     * This method never returns null even if the key is not present
+     * Any changes made to the returned array modify the underlying array in the MultiMap as well
+     * @memberOf MultiMap.prototype
+     * @param key
+     * @return {Array} associated value Array
+     */
+    MultiMap.prototype.get = function (key) {
+        if (!this._mmap.get(key)) {
+            this._mmap.set(key, []);
+
+        }
+        return this._mmap.get(key);
+
+    };
+    /**
+     * If a value is provided, only that value is removed from the list
+     * If value is not provided, key and all values are deleted from the MultiMap
+     * @memberOf MultiMap.prototype
+     * @param key {*}
+     * @param value {*}
+     * @return {Array} last value associated with the key
+     */
+    MultiMap.prototype.remove = function (key, value) {
+        var values = this._mmap.get(key),
+            index = null,
+            lasVal;
+        if (values) {
+            if (typeof value !== 'undefined') {
+                values.every(function (v, i) {
+                    if (v === value) {
+                        index = i;
+                        return false;
+                    }
+                    return true;
+                });
+                lasVal = index !== null ? values.splice(index, 1) : [];
+            } else {
+                this._mmap['delete'](key);
+                lasVal = values;
+            }
+        }
+        return lasVal;
+
+    };
+
+    /**
+     * Test if a key is present in Map or not. This doesn't modify the Map to create empty array if
+     * the key was not present.
+     * @memberOf MultiMap.prototype
+     * @param key
+     * @returns {Boolean} true if key is present, false otherwise
+     */
+    MultiMap.prototype.hasKey = function (key) {
+        var v = this._mmap.get(key);
+        return (typeof v !== 'undefined') &amp;&amp; v !== null;
+    };
+
+    /**
+     * Return a list of all key, value pairs.
+     * The key value pairs are returned as objects {'key':&lt;K>,'value':&lt;V>}
+     * Note that for keys associated with multiple values there is one object per value returned in the entry
+     * for example for key1->val1,val2,val3 , the entries will be
+     * [{'key':key1,'value':val1},{'key':key1,'value':val2},{'key':key1,'value':val3}]
+     * @memberOf MultiMap.prototype
+     * @instance
+     * @returns {Array} Array of objects  {'key':&lt;K>,'value':&lt;V>}
+     */
+    MultiMap.prototype.entries = function () {
+        var entries = [];
+
+        this._mmap.keys().forEach(function (k) {
+            this._mmap.get(k).forEach(function (v) {
+                entries.push({'key' : k, 'value' : v});
+            });
+
+        }, this);
+
+        return entries;
+
+    };
+    module.exports = MultiMap;
+}());</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-dsjslib.html">dsjslib</a></li></ul><h3>Classes</h3><ul><li><a href="AVLTree.html">AVLTree</a></li><li><a href="BinarySearchTree.html">BinarySearchTree</a></li><li><a href="BitSet.html">BitSet</a></li><li><a href="BTree.html">BTree</a></li><li><a href="Cache.html">Cache</a></li><li><a href="DelayQueue.html">DelayQueue</a></li><li><a href="LinkedDeque.html">LinkedDeque</a></li><li><a href="MultiMap.html">MultiMap</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li><li><a href="RWayTrie.html">RWayTrie</a></li><li><a href="SkipList.html">SkipList</a></li><li><a href="TernarySearchTrie.html">TernarySearchTrie</a></li><li><a href="TreeMultiMap.html">TreeMultiMap</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha2</a> on Tue Dec 17 2013 17:49:01 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

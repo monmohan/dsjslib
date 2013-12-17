@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: PriorityQueue.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: PriorityQueue.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>(function () {
+    "use strict";
+    /**
+     * @class PriorityQueue
+     * @classdesc A queue backed by a Binary Heap. Basic queue operation offer and poll run in O(lgn) time.
+     * The elements in this queue are ordered according to their natural ordering or
+     * based on the compare function provided.
+     * [Reference: PriorityQueue in Oracle JDK](http://docs.oracle.com/javase/7/docs/api/java/util/PriorityQueue.html)
+     * @param compareFn {userCompareFn=} optional external ordering function for priority of elements
+     * @desc
+     * #### Example -
+     * ```js
+     * var PriorityQueue = require("dsjslib").PriorityQueue
+     * var pq=new PriorityQueue(function(w1,w2){
+     *      return w1.weight - w2.weight;
+     * })
+     * ```
+     */
+    function PriorityQueue(compareFn) {
+        this._queue = [];
+        this._compFn =
+            typeof compareFn === 'function' ? function (inQ, objToAdd) {
+                return compareFn.call(null, inQ, objToAdd);
+            } : function (inQ, objToAdd) {
+                return (inQ &lt; objToAdd ? 1 : inQ > objToAdd ? -1 : 0);
+            };
+
+    }
+
+    /**
+     * @memberOf PriorityQueue.prototype
+     * @instance
+     * @returns {Number} number of elements in the queue
+     */
+    PriorityQueue.prototype.size = function () {
+        return this._queue.length;
+    };
+
+    /**
+     * @memberOf PriorityQueue.prototype
+     * @instance
+     * @param obj Insert the object in queue. Re-heapifies the queue.
+     * @return {PriorityQueue} this
+     */
+    PriorityQueue.prototype.offer = function (obj) {
+        var idx = this._queue.length;
+        this._queue.push(obj);
+        siftUp.apply(this._queue, [obj, idx, this._compFn]);
+        return this;
+
+    };
+
+    /**
+     * Returns and removes the element at the head of the queue
+     * @memberOf PriorityQueue.prototype
+     * @instance
+     * @return {*} Returns and removes the element at the head of the queue . Re-heapifies the queue..
+     * The head of this queue is the maximum element with respect to the specified ordering. If multiple elements
+     * are tied for max value, the head is one of those elements -- ties are broken arbitrarily.
+     */
+    PriorityQueue.prototype.poll = function () {
+        var obj = this._queue[0];
+        if (this._queue.length > 1) {
+            this._queue[0] = this._queue.pop();
+            siftDown.apply(this._queue, [this._queue[0], 0, this._compFn]);
+        } else {
+            obj = this._queue.pop();
+        }
+        return obj;
+    };
+
+    /**
+     * Returns, without removing, the element at the head of the queue
+     * @memberOf PriorityQueue.prototype
+     * @instance
+     * @return {*} Returns the element at the head of the queue .
+     * The head of this queue is the maximum element with respect to the specified ordering. If multiple elements
+     * are tied for max value, the head is one of those elements -- ties are broken arbitrarily.
+     */
+    PriorityQueue.prototype.peek = function () {
+        return this._queue[0];
+    };
+
+    var siftUp = function (item, idx, compFn) {
+        while (idx > 0) {
+            var pIdx = (idx - 1) >>> 1,
+                parent = this[pIdx];
+            if (compFn(parent, item) > 0) {
+                this[pIdx] = item;
+                this[idx] = parent;
+                idx = pIdx;
+            } else {
+                break;
+            }
+        }
+    };
+
+    var siftDown = function (item, idx, compFn) {
+        var half = this.length >>> 1;
+        while (idx &lt; half) {
+            var nextIdx = 2 * idx + 1,
+                child = this[nextIdx],
+                right = this[nextIdx + 1];
+            if (right &amp;&amp; compFn(child, right) > 0) {
+                child = right;
+                nextIdx = nextIdx + 1;
+            }
+
+            if (compFn(item, child) > 0) {
+                this[nextIdx] = item;
+                this[idx] = child;
+            } else {
+                break;
+            }
+
+            idx = nextIdx;
+        }
+    };
+
+    /**
+     * Cleanup and remove all elements from the queue
+     * @memberOf PriorityQueue.prototype
+     * @instance
+     */
+    PriorityQueue.prototype.clear = function () {
+        this._queue = [];
+    };
+
+    /**
+     * @memberOf PriorityQueue.prototype
+     * @instance
+     * @return {Array} Returns array of elements in the queue.
+     * Ordering of those elements in undefined
+     */
+    PriorityQueue.prototype.entries = function () {
+        return this._queue.slice(0);
+    };
+
+    module.exports = PriorityQueue;
+
+}());</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-dsjslib.html">dsjslib</a></li></ul><h3>Classes</h3><ul><li><a href="AVLTree.html">AVLTree</a></li><li><a href="BinarySearchTree.html">BinarySearchTree</a></li><li><a href="BitSet.html">BitSet</a></li><li><a href="BTree.html">BTree</a></li><li><a href="Cache.html">Cache</a></li><li><a href="DelayQueue.html">DelayQueue</a></li><li><a href="LinkedDeque.html">LinkedDeque</a></li><li><a href="MultiMap.html">MultiMap</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li><li><a href="RWayTrie.html">RWayTrie</a></li><li><a href="SkipList.html">SkipList</a></li><li><a href="TernarySearchTrie.html">TernarySearchTrie</a></li><li><a href="TreeMultiMap.html">TreeMultiMap</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha2</a> on Tue Dec 17 2013 17:49:01 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

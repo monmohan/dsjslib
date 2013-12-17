@@ -1,280 +1,116 @@
-<html>
-  <head>
-    <title>dsjslib - a JavaScript data structure library</title>
-    <link rel="stylesheet" href="index.css" />
-      <script type="text/javascript"  src="http://codeorigin.jquery.com/jquery-2.0.3.min.js"></script>
-      <script type="text/javascript" src="decorate.js"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Index</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
 <body>
-<section id="content">
-<h1><a href="https://github.com/monmohan/dsjs.git">dsjslib</a></h1>
-<h2>
-<p>This is a collection of data structures and utilities, implemented in JavaScript. Its written and tested using Node.js but the dependencies are mostly peripheral
-(e.g util for logging and assert module for testing). So the code can be used in Browser as well with minor changes.</p></h2>
-<h4>NOTE: This page might be dated. Please also visit the <a href="https://github.com/monmohan/dsjslib">github repository</a> for latest info.</h4>
 
-<h2 id="structs">Table of Contents</h2>
+<div id="main">
+    
+    <h1 class="page-title">Index</h1>
+    
+    
 
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>dsjslib</h1>
+<p>This is a collection of different data structures and utilities, implemented in JavaScript.
+Its written and tested using Node.js which is also the target platform.</p>
 <ul>
-<li><a href="#installation">Installation</a></li>
-<li><a href="#cache">Cache</a></li>
-<li><a href="#avl-tree-map">AVL Tree</a></li>
-<li><a href="#skiplist-map">SkipList</a></li>
-<li><a href="#btree">BTree</a></li>
-<li><a href="#rwaytrie-map">RWayTrie</a></li>
-<li><a href="#ternarysearchtrie-map">TernarySearchTrie</a></li>
-
+<li><h3>Maps</h3><ul>
+<li><h4>Sorted Maps</h4> Maps sorted according to natural ordering of keys or by comparator function provided at creation time.
+Two different backing stores are available<ul>
+<li><a href="#avl-tree">AVLTree</a></li>
+<li><a href="#skip-list">Skip List</a></li>
 </ul>
-
-<h2 id="installation">Installation</h2>
-
-<p>Install with <a href="http://npmjs.org">npm</a>:</p>
-
-<pre><code>$ npm install dsjslib
-</code></pre>
-
-<h2 id="avl-tree-map">AVL Tree [Map]</h2>
-Extends BinarySearchTree (see lib/BinarySearchTree.js) to provide a Map like functionality backed by a balanced binary Tree. All functionality of BinarySearchTree is available. In addition Tree is height balanced by rotation whenever an insert is done See rotate(), reBalance() and checkAVLProperty() functions for explanation. Caller doesn't need to invoke these functions, they are internally usedd when an insert or delete violates the AVL property of the tree
-<pre><code>
-//Create and AVLTree (extends a BinarySearchTree)
-var avl=require('dsjslib').AVLTree
-
-//Insert a key value. It also rebalances the tree
-avl.put(key,value)
-
-//Get a value for key
-avl.get(key)
-
-//Remove key vallue, also rebalances the tree
-avl.delete(key)
-
-//Predecessor and Successor avl.predecessor(key)
-avl.successor(key)
-
-//Inorder traversal of the tree. callbackfn called for every node visited
-avl.traverse([node],callbackfn)and Max - if start node not given, starts at root
-avl.min([startAtNode]) avl.max([startAtNode])
-
-//Validates the tree starting at given node (root otherwise).
-//Validates BST as well as AVL proeprties 
-avl.checkInvariants([startAtNode])
-
-//Print the tree starting at root (requires util module from Node.js)
-console.log(avl.root)
-
-</code></pre>
-<p>Known Limitations: None </p>
-
-<h2 id="skiplist-map">SkipList [Map]</h2>
-<p>[Ref - http://ocw.mit.edu Lecture on skip-lists] </p>
-<pre><code>
-//Create a Skip List
-//Optional compare function to order the keys. If not provided, a natural ordering is assumed.
-var skl=new SkipList(compareFn)
-
-//Add a key value
-skl.put(k,v)
-
-//Search for a key
-skl.get(k)
-
-//delete a key and its associated value
-skl.delete(k)
-
-//Get all entries(sorted). They are returned as key value pair objects
-skl.entrySet()
-</code></pre>
-Known Limitations: None
-
-<h2 id="btree">BTree</h2>
-[Ref - Introduction to Algorithms By Coremen et al.]
-<pre><code>
-//Creates a BTree of degree K . Any node in the Tree can have a maximum of 2*K-1 keys and a minimum of K-1 keys. 
-var btree=new BTree(K)
-
-//Inserts a key and splits nodes as required
-btree.put(key,value)
-
-//Search by key
-btree.get(key)
-
-//Deletes a key and re-joins nodes and/or reduces the height of tree as required
-btree.delete(key)
-
-//Check various BTree invariants -- For sanity testing
-1. Except root all nodes have degree -1 &lt;keys&lt;2*degree-1
-2. Child keys are less than corresponding parent key 
-   (and greater than predecessor parent key)
-
-btree.checkInvariants()
-</code></pre>
-
-Known Limitations: Currently only supports Numeric or String keys (uses < > for natural ordering).
-
-<h2 id="rwaytrie-map">RWayTrie [Map optimized for String keys]</h2>
-<p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
-Data structure supporting String keys, for fast retrieval of values associated with string keys. In comparison to a Map, has additional (fast) functions like list of keys with prefix and listing all keys in sorted order. For large R the space requirement for this DS is impractical (although in javascript arrays are sparse so its not the same) , TernarySearchTrie can be more practical alternative.
-<pre><code>
-
-// Creates a RWayTrie of alphabet size R .
-//For example if you know that the keys are made of ASCII chars only, R=128. 
-//Each node in this trie will have an array of size R. 
-
-var rTrie=new RWayTrie(R) 
-
-
-// Inserts a key and set its value as val
-rTrie.put(key,val) 
-
-
-//Search for a key and return associated value or null
-rTrie.get(key) 
-
-//Deletes a key
-rTrie.delete(key)
-
-//Return a list of all key, value pairs in sorted order (of keys)
-rTrie.entrySet() 
-
-
-//Return a list of all key, value pairs where
-//keys start with given prefix_chars
-rTrie.keysWithPrefix(prefix_chars)
-</code></pre>
-
-<p>Known Limitations: None</p>
-
-<h2 id="ternarysearchtrie-map">TernarySearchTrie [Map optimized for String keys]</h2>
-<p>[Reference: Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne]</p>
-Data structure supporting String keys, for fast retrieval of values associated with string and provide prefix searches. Functions are same as RWayTrie
-<pre><code>
-
-//Creates a TernarySearchTrie 
-var tst=new TernarySearchTrie()
-
-//Insert a key value pair into the Trie
-tst.put(key,val)
-
-//Search for key and return associated value or null
-tst.get(key)
-
-//Deletes a key and associated value
-tst.delete(key)
-
-//Return a list of all key, value pairs where //keys start with given prefix_chars
-tst.keysWithPrefix(prefix_chars)
-</code></pre>
-<p>Known Limitations: None</p>
-
-<h2 id="cache">Cache [LRU Cache with stats] </h2>
-
-<p>[Reference: Google Guava https://code.google.com/p/guava-libraries/]
-
-    In-memory cache implementation for Node, inspired by Google Guava Loading Cache .
-    The cache is much simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
-    cache are captured e.g auto loader function, removal listener, stats recording etc.
-</p>
-
-<pre><code>
-
-var Cache = require("dsjslib").Cache
-
-
-//General format
-
-var cache = new Cache(cacheSpecObject)
-
-//Create a cache of maximum size 100, entries set to expire after 60 seconds post write
-
- var cache=new Cache(
-/*Cache spec object*/{
-'maximumSize':100,
-'expiresAfterWrite':60
-})
-
-//Create a cache of maximum size 100, entries set to expire after 60 seconds post write,
-//and a caller provided automatic loader function to load the value in Cache if not present.
-//myloader function should take an argument  (key) and return the value to be stored for the key.
-//undefined and null values can't be stored and an error will be raised
-
-var cache=new Cache(
-/*Cache spec object*/{
-'maximumSize':100,
-'expiresAfterWrite':60,
-'loaderFunction':myLoaderFn
-})
-
-
-
-//Create a cache with max size, TTL, auto loader function and also adds a removal listener.
-//The function specified by the 'onRemove' property is called when an entry is evicted.
-//THis function takes three arguments key, value, cause .
-//Cause can be one of 'expired', 'capacity' or 'explicit'
-
-var cache=new Cache(
-/*Cache spec object*/{
-'maximumSize':100,
-'expiresAfterWrite':60,
-'loaderFunction':myloader,
-'onRemove':removeListenerFn
-})
-
-
-//Creates a Cache with capacity based on maximum weight instead of number of entries
-//maximumWeight specifies the capacity and weigherFunction would be invoked to get
-// the weight of key, value.
-//Note that eviction strategy for Cache can max weight or max size but not both
-//TTL (expireAfterWrite) can be used with both capacity strategies
-
-var cache=new Cache(
-/*Cache spec object*/{
-'maximumWeight':1000,
-'weigherFunction':myWeigherFn,
-'loaderFunction':myloader,
-'onRemove':removeListenerFn
-})
-
-
-//Record stats of the cache
-//Hit, Miss and request counts are recorded
-
-var cache=new Cache(
-/*Cache spec object*/{
-'maximumSize':100,
-.................
-'recordStats':true
-})
-    </code></pre>
-
-
-<h3>API</h3>
-
-<pre><code>
-
-//Get value for key,
-//Automatically load the value if not present and an auto loader function is configured
-
-cache.get(key)
-
-//Get value for key as present in cache, not attempt to load the key will be done
-//even if a loader is configured
-
-cache.getIfPresent(key)
-
-//Add a key value
-cache.put(key,value)
-//Invalidate a key, If a removal listener is configured, it will be invoked with key value pair
-//and removal cause as 'explicit'
-cache.invalidate(key)
-
-//Invalidate all keys in cache, removal listeners are not invoked
-cache.invalidateAll()
-
-//Gets statistics of cache usage
-cache.stats returns an object {'hitCount':number,'missCount':number,'reqeustCount':number}
-
-</code></pre>
-</section>
+</li>
+<li><h4>Tries</h4> Map optimized for prefix searching on string keys<ul>
+<li><a href="#rwaytrie">Multi Way Trie</a></li>
+<li><a href="#tstrie">Ternary Search Trie</a></li>
+</ul>
+</li>
+<li><h4>Multi-Valued</h4> Map supporting multiple values for a key<ul>
+<li><a href="#multi-map">MultiMap</a></li>
+<li><a href="#tree-multi-map">TreeMultiMap</a> - In addition, Map is sorted on keys. Uses AVLTree as backing store</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><h3>Queues</h3></p>
+<ul>
+<li><h4><a href="#linked-deque">Linked Deque</a></h4> - An optionally capacity constrained deque based on linked nodes</li>
+<li><h4><a href="#priority-queue">Priority Queue</a></h4> - Priority Queue based on a Binary Heap</li>
+<li><h4><a href="#delay-queue">Delay Queue</a></h4> - Queue of 'Delayed' items, item can only be taken when its delay has expired.
+  For example usage see <a href="https://github.com/monmohan/dsjslib/wiki/Example:-DelayQueue-for-Scheduled-Task-Management">wiki</a></li>
+</ul>
+</li>
+<li><p><h3>Utilities</h3></p>
+<ul>
+<li><p><h4>LRU Cache with Stats</h4> Google Guava inspired LRU cache. [Reference: Google Guava](https://code.google.com/p/guava-libraries/]. In-memory LRU cache implementation for Node,
+inspired by Google Guava Loading Cache .  The cache is simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
+cache are captured like</p>
+<pre><code> - Auto loader function
+ - Removal listener
+ - Auto expiry After Write (TTL)
+ - Max Size and weight
+ - Cache Stats recording</code></pre>
+<p>For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Cache-Feature-and-usage-overview</p>
+</li>
+<li><p><h4><a href="#bit-set">BitSet</a></h4> - An array of bits with operations to set, examine and clear individual bits</p>
+</li>
+<li><h4><a href="#btree">BTree</a></h4> - Self balancing generalized Search Tree</li>
+</ul>
+</li>
+</ul>
+<p><strong>Current version 0.6.5 is stable and thoroughly tested on Node v0.10</strong></p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-dsjslib.html">dsjslib</a></li></ul><h3>Classes</h3><ul><li><a href="AVLTree.html">AVLTree</a></li><li><a href="BinarySearchTree.html">BinarySearchTree</a></li><li><a href="BitSet.html">BitSet</a></li><li><a href="BTree.html">BTree</a></li><li><a href="Cache.html">Cache</a></li><li><a href="DelayQueue.html">DelayQueue</a></li><li><a href="LinkedDeque.html">LinkedDeque</a></li><li><a href="MultiMap.html">MultiMap</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li><li><a href="RWayTrie.html">RWayTrie</a></li><li><a href="SkipList.html">SkipList</a></li><li><a href="TernarySearchTrie.html">TernarySearchTrie</a></li><li><a href="TreeMultiMap.html">TreeMultiMap</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha2</a> on Tue Dec 17 2013 17:49:01 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
 </body>
 </html>
