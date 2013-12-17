@@ -1,4 +1,4 @@
-Data Structures and Utilities
+dsjslib
 ----------------------------
 * [LRU Cache with Stats] (#lru-node-cache) - Google Guava inspired LRU cache
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
