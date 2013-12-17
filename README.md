@@ -3,12 +3,8 @@ dsjslib
 This is a collection of different data structures and utilities, implemented in JavaScript.
 Its written and tested using Node.js which is also the target platform.
 
-<a href="http://monmohan.github.io/dsjslib">
-<img title="Documentation" src="http://monmohan.github.io/dsjslib/images/documentation.png"></a>
-<p>
-<a href="http://monmohan.github.io/dsjslib">
-API Documentation >></a>
-</p>
+###[API Documentation >>](http://monmohan.github.io/dsjslib)
+
 
 Overview
 ----------------
