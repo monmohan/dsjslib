@@ -1,4 +1,4 @@
-dsjslib
+[dsjslib](https://github.com/monmohan/dsjslib)
 =======================================
 This is a collection of different data structures and utilities, implemented in JavaScript.
 Its written and tested using Node.js which is also the target platform.
