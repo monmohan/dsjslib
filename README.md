@@ -1,5 +1,6 @@
 dsjslib
-----------------------------
+=======================================
+
 * [LRU Cache with Stats] (#lru-node-cache) - Google Guava inspired LRU cache
 * [AVL Tree] (#avl-tree) - Sorted Map backed by AVL Tree 
 * [Priority Queue] (#priority-queue) - Priority Queue based on a Binary Heap
