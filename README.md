@@ -41,7 +41,11 @@ Overview
     * <h4>[BTree](http://monmohan.github.io/dsjslib/BTree.html)</h4> - Self balancing generalized Search Tree
 
 
-
+Installation
+-------------------------
+```js
+    npm install dsjslib
+```
 **Current version 0.6.5 is stable and thoroughly tested on Node v0.10**
 
 
