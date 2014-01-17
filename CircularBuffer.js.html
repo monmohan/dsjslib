@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CircularBuffer.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: CircularBuffer.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>(function () {
+    "use strict";
+    /**
+     * @class CircularBuffer
+     * @classdesc Implementation of a CircularBuffer
+     * The term circular buffer (also called a ring or cyclic buffer) refers to an area in memory
+     * which is used to store incoming data.
+     * When the buffer is filled, new data is written starting at the beginning of the buffer and overwriting the old.
+     * [Reference: CircularBuffer in Boost](http://www.boost.org/doc/libs/1_55_0/doc/html/circular_buffer.html)
+     *
+     * ```js
+     *  var CircularBuffer=require('dsjslib').CircularBuffer
+     *  var cb=new CircularBuffer(100)
+     *  cb.add(foo)
+     * ```
+     * @param capacity {Number=} default is 32
+     */
+    function CircularBuffer(capacity) {
+        this._capacity = typeof capacity === 'number'
+            &amp;&amp; capacity !== 0 ? capacity : 32;
+        this._end = 0;
+        this._st = -1;
+        this._buf = [];
+    }
+
+    /**
+     * Add data to buffer. This will overwrite older items
+     * if the buffer is full
+     * @memberOf CircularBuffer
+     * @instance
+     * @param obj Item being added , null and undefined are not supported
+     * @returns this {CircularBuffer}
+     */
+    CircularBuffer.prototype.add = function (obj) {
+        if (obj === undefined || obj === null)throw new Error("Null/Undefined values are not supported");
+        this._buf[this._end] = obj;
+        if (this._end === this._st || this._st === -1) {
+            //advance head
+            this._st++;
+            this._st %= this._capacity;
+        }
+        this._end++;
+        this._end %= this._capacity;
+        return this;
+    }
+    /**
+     * Remove the least recent item from the buffer
+     * @memberOf CircularBuffer
+     * @instance
+     */
+    CircularBuffer.prototype.remove = function () {
+        var obj = this._buf[this._st],
+            sz = this.size();
+        switch (sz) {
+            case 0:
+                break;
+            case 1:
+                delete this._buf[this._st];
+                this._st = -1;
+                break;
+            default:
+                delete this._buf[this._st];
+                this._st++;
+                this._st %= this._capacity;
+
+        }
+        return obj;
+
+    }
+
+    /**
+     * Get the item at given index. Returns null if no
+     * item exists at given index.
+     * @memberOf CircularBuffer
+     * @param index {Number} index to fetch
+     * @return {*}  item at given index
+     */
+    CircularBuffer.prototype.get = function (index) {
+        if (index >= this.size())return null;
+        return this._buf[(this._st + index) % this._capacity];
+
+    }
+
+    /**
+     * Return the total number of items in the buffer.
+     * this will always be &lt;=  buffer capacity
+     * @memberOf CircularBuffer
+     * @instance
+     * @returns {Number} count of items in buffer
+     */
+    CircularBuffer.prototype.size = function () {
+        return this._st === -1 ? 0 :
+            this._end > this._st ? this._end - this._st :
+                (this._capacity - this._st) + this._end;
+
+    }
+
+    /**
+     * Check if the buffer is full
+     * @memberOf CircularBuffer
+     * @instance
+     * @returns {boolean} True if buffer is full
+     */
+    CircularBuffer.prototype.isFull = function () {
+        return this.size() === this._capacity;
+    }
+
+    /**
+     * Check if the buffer is empty
+     * @memberOf CircularBuffer
+     * @instance
+     * @returns {boolean} True if buffer is empty
+     */
+    CircularBuffer.prototype.isEmpty = function () {
+        return this.size() === 0;
+    }
+
+    /**
+     * Clear the contents of this buffer
+     * @memberOf CircularBuffer
+     * @instance
+     *
+     */
+    CircularBuffer.prototype.clear = function () {
+        this._st = -1;
+        this._end = 0;
+    }
+
+    /**
+     * Get all buffer entries
+     * @memberOf CircularBuffer
+     * @instance
+     * @returns {Array} Array of all entries in Buffer
+     */
+    CircularBuffer.prototype.entries = function () {
+        var start = this._st,
+            end= (this._end || this._capacity)-1,
+            entries = [];
+        while (start != -1 &amp;&amp; start &lt;= end) {
+            entries.push(this._buf[start++]);
+        }
+        return entries;
+    }
+
+    /**
+     * Get the first element
+     *
+     * @memberOf CircularBuffer
+     * @instance
+     * @return {*}  first element, null if buffer is empty
+     */
+    CircularBuffer.prototype.front = function () {
+        return this.get(0);
+
+    }
+
+    /**
+     * Get the last element
+     *
+     * @memberOf CircularBuffer
+     * @instance
+     * @return {*}  last element, null if buffer is empty
+     */
+    CircularBuffer.prototype.back = function () {
+        return this.isEmpty()?null:
+            this._buf[(this._end || this._capacity)-1];
+
+
+    }
+
+
+    module.exports = CircularBuffer;
+
+})();</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-dsjslib.html">dsjslib</a></li></ul><h3>Classes</h3><ul><li><a href="AVLTree.html">AVLTree</a></li><li><a href="BinarySearchTree.html">BinarySearchTree</a></li><li><a href="BitSet.html">BitSet</a></li><li><a href="BTree.html">BTree</a></li><li><a href="Cache.html">Cache</a></li><li><a href="CircularBuffer.html">CircularBuffer</a></li><li><a href="DelayQueue.html">DelayQueue</a></li><li><a href="LinkedDeque.html">LinkedDeque</a></li><li><a href="MultiMap.html">MultiMap</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li><li><a href="RWayTrie.html">RWayTrie</a></li><li><a href="SkipList.html">SkipList</a></li><li><a href="TernarySearchTrie.html">TernarySearchTrie</a></li><li><a href="TreeMultiMap.html">TreeMultiMap</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha2</a> on Fri Jan 17 2014 16:58:53 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
