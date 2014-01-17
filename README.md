@@ -38,6 +38,8 @@ Overview
     For usage and overview see wiki: https://github.com/monmohan/dsjslib/wiki/LRU-Cache-Feature-and-usage-overview
 
     * <h4>[BitSet](http://monmohan.github.io/dsjslib/BitSet.html)</h4> - An array of bits with operations to set, examine and clear individual bits
+    * <h4>[CircularBuffer](http://monmohan.github.io/dsjslib/CircularBuffer.html)</h4> - A data structure that uses a single, fixed-size buffer as if it were connected end-to-end.
+    When the buffer is filled, new data is written starting at the beginning of the buffer and overwriting the old.
     * <h4>[BTree](http://monmohan.github.io/dsjslib/BTree.html)</h4> - Self balancing generalized Search Tree
 
 
