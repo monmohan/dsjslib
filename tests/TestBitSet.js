@@ -18,33 +18,35 @@ var BitSet = require('../lib/BitSet.js'), assert = require('assert'), fs = requi
     }
 
     function testLargeBitSet() {
-        var bs = new BitSet(200);
+        var bs = new BitSet(20);
         bs.set(156);
         assert.equal(bs.get(156), true, 'setting bit failed');
         bs.clear(156);
         assert.equal(bs.get(156), false, 'clearing bit failed');
 
-        assert.equal(bs.size, 200, 'wrong size');
         bs.set(32);
         assert.equal(bs.get(32), true, 'setting bit failed');
         bs.clear(32);
         assert.equal(bs.get(32), false, 'clearing bit failed');
-        assert.throws(function () {
-            bs.set(235);
-        });
+        bs.set(182);
+        assert.equal(bs.get(182), true, 'setting bit failed');
+
+        //larger than size
+        bs.set(235);
         assert.doesNotThrow(function () {
             bs.get(235);
         });
-        assert.equal(bs.get(235), false, 'wrong value set');
-
+        assert.equal(bs.get(235), true, 'wrong value set');
+        assert.equal(bs.get(182), true, 'rechecking old value after resize failed');
+        bs._checkInvariants();
     }
 
     function testCardinality() {
-        var bs = new BitSet(64);
+        var bs = new BitSet();
         bs.set(10);
         bs.set(2);
         assert.equal(bs.cardinality(), 2, 'wrong cardinality');
-        bs = new BitSet(1000);
+        bs = new BitSet();
         for (var i = 0; i < 20; i++) {
             bs.set(i * 10);
         }
@@ -58,8 +60,8 @@ var BitSet = require('../lib/BitSet.js'), assert = require('assert'), fs = requi
     }
 
     function testAnd() {
-        var bs = new BitSet(64);
-        var bs2=new BitSet(64);
+        var bs = new BitSet(32);
+        var bs2=new BitSet(32);
         bs.set(10);
         assert.equal(bs.get(10), true, 'wrong value set');
         bs.and(bs2);
@@ -82,19 +84,19 @@ var BitSet = require('../lib/BitSet.js'), assert = require('assert'), fs = requi
         assert.equal(bs.get(11), true, 'wrong value after And');
         assert.equal(bs.size, 200, 'wrong size after And');
         assert.equal(bs.cardinality(), 1, 'wrong cardinality after clearing');
-
+        bs._checkInvariants();
 
     }
 
     function testFlip(){
-        var bs = new BitSet(64);
+        var bs = new BitSet();
         bs.set(10);
         assert.equal(bs.get(10), true, 'wrong value set');
         bs.flip(10);
         assert.equal(bs.get(10), false, 'wrong value set');
         bs.flip(10);
         assert.equal(bs.get(10), true, 'wrong value set');
-
+        bs._checkInvariants()
 
     }
 
