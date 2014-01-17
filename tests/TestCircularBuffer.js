@@ -35,6 +35,8 @@ var CircularBuffer = require('../lib/CircularBuffer.js'), assert = require('asse
         cb=new CircularBuffer();
         assert.deepEqual(cb._capacity,32);
         assert.deepEqual(cb.isEmpty(),true);
+        assert.deepEqual(cb.front(),null);
+        assert.deepEqual(cb.back(),null);
 
     }
 
@@ -73,6 +75,17 @@ var CircularBuffer = require('../lib/CircularBuffer.js'), assert = require('asse
 
     }
 
+    function addManyTest(){
+        var cb=new CircularBuffer(10);
+        for(var i=1;i<=100;i++){
+            cb.add(i);
+        }
+        console.log(cb);
+        assert.deepEqual(cb.front(),91);
+        assert.deepEqual(cb.back(),100);
+        assert.deepEqual(cb.entries(),[91,92,93,94,95,96,97,98,99,100])
+    }
+
     function assertAll(cb,size,st,end,buf,capacity){
         buf && assert.deepEqual(cb._buf,buf);
         capacity && assert.deepEqual(cb._capacity,capacity);
@@ -93,4 +106,5 @@ var CircularBuffer = require('../lib/CircularBuffer.js'), assert = require('asse
     testInvariants()
     addTest();
     addAndRemoveTest();
+    addManyTest();
 }());
