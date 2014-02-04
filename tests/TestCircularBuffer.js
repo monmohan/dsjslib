@@ -108,6 +108,61 @@ var CircularBuffer = require('../lib/CircularBuffer.js'), assert = require('asse
         assert.deepEqual(cb.front(),4);
         cb.remove();
         assert.deepEqual(cb.isEmpty(),true);
+
+        cb.clear();
+        //Test that cb.entries() behaves correctly for all _st and _end positions
+        var expect = [92,93,94,95,96,97,98,99,100,101];
+        for(i=1;i<=100;i++){
+            cb.add(i);
+        }
+        for (i=1;i<=19;i++) {
+            cb.add(100+i);
+            assert.deepEqual(cb.front(),expect[0]);
+            assert.deepEqual(cb.back(),expect[expect.length-1]);
+            assert.deepEqual(cb.entries(),expect);
+
+            expect.shift();
+            expect.push(100+i+1);
+        }
+
+        expect = [111,112,113,114,115,116,117,118,119];
+        cb.remove();
+
+        console.log(cb);
+        assert.deepEqual(cb.entries(),expect);
+
+
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+        assert.deepEqual(cb.entries(),expect);
+        cb.remove();
+        expect.shift();
+
+        console.log(cb);
+        assert.deepEqual(cb.entries(),expect);
+        console.log(cb._buf.length);
+
     }
 
     function assertAll(cb,size,st,end,buf,capacity){
@@ -127,7 +182,7 @@ var CircularBuffer = require('../lib/CircularBuffer.js'), assert = require('asse
             i++;
         }
     }
-    testInvariants()
+    testInvariants();
     addTest();
     addAndRemoveTest();
     addManyTest();
