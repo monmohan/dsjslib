@@ -31,7 +31,24 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
         assert.deepEqual(path,[ 'F', 'E', 'B', 'A' ]);
         console.log(path);
     }
-    simpleTest()
-    testShortestPathDirected()
+
+    function testTopologicalSort(){
+        var getReady=new DiGraph({'directed':true});
+        getReady.addEdge("PANTS","UNDPANTS");
+        getReady.addEdge("BELT","PANTS");
+        getReady.addEdge("SHIRT","UNDSHIRT");
+        getReady.addEdge("BELT","SHIRT");//should be tucked in
+        getReady.addEdge("TIE","SHIRT");
+        getReady.addEdge("PEN","SHIRT");
+        getReady.addEdge("WATCH");
+        getReady.addEdge("SHOES","SOCKS");
+        getReady.addEdge("SHOES","PANTS");
+        var ro=getReady.topsort();
+        console.log(ro);
+
+    }
+    simpleTest();
+    testShortestPathDirected();
+    testTopologicalSort();
 
 })();
