@@ -37,6 +37,7 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
         getReady.addEdge("PANTS","UNDPANTS");
         getReady.addEdge("BELT","PANTS");
         getReady.addEdge("SHIRT","UNDSHIRT");
+        getReady.addEdge("JACKET","SHIRT");
         getReady.addEdge("BELT","SHIRT");//should be tucked in
         getReady.addEdge("TIE","SHIRT");
         getReady.addEdge("PEN","SHIRT");
@@ -45,6 +46,17 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
         getReady.addEdge("SHOES","PANTS");
         var ro=getReady.topsort();
         console.log(ro);
+        assert.deepEqual(ro,[ 'UNDPANTS',
+            'PANTS',
+            'UNDSHIRT',
+            'SHIRT',
+            'BELT',
+            'JACKET',
+            'TIE',
+            'PEN',
+            'WATCH',
+            'SOCKS',
+            'SHOES' ]);
 
     }
     simpleTest();
