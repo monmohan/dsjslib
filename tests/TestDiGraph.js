@@ -57,10 +57,24 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
             'WATCH',
             'SOCKS',
             'SHOES' ]);
+        assert.deepEqual(getReady.hasCycles(),false);
 
     }
+    function testCycleDetection(){
+       var cyclic=new DiGraph({'directed':true});
+        cyclic.addEdge(1,2);
+        cyclic.addEdge(2,3);
+        cyclic.addEdge(3,4);
+        cyclic.addEdge(3,5);
+        cyclic.addEdge(6);
+        cyclic.addEdge(7,8);
+        cyclic.addEdge(4,1);
+        assert.deepEqual(cyclic.hasCycles(),true);
+    }
+
     simpleTest();
     testShortestPathDirected();
     testTopologicalSort();
+    testCycleDetection();
 
 })();
