@@ -70,6 +70,17 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
         cyclic.addEdge(7,8);
         cyclic.addEdge(4,1);
         assert.deepEqual(cyclic.hasCycles(),true);
+        var undir=new DiGraph({'directed':true});
+        undir.addEdge(1,2);
+        undir.addEdge(2,3);
+        undir.addEdge(3,4);
+        undir.addEdge(4,5);
+        assert.deepEqual(undir.hasCycles(),false);
+        undir.addEdge(1,5);
+        assert.deepEqual(undir.hasCycles(),true);
+
+
+
     }
 
     simpleTest();
