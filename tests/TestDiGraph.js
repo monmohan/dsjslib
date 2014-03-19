@@ -31,6 +31,32 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
         assert.deepEqual(path,[ 'F', 'E', 'B', 'A' ]);
         console.log(path);
     }
+    function testShortestPathObjects(){
+        var dg=new DiGraph({'directed':true});
+        var hyd={objectid:1,name:'HYD'},
+            ams={objectid:2,name:'AMS'},
+            ld= {objectid:3,name:'LONDON'},
+            be={objectid:4,name:'BERLIN'},
+            ny={objectid:5,name:'NY'},
+            nj={objectid:6,name:'NJ'},
+            ch={objectid:7,name:'CHICAGO'};
+        dg.addEdge(hyd,ams);
+        dg.addEdge(ams,ld);
+        dg.addEdge(ld,ny);
+        dg.addEdge(ny,nj);
+        dg.addEdge(nj,ch);
+        dg.addEdge(hyd,be);
+        dg.addEdge(be,ams);
+        dg.addEdge(hyd,ld);
+        var path=dg.getShortestPath(hyd,ch);
+        assert.deepEqual(path,[ { objectid: 7, name: 'CHICAGO' },
+            { objectid: 6, name: 'NJ' },
+            { objectid: 5, name: 'NY' },
+            { objectid: 3, name: 'LONDON' },
+            { objectid: 1, name: 'HYD' } ]);
+        console.log(path);
+
+    }
 
     function testTopologicalSort(){
         var getReady=new DiGraph({'directed':true});
@@ -60,6 +86,44 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
         assert.deepEqual(getReady.hasCycles(),false);
 
     }
+
+    function testTopologicalSortObj(){
+        var buildHouse=new DiGraph({'directed':true});
+        var i=0;
+        function Job(desc){
+            this.desc=desc;
+            this.id=i++;
+            this.objectid=function(){
+                return this.id;
+            }
+        }
+        var f=new Job("foundation");
+        var ind=new Job("somethingelse"); //doesn't depend on any thing
+        var w=new Job("walls");
+        var win=new Job("windows");
+        var d=new Job("doors");
+        var wi=new Job("wires");
+        var li=new Job("lights");
+        var fu=new Job("furniture");
+        var fo=new Job("floor");
+        var de=new Job("decorations");
+        console.log(f.objectid())
+
+        buildHouse.addEdge(fu,fo);
+        buildHouse.addEdge(wi,w);
+        buildHouse.addEdge(w,f);
+        buildHouse.addEdge(li,wi);
+        buildHouse.addEdge(fo,w);
+        buildHouse.addEdge(win,w);
+        buildHouse.addEdge(d,w);
+        buildHouse.addEdge(de,li);
+        buildHouse.addEdge(ind);
+
+        var ro=buildHouse.topsort();
+        console.log(ro);
+        assert.deepEqual(buildHouse.hasCycles(),false);
+
+    }
     function testCycleDetection(){
        var cyclic=new DiGraph({'directed':true});
         cyclic.addEdge(1,2);
@@ -85,7 +149,9 @@ var DiGraph = require("../lib/DiGraph.js"), util = require("util"), assert = req
 
     simpleTest();
     testShortestPathDirected();
+    testShortestPathObjects();
     testTopologicalSort();
+    testTopologicalSortObj();
     testCycleDetection();
 
 })();
