@@ -1,6 +1,6 @@
 {
   "name": "dsjslib",
-  "version": "0.6.7",
+  "version": "0.6.8",
   "description": "Implementation of commonly used datastructures and utilities in Javascript.",
   "main": "index.js",
   "directories": {
@@ -42,7 +42,14 @@
       "BitArray",
       "BitVector",
       "CircularBuffer",
-      "RingBuffer"
+      "RingBuffer",
+      "Graph",
+      "Directed",
+      "UnDirected",
+      "Shortest",
+      "cycle",
+      "Path",
+      "topological"
   ],
   "author": "monmohan@gmail.com",
   "license": "MIT",
