@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: BloomFilter</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Class: BloomFilter</h1>
+    
+    
+
+
+
+<section>
+    
+<header>
+    <h2>
+    BloomFilter
+    </h2>
+    
+        <div class="class-description"><p>Bloom Filter is a probabilistic data structure used to test if an element is
+a member of a set or not. False positives are possible but false negatives or not
+i.e. if the answer to mightContain(e) is false, then the element is definetly not
+in the set. But if the answer is true, then the element may still not be in the set
+<a href="http://billmill.org/bloomfilter-tutorial/">For more details see this tutorial</a></p></div>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <h4 class="name" id="BloomFilter"><span class="type-signature"></span>new BloomFilter<span class="signature">(<span class="optional">config</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Argument</th>
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>An object with following properies</p>
+<pre><code class="lang-js">  {
+    expectedInsertions: The number of expected insertions in the filter, default is 1024,
+
+    falsePosPercent: Acceptable false positive rate, default is 0.03,
+
+    hashGenerator: Optional Hash Generator, By default
+    the library provides a MD5 based hash generation. The hash generation uses node's crypto library.
+    A single 128 bit hash is created which is then used to create different hashes.
+    [See Less Hashing, Same Performance](http://www.eecs.harvard.edu/~kirsch/pubs/bbbf/esa06.pdf)
+    }</code></pre></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BloomFilter.js.html">BloomFilter.js</a>, <a href="BloomFilter.js.html#line11">line 11</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="mightContain"><span class="type-signature"></span>mightContain<span class="signature">(obj)</span><span class="type-signature"> &rarr; {Boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>element to check for presence</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BloomFilter.js.html">BloomFilter.js</a>, <a href="BloomFilter.js.html#line85">line 85</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>true if all hashes of object are present in the Set, false otherwise</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Boolean</span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="put"><span class="type-signature"></span>put<span class="signature">(obj)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>obj</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"><p>element to add to the filter
+The element being added is first &quot;stringified&quot; and then added to the filter.
+If the element is an string, it is used as is.
+If the element is a Number, it is converted to string.
+If the element is an Array, all elements of the array are recursively &quot;stringified&quot; and joined.
+If the element is an Object, it is checked if the object contains a function &quot;stringify&quot;, if yes
+that function is invoked and the resulting string is used.
+For all other cases, default toString() is used.</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="BloomFilter.js.html">BloomFilter.js</a>, <a href="BloomFilter.js.html#line70">line 70</a>
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Modules</h3><ul><li><a href="module-dsjslib.html">dsjslib</a></li></ul><h3>Classes</h3><ul><li><a href="AVLTree.html">AVLTree</a></li><li><a href="BinarySearchTree.html">BinarySearchTree</a></li><li><a href="BitSet.html">BitSet</a></li><li><a href="BloomFilter.html">BloomFilter</a></li><li><a href="BTree.html">BTree</a></li><li><a href="Cache.html">Cache</a></li><li><a href="CircularBuffer.html">CircularBuffer</a></li><li><a href="DelayQueue.html">DelayQueue</a></li><li><a href="LinkedDeque.html">LinkedDeque</a></li><li><a href="MultiMap.html">MultiMap</a></li><li><a href="PriorityQueue.html">PriorityQueue</a></li><li><a href="RWayTrie.html">RWayTrie</a></li><li><a href="SkipList.html">SkipList</a></li><li><a href="TernarySearchTrie.html">TernarySearchTrie</a></li><li><a href="TreeMultiMap.html">TreeMultiMap</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha2</a> on Fri May 23 2014 18:07:31 GMT+0530 (IST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

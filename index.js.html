@@ -41,6 +41,12 @@ exports.MultiMap=require('./MultiMap.js');
 exports.TreeMultiMap=require('./TreeMultiMap.js');
 exports.BitSet=require('./BitSet.js');
 exports.CircularBuffer=require('./CircularBuffer.js');
+exports.DiGraph=require('./DiGraph.js');
+exports.BloomFilter=require('./BloomFilter.js');
+var logger=require('./logger.js');
+exports.logDebug=function(){
+    logger.setLogLevel(logger.Levels.debug);
+}
 
 /** GLOBAL DEFS**/
 /**
