@@ -1,12 +1,73 @@
-var assert = require('assert'), BloomFilter=require('../lib/BloomFilter.js');
+var assert = require('assert'), BloomFilter = require('../lib/BloomFilter.js'), logger = require('../lib/logger.js');
+;
 (function () {
-    var b=new BloomFilter({expectedInsertions:10,falsePosPercent:0.03});
-    console.log(b.k);
-    console.log(b.m);
+    logger.setLogLevel(logger.Levels.debug);
+    function testBloomRepeatedHash() {
+        var b = new BloomFilter({expectedInsertions : 1000,
+            falsePosPercent : 0.03});
+        var someKey = 'someran#$@#junk--\u03B1Greek';
+        for (var x = 1; x < 1000; x++) {
+            b.put(someKey);
+            assert.deepEqual(b.mightContain(someKey), true);
+        }
 
-    b.put('a');
-    b.put('b');
-    console.log(b.mightContain('a'));
-    console.log(b.mightContain('b'));
+        for (x = 1; x < 100; x++) {
+            b.put(someKey + x);
+            assert.deepEqual(b.mightContain(someKey), true);
+        }
+
+
+    }
+
+    function testBloomSmall() {
+        var b = new BloomFilter({expectedInsertions : 30,
+            falsePosPercent : 0.03});
+        for (var x = 1; x < 10; x++) {
+            b.put(Math.random());
+        }
+        var num_conflict = 0;
+        for (x = 2; x < 100; x++) {
+            if (b.mightContain(x)) {
+                num_conflict++;
+            }
+        }
+        console.log(num_conflict);
+        //shouldn't be more than 1
+        assert.equal(num_conflict > 1, false);
+
+
+    }
+
+    function testBloomComplexObjects() {
+        var b = new BloomFilter({expectedInsertions : 300,
+            falsePosPercent : 0.03});
+        var arr = []
+        for (var x = 1; x < 100; x++) {
+            arr.push(x);
+            b.put(arr);
+        }
+        var carr = []
+        for (x = 1; x < 100; x++) {
+            carr.push(x);
+            assert.equal(b.mightContain(carr), true);
+        }
+        var obj = {
+            id : "100", stringify : function () {
+                return this.id + " is key";
+            }
+
+        }
+        b.put(obj);
+        assert.equal(b.mightContain(obj.toString()), false);
+        assert.equal(b.mightContain(obj), true);
+        b.put({});
+        assert.equal(b.mightContain({}), true);
+
+
+    }
+
+    testBloomRepeatedHash();
+    testBloomSmall();
+    testBloomComplexObjects();
 
 }());
