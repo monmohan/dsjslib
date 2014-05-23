@@ -8,6 +8,8 @@ Its written and tested using Node.js which is also the target platform.
 
 Overview
 ----------------
+* <h3>New</h3>
+    * <h4>[Bloom Filter](http://monmohan.github.io/dsjslib/BloomFilter.html)</h4> - Probabilistic data structure to test whether an element is a member of a set.
 
 * <h3>Maps</h3>
     * <h4>Sorted Maps</h4> Maps sorted according to natural ordering of keys or by comparator function provided at creation time.
@@ -40,6 +42,7 @@ Overview
     * <h4>[BitSet](http://monmohan.github.io/dsjslib/BitSet.html)</h4> - An array of bits with operations to set, examine and clear individual bits
     * <h4>[CircularBuffer](http://monmohan.github.io/dsjslib/CircularBuffer.html)</h4> - A data structure that uses a single, fixed-size buffer as if it were connected end-to-end.
     When the buffer is filled, new data is written starting at the beginning of the buffer and overwriting the old.
+    * <h4>[Bloom Filter](http://monmohan.github.io/dsjslib/BloomFilter.html)</h4> - Probabilistic data structure to test whether an element is a member of a set.
     * <h4>[BTree](http://monmohan.github.io/dsjslib/BTree.html)</h4> - Self balancing generalized Search Tree
 
 
