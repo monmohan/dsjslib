@@ -51,7 +51,7 @@ Installation
 ```js
     npm install dsjslib
 ```
-**Current version 0.6.8 is stable and thoroughly tested on Node v0.10**
+**Current version 0.6.9 is stable and thoroughly tested on Node v0.10**
 
 
 
