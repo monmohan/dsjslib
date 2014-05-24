@@ -3,8 +3,7 @@ var assert = require('assert'), BloomFilter = require('../lib/BloomFilter.js'), 
 (function () {
     logger.setLogLevel(logger.Levels.debug);
     function testBloomRepeatedHash() {
-        var b = new BloomFilter({expectedInsertions : 1000,
-            falsePosPercent : 0.03});
+        var b = new BloomFilter();
         var someKey = 'someran#$@#junk--\u03B1Greek';
         for (var x = 1; x < 1000; x++) {
             b.put(someKey);
@@ -66,8 +65,25 @@ var assert = require('assert'), BloomFilter = require('../lib/BloomFilter.js'), 
 
     }
 
+    function testVeryLargeFilter() {
+        //can't be bigger than 2^31
+
+        var b = new BloomFilter({expectedInsertions : 100000000000000000000000000
+            });
+        var arr = []
+        assert.equal(b.m,0x7fffffff);
+        for (var x = 1; x < 10; x++) {
+            arr.push(x);
+            b.put(x);
+            assert.equal(b.mightContain(x), true);
+        }
+
+        assert.equal(b.mightContain("asdasewd"), false);
+    }
+
     testBloomRepeatedHash();
     testBloomSmall();
     testBloomComplexObjects();
+    testVeryLargeFilter();
 
 }());
