@@ -40,6 +40,24 @@ var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('
         assert.strictEqual(bt.predecessor(35).key, 29);
     }
 
+    function testSuccPreBounds() {
+        // add values in order
+        var bt = new BinarySearchTree();
+        bt.put(1, "first").put(2, 'last');
+        assert.deepEqual(bt.successor(1), { key:2, value:'last' });
+        assert(bt.successor(2) === null);
+        assert.deepEqual(bt.predecessor(2), { key:1, value:'first' });
+        assert(bt.predecessor(1) === null);
+
+        // add values in reverse order
+        bt = new BinarySearchTree();
+        bt.put(2, 'last').put(1, "first");
+        assert.deepEqual(bt.successor(1), { key:2, value:'last' });
+        assert(bt.successor(2) === null);
+        assert.deepEqual(bt.predecessor(2), { key:1, value:'first' });
+        assert(bt.predecessor(1) === null);
+    }
+
     function testDel() {
         console.log("DELETE")
         bt.delete(29);
@@ -110,12 +128,13 @@ var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('
         testInsert();
         testMinMax();
         testSuccPre();
+        testSuccPreBounds();
         testDel();
         //pretty print the tree
         console.log(bt.root);
         testEntrySet();
-        bt.checkInvariants()
-        testBSTCompfn()
+        bt.checkInvariants();
+        testBSTCompfn();
     })();
 
 
