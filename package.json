@@ -1,7 +1,7 @@
 {
   "name": "dsjslib",
-  "version": "0.6.10",
-  "description": "Implementation of commonly used datastructures and utilities in Javascript.",
+  "version": "0.6.12",
+  "description": "Implementation of commonly used data structures and utilities in JavaScript.",
   "main": "index.js",
   "directories": {
     "test": "tests"
@@ -13,8 +13,8 @@
   "keywords": [
     "ds",
     "sort map",
-    "datastructures",
-    "javascript",
+    "data structures",
+    "JavaScript",
     "AVL",
     "AVLTree",
     "Trie",
@@ -28,7 +28,7 @@
     "LRU",
     "cache",
     "eviction",
-    "maxsize",
+    "maximize",
     "least recently used",
     "loading",
     "guava",
