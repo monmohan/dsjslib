@@ -26,6 +26,10 @@ var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('
         assert.strictEqual(bt.min().value, "seven");
         assert.strictEqual(bt.max().key, 55);
         assert.deepEqual(bt.max().value, {complex:"55"});
+		console.log("Test min/max on empty tree");
+		var emp=new BinarySearchTree();
+		emp.min();
+		emp.max();
     }
 
 
