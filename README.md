@@ -29,7 +29,7 @@ Overview
         For example usage see [wiki: DelayQueue-for-Scheduled-Task-Management](https://github.com/monmohan/dsjslib/wiki/Example:-DelayQueue-for-Scheduled-Task-Management)
 
 * <h3>Utilities</h3>
-    * <h4>[LRU Cache with Stats](http://monmohan.github.io/dsjslib/Cache.html)</h4> Google Guava inspired LRU cache. [Reference: Google Guava](https://code.google.com/p/guava-libraries/]. In-memory LRU cache implementation for Node,
+    * <h4>[LRU Cache with Stats](http://monmohan.github.io/dsjslib/Cache.html)</h4> Google Guava inspired LRU cache. [Reference: Google Guava](https://code.google.com/p/guava-libraries/). In-memory LRU cache implementation for Node,
     inspired by Google Guava Loading Cache .  The cache is simpler since it doesn't have to deal with concurrent threads, but other functionality of Guava
     cache are captured like
            - Auto loader function
