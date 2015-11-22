@@ -4,7 +4,9 @@ var BinarySearchTree = require("../lib/BinarySearchTree.js"), assert = require('
 
     function testInsert() {
         console.log("INSERT AND TRAVERSE")
-        bt.put(16, "sVal").put(7, "seven").put(25, "sVal").put(26, "sVal").put(39, "sVal")
+        assert(bt.put(16, "sVal").node);
+        assert(bt.put(7, "seven").node);
+        bt.put(25, "sVal").put(26, "sVal").put(39, "sVal")
             .put(13, "sVal").put(15, "sVal").put(29, "zzz").put(24, "chowbees")
             .put(35, "thirtyFive").put(12, "sVal").put(55, {complex:"55"}).put(11, "sVal");
         assert.strictEqual(bt.get(29).value, "zzz");
